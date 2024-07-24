@@ -7,7 +7,7 @@
 
 import UIKit
 
-class TrackersViewController: UIViewController, AddNewCategoryProtocol, CreateTrackerProtocol, TrackerRecordProtocol {    
+class TrackersViewController: UIViewController, CreateTrackerProtocol, TrackerRecordProtocol {    
     
     private var imageView = UIImageView()
     private var button = UIButton(type: .system)
@@ -117,13 +117,6 @@ class TrackersViewController: UIViewController, AddNewCategoryProtocol, CreateTr
         dateButton.preferredDatePickerStyle = .compact
         dateButton.widthAnchor.constraint(equalToConstant: 110).isActive = true
         dateButton.addTarget(self, action: #selector(changeDate), for: .editingDidEnd)
-    }
-    
-    func addCategoryAtArray(nameOfCategory: String) {
-        var newArray:[TrackerCategory] = categories
-        let newCategory = TrackerCategory(name: nameOfCategory, trackers: [])
-        newArray.append(newCategory)
-        categories = newArray
     }
     
     func createNewTracker(name: String, shedule: [String], category: TrackerCategory) {
@@ -236,6 +229,14 @@ class TrackersViewController: UIViewController, AddNewCategoryProtocol, CreateTr
         createTrackerViewController.currentDate = self.currentDate
         let navigationController = UINavigationController(rootViewController: createTrackerViewController)
         present(navigationController, animated: true)
+    }
+}
+extension TrackersViewController: AddNewCategoryProtocol{
+    func addCategoryAtArray(nameOfCategory: String) {
+        var newArray:[TrackerCategory] = categories
+        let newCategory = TrackerCategory(name: nameOfCategory, trackers: [])
+        newArray.append(newCategory)
+        categories = newArray
     }
 }
 extension TrackersViewController: UICollectionViewDataSource {
