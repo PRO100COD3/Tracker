@@ -38,6 +38,8 @@
 		3CE1CB102C4532F4007E96CB /* TrackersCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE1CB0F2C4532F4007E96CB /* TrackersCollectionViewCell.swift */; };
 		3CE1CB132C486CAD007E96CB /* CollectionViewHeaders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE1CB122C486CAD007E96CB /* CollectionViewHeaders.swift */; };
 		3CE1CB1D2C4E3D02007E96CB /* TrackerRecordProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE1CB1C2C4E3D02007E96CB /* TrackerRecordProtocol.swift */; };
+		3CE1CB712C71CCFC007E96CB /* CustomEmojiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE1CB702C71CCFC007E96CB /* CustomEmojiCell.swift */; };
+		3CE1CB732C748CC3007E96CB /* CustomColorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE1CB722C748CC3007E96CB /* CustomColorCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -93,6 +95,8 @@
 		3CE1CB0F2C4532F4007E96CB /* TrackersCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersCollectionViewCell.swift; sourceTree = "<group>"; };
 		3CE1CB122C486CAD007E96CB /* CollectionViewHeaders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewHeaders.swift; sourceTree = "<group>"; };
 		3CE1CB1C2C4E3D02007E96CB /* TrackerRecordProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecordProtocol.swift; sourceTree = "<group>"; };
+		3CE1CB702C71CCFC007E96CB /* CustomEmojiCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomEmojiCell.swift; sourceTree = "<group>"; };
+		3CE1CB722C748CC3007E96CB /* CustomColorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColorCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -200,6 +204,8 @@
 				3CB90D102C3E56DF0074BD2D /* CreateTemporaryEventViewController.swift */,
 				3C2E92042C3C83460081F7B7 /* CreateHabitViewController.swift */,
 				3CB90D132C3E597E0074BD2D /* CustomTableViewCell.swift */,
+				3CE1CB702C71CCFC007E96CB /* CustomEmojiCell.swift */,
+				3CE1CB722C748CC3007E96CB /* CustomColorCell.swift */,
 			);
 			path = CreateEvent;
 			sourceTree = "<group>";
@@ -410,6 +416,7 @@
 				3C2E90C22C2B23A00081F7B7 /* AppDelegate.swift in Sources */,
 				3CE1CB1D2C4E3D02007E96CB /* TrackerRecordProtocol.swift in Sources */,
 				3CE1CB0E2C4428E0007E96CB /* CloseControllerProtocol.swift in Sources */,
+				3CE1CB712C71CCFC007E96CB /* CustomEmojiCell.swift in Sources */,
 				3CE1CB072C43EED8007E96CB /* CategoryProtocol.swift in Sources */,
 				3CE1CB132C486CAD007E96CB /* CollectionViewHeaders.swift in Sources */,
 				3CE1CB052C43EE92007E96CB /* SheduleProtocol.swift in Sources */,
@@ -418,6 +425,7 @@
 				3C2E92052C3C83460081F7B7 /* CreateHabitViewController.swift in Sources */,
 				3C2E90C42C2B23A00081F7B7 /* SceneDelegate.swift in Sources */,
 				3C2E91FF2C393D0B0081F7B7 /* TrackerCategory.swift in Sources */,
+				3CE1CB732C748CC3007E96CB /* CustomColorCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

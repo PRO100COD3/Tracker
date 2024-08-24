@@ -11,14 +11,15 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
     
     weak var addCategoryDelegate: AddNewCategoryProtocol?
     weak var delegate: CategoryProtocol?
-    let label = UILabel()
-    let buttonAddNewCategory = UIButton(type: .system)
-    let tableView = UITableView()
+    weak var addCategoryAtCreatorDelegate: AddNewCategoryProtocol?
+    private let label = UILabel()
+    private let buttonAddNewCategory = UIButton(type: .system)
+    private let tableView = UITableView()
     private var imageView = UIImageView()
-    let quote = UILabel()
+    private let quote = UILabel()
     var categories: [TrackerCategory] = []
-    var newCategories:[String] = []
-    var selectedIndexPath: IndexPath?
+    private var newCategories:[String] = []
+    private var selectedIndexPath: IndexPath?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,13 +35,13 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         addButtonAddNewCategory()
     }
     
-    func addLabel() {
+    private func addLabel() {
         label.text = "Категория"
         label.font = UIFont(name: "SFPro-Medium", size: 16)
         navigationItem.titleView = label
     }
     
-    func addButtonAddNewCategory() {
+    private func addButtonAddNewCategory() {
         buttonAddNewCategory.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(buttonAddNewCategory)
         buttonAddNewCategory.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
@@ -56,7 +57,7 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         buttonAddNewCategory.addTarget(self, action: #selector(addNewCategory), for: .touchUpInside)
     }
     
-    func addImageView() {
+    private func addImageView() {
         let image = UIImage(named: "Star")
         imageView = UIImageView(image: image)
         view.addSubview(imageView)
@@ -65,7 +66,7 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
     
-    func addCentreText() {
+    private func addCentreText() {
         quote.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(quote)
         quote.numberOfLines = 2
@@ -76,7 +77,7 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         quote.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
     }
     
-    @objc func addNewCategory() {
+    @objc private func addNewCategory() {
         let addNewCategoryViewController = AddNewCategoryViewController()
         addNewCategoryViewController.delegate = self
         addNewCategoryViewController.addCategoryDelegate = self.addCategoryDelegate
@@ -84,7 +85,7 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         present(navigationController, animated: true)
     }
     
-    func addTableView() {
+    private func addTableView() {
         tableView.frame = self.view.bounds
         tableView.dataSource = self
         tableView.delegate = self
@@ -113,6 +114,8 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
             let newIndexPath = IndexPath(row: categories.count - 1, section: 0)
             tableView.insertRows(at: [newIndexPath], with: .automatic)
         }
+        delegate?.addCategoryAtProtocol(name: nameOfCategory)
+        addCategoryAtCreatorDelegate?.addCategoryAtArray(nameOfCategory: nameOfCategory)
         
         tableView.reloadData()
     }
@@ -162,18 +165,19 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         return 75
     }
     
-    func categoryToString() {
+    private func categoryToString() {
         for i in categories {
             newCategories.append(i.name)
         }
     }
     
-    func findCategory(name: String) -> TrackerCategory {
+    private func findCategory(name: String) -> TrackerCategory {
         for i in categories {
             if name == i.name {
                 return i
             }
         }
-        fatalError("ошибка, не найдена категория из ячейки")
+        assertionFailure("ошибка, не найдена категория из ячейки")
+        return TrackerCategory(name: "", trackers: [])
     }
 }

@@ -7,7 +7,7 @@
 
 import UIKit
 
-class TrackersViewController: UIViewController, CreateTrackerProtocol, TrackerRecordProtocol {    
+class TrackersViewController: UIViewController, CreateTrackerProtocol, TrackerRecordProtocol {
     
     private var imageView = UIImageView()
     private var button = UIButton(type: .system)
@@ -15,11 +15,11 @@ class TrackersViewController: UIViewController, CreateTrackerProtocol, TrackerRe
     private let centreText = UILabel()
     private let searchBar = UISearchTextField()
     private let dateButton = UIDatePicker()
-    var currentDate: Date = Date()
-    var categories: [TrackerCategory] = []//TrackerCategory(name: "Cat", trackers: [Tracker(id: UUID(), name: "1", color: .orange, emoji: "😻", schedule: ["Monday"])])
-    var completedTrackers: [TrackerRecord] = []
-    var trackers: [Tracker] = []//Tracker(id: UUID(), name: "1", color: .red, emoji: "😻", schedule: nil)
-    var trackersCategoryOnCollection: [TrackerCategory] = []
+    private var currentDate: Date = Date()
+    private var categories: [TrackerCategory] = []//TrackerCategory(name: "Cat", trackers: [Tracker(id: UUID(), name: "1", color: .orange, emoji: "😻", schedule: ["Monday"])])
+    private var completedTrackers: [TrackerRecord] = []
+    private var trackers: [Tracker] = []//Tracker(id: UUID(), name: "1", color: .red, emoji: "😻", schedule: nil)
+    private var trackersCategoryOnCollection: [TrackerCategory] = []
     private let collectionView: UICollectionView = {
         let collectionView = UICollectionView(
             frame: .zero,
@@ -46,7 +46,7 @@ class TrackersViewController: UIViewController, CreateTrackerProtocol, TrackerRe
         configurateDisplay()
     }
     
-    func configurateDisplay(){
+    private func configurateDisplay(){
         addTitle()
         addPlusButton()
         addSearchBar()
@@ -54,7 +54,7 @@ class TrackersViewController: UIViewController, CreateTrackerProtocol, TrackerRe
         checkTrackers()
     }
     
-    func addCollectionView(){
+    private func addCollectionView(){
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(collectionView)
         collectionView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 18).isActive = true
@@ -65,7 +65,7 @@ class TrackersViewController: UIViewController, CreateTrackerProtocol, TrackerRe
         collectionView.delegate = self
     }
     
-    func addTitle(){
+    private func addTitle(){
         label.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(label)
         label.font = UIFont(name: "SFPro-Bold", size: 34)
@@ -74,16 +74,16 @@ class TrackersViewController: UIViewController, CreateTrackerProtocol, TrackerRe
         label.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
     }
     
-    func addPlusButton(){
+    private func addPlusButton(){
         button.setTitle("+", for: .normal)
         button.setTitleColor(.yPblack, for: .normal)
         button.titleLabel?.font = UIFont(name: "SFPro-Regular", size: 34)
         button.widthAnchor.constraint(equalToConstant: 44).isActive = true
         button.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        button.addTarget(self, action: #selector(CreateButtonTapped), for: .touchUpInside)
+        button.addTarget(self, action: #selector(сreateButtonTapped), for: .touchUpInside)
     }
     
-    func addCentrePictures(){
+    private func addCentrePictures(){
         let image = UIImage(named: "Star")
         imageView = UIImageView(image: image)
         view.addSubview(imageView)
@@ -92,7 +92,7 @@ class TrackersViewController: UIViewController, CreateTrackerProtocol, TrackerRe
         imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
     
-    func addCentreText(){
+    private func addCentreText(){
         centreText.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(centreText)
         centreText.text = "Что будем отслеживать?"
@@ -101,7 +101,7 @@ class TrackersViewController: UIViewController, CreateTrackerProtocol, TrackerRe
         centreText.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
     }
     
-    func addSearchBar(){
+    private func addSearchBar(){
         searchBar.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(searchBar)
         searchBar.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 7).isActive = true
@@ -112,15 +112,15 @@ class TrackersViewController: UIViewController, CreateTrackerProtocol, TrackerRe
         searchBar.heightAnchor.constraint(equalToConstant: 36).isActive = true
     }
     
-    func addDateButton(){
+    private func addDateButton(){
         dateButton.datePickerMode = .date
         dateButton.preferredDatePickerStyle = .compact
         dateButton.widthAnchor.constraint(equalToConstant: 110).isActive = true
         dateButton.addTarget(self, action: #selector(changeDate), for: .editingDidEnd)
     }
     
-    func createNewTracker(name: String, shedule: [String], category: TrackerCategory) {
-        let tracker = Tracker(id: UUID(), name: name, color: UIColor.orange, emoji: "😻", schedule: shedule)
+    func createNewTracker(name: String, shedule: [String], category: TrackerCategory, emoji: String) {
+        let tracker = Tracker(id: UUID(), name: name, color: UIColor.orange, emoji: emoji, schedule: shedule)
         trackers.append(tracker)
         
         for (i, _) in categories.enumerated(){
@@ -132,7 +132,7 @@ class TrackersViewController: UIViewController, CreateTrackerProtocol, TrackerRe
     }
     
     
-    func addNewRecord(indexPath: IndexPath) {
+    private func addNewRecord(indexPath: IndexPath) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .none
@@ -146,7 +146,7 @@ class TrackersViewController: UIViewController, CreateTrackerProtocol, TrackerRe
         }
     }
     
-    func deleteRecord(indexPath: IndexPath){
+    private func deleteRecord(indexPath: IndexPath){
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .none
@@ -175,11 +175,11 @@ class TrackersViewController: UIViewController, CreateTrackerProtocol, TrackerRe
         
     }
     
-    func addTemporaryEvent(category: TrackerCategory){
+    private func addTemporaryEvent(category: TrackerCategory){
         trackersCategoryOnCollection.append(category)
     }
     
-    func checkTrackers(){
+    private func checkTrackers(){
         trackersCategoryOnCollection = []
         let dateFormatterDay = DateFormatter()
         dateFormatterDay.dateFormat = "EEEE"
@@ -211,16 +211,16 @@ class TrackersViewController: UIViewController, CreateTrackerProtocol, TrackerRe
         collectionView.reloadData()
     }
     
-    @objc func changeDate(){
+    @objc private func changeDate(){
         currentDate = dateButton.date
         checkTrackers()
     }
     
-    @objc func dismissKeyboard() {
+    @objc private func dismissKeyboard() {
         view.endEditing(true)
     }
     
-    @objc func CreateButtonTapped() {
+    @objc private func сreateButtonTapped() {
         let createTrackerViewController = CreateTrackerViewController()
         createTrackerViewController.addCategoryDelegate = self
         createTrackerViewController.delegate = self
@@ -251,30 +251,32 @@ extension TrackersViewController: UICollectionViewDataSource {
         _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrackersCollectionViewCell.identifier, for: indexPath) as! TrackersCollectionViewCell
-        let tracker = trackersCategoryOnCollection[indexPath.section].trackers[indexPath.row]
-        
-        let uuid = trackersCategoryOnCollection[indexPath.section].trackers[indexPath.row].id
-        
-        var recordDaysCount = 0
-        var i = false
-        
-        for record in completedTrackers{
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateStyle = .medium
-            dateFormatter.timeStyle = .none
-            let formattedDate = dateFormatter.string(from: currentDate)
-            if (uuid == record.id && record.date == formattedDate){
-                i = true
+        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrackersCollectionViewCell.identifier, for: indexPath) as? TrackersCollectionViewCell {
+            let tracker = trackersCategoryOnCollection[indexPath.section].trackers[indexPath.row]
+            
+            let uuid = trackersCategoryOnCollection[indexPath.section].trackers[indexPath.row].id
+            
+            var recordDaysCount = 0
+            var i = false
+            
+            for record in completedTrackers{
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateStyle = .medium
+                dateFormatter.timeStyle = .none
+                let formattedDate = dateFormatter.string(from: currentDate)
+                if (uuid == record.id && record.date == formattedDate){
+                    i = true
+                }
+                if (uuid == record.id) {
+                    recordDaysCount += 1
+                }
             }
-            if (uuid == record.id) {
-                recordDaysCount += 1
-            }
+            cell.changeCell(color: tracker.color, emoji: tracker.emoji, title: tracker.name, daysCount: recordDaysCount, checkThisDayRecord: i)
+            cell.delegate = self
+            return cell
         }
-        
-        cell.changeCell(color: tracker.color, emoji: tracker.emoji, title: tracker.name, daysCount: recordDaysCount, checkThisDayRecord: i)
-        cell.delegate = self
-        return cell
+        assertionFailure("не найдена ячейка")
+        return UICollectionViewCell()
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {

@@ -9,4 +9,5 @@ import UIKit
 
 protocol CategoryProtocol: AnyObject{
     func selectCategory(selected: TrackerCategory)
+    func addCategoryAtProtocol(name: String)
 }
