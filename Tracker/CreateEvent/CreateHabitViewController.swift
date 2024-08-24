@@ -13,6 +13,8 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
     weak var addCategoryAtCreatorDelegate: AddNewCategoryProtocol?
     weak var closeDelegate: CloseControllerProtocol?
     weak var delegate: CreateTrackerProtocol?
+    private let scrollView = UIScrollView()
+    private let contentView = UIView()
     private let label = UILabel()
     private let nameOfHabit = UITextField()
     private let buttonСancel = UIButton(type: .system)
@@ -56,6 +58,7 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
         view.backgroundColor = .white
+        setupScrollView()
         addLabel()
         addTextField()
         addTableView()
@@ -67,6 +70,29 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
         addButtonAccept()
     }
     
+    private func setupScrollView() {
+            scrollView.translatesAutoresizingMaskIntoConstraints = false
+            contentView.translatesAutoresizingMaskIntoConstraints = false
+            
+            view.addSubview(scrollView)
+            scrollView.addSubview(contentView)
+            
+            NSLayoutConstraint.activate([
+                // ScrollView constraints
+                scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+                scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+                
+                // ContentView constraints
+                contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+                contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+                contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+                contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+                contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+            ])
+    }
+    
     func addCategoryAtProtocol(name: String) {
         let newCategory = TrackerCategory(name: name, trackers: [])
         categories.append(newCategory)
@@ -74,8 +100,8 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
     
     private func addColorLabel() {
         colorLabel.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(colorLabel)
-        colorLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 28).isActive = true
+        contentView.addSubview(colorLabel)
+        colorLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 28).isActive = true
         colorLabel.topAnchor.constraint(equalTo: emojiCollectiomView.bottomAnchor, constant: 32).isActive = true
         colorLabel.text = "Цвет"
         colorLabel.font = UIFont(name: "SFPro-Bold", size: 19)
@@ -83,10 +109,10 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
     
     private func addColorsCollectionView() {
         colorsCollectiomView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(colorsCollectiomView)
+        contentView.addSubview(colorsCollectiomView)
         colorsCollectiomView.topAnchor.constraint(equalTo: colorLabel.bottomAnchor, constant: 19).isActive = true
-        colorsCollectiomView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18).isActive = true
-        colorsCollectiomView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -18).isActive = true
+        colorsCollectiomView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 18).isActive = true
+        colorsCollectiomView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -18).isActive = true
         colorsCollectiomView.heightAnchor.constraint(equalToConstant: 156).isActive = true
         colorsCollectiomView.dataSource = self
         colorsCollectiomView.delegate = self
@@ -95,8 +121,8 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
     
     private func addEmojiLabel() {
         emojiLabel.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(emojiLabel)
-        emojiLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 28).isActive = true
+        contentView.addSubview(emojiLabel)
+        emojiLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 28).isActive = true
         emojiLabel.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 32).isActive = true
         emojiLabel.text = "Emoji"
         emojiLabel.font = UIFont(name: "SFPro-Bold", size: 19)
@@ -108,12 +134,12 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
         tableView.delegate = self
         tableView.register(CustomTableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(tableView)
+        contentView.addSubview(tableView)
         tableView.layer.masksToBounds = true
         tableView.layer.cornerRadius = 16
         tableView.backgroundColor = .ypGrey
-        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
+        tableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16).isActive = true
         tableView.topAnchor.constraint(equalTo: nameOfHabit.bottomAnchor, constant: 24).isActive = true
         tableView.heightAnchor.constraint(equalToConstant: 149).isActive = true
         tableView.isScrollEnabled = false
@@ -123,10 +149,10 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
     
     private func addEmojiCollectionView() {
         emojiCollectiomView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(emojiCollectiomView)
+        contentView.addSubview(emojiCollectiomView)
         emojiCollectiomView.topAnchor.constraint(equalTo: emojiLabel.bottomAnchor, constant: 19).isActive = true
-        emojiCollectiomView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 18).isActive = true
-        emojiCollectiomView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -18).isActive = true
+        emojiCollectiomView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 18).isActive = true
+        emojiCollectiomView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -18).isActive = true
         emojiCollectiomView.heightAnchor.constraint(equalToConstant: 156).isActive = true
         emojiCollectiomView.dataSource = self
         emojiCollectiomView.delegate = self
@@ -141,12 +167,12 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
     
     private func addTextField() {
         nameOfHabit.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(nameOfHabit)
+        contentView.addSubview(nameOfHabit)
         nameOfHabit.placeholder = "Введите название трекера"
         nameOfHabit.heightAnchor.constraint(equalToConstant: 75).isActive = true
-        nameOfHabit.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24).isActive = true
-        nameOfHabit.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
-        nameOfHabit.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
+        nameOfHabit.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 24).isActive = true
+        nameOfHabit.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16).isActive = true
+        nameOfHabit.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16).isActive = true
         nameOfHabit.layer.masksToBounds = true
         nameOfHabit.layer.cornerRadius = 16
         nameOfHabit.backgroundColor = .ypGrey
@@ -160,9 +186,10 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
     
     private func addButtonCancel() {
         buttonСancel.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(buttonСancel)
-        buttonСancel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
-        buttonСancel.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        contentView.addSubview(buttonСancel)
+        buttonСancel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20).isActive = true
+        buttonСancel.topAnchor.constraint(equalTo: colorsCollectiomView.bottomAnchor, constant: 32).isActive = true
+        buttonСancel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20).isActive = true
         buttonСancel.widthAnchor.constraint(equalToConstant: 166).isActive = true
         buttonСancel.heightAnchor.constraint(equalToConstant: 60).isActive = true
         buttonСancel.layer.masksToBounds = true
@@ -177,9 +204,10 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
     
     private func addButtonAccept() {
         buttonAccept.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(buttonAccept)
-        buttonAccept.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
-        buttonAccept.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
+        contentView.addSubview(buttonAccept)
+        buttonAccept.topAnchor.constraint(equalTo: colorsCollectiomView.bottomAnchor, constant: 32).isActive = true
+        buttonAccept.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -20).isActive = true
+        buttonAccept.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20).isActive = true
         buttonAccept.widthAnchor.constraint(equalToConstant: 166).isActive = true
         buttonAccept.heightAnchor.constraint(equalToConstant: 60).isActive = true
         buttonAccept.layer.masksToBounds = true
