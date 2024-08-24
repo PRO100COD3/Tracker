@@ -8,5 +8,5 @@
 import UIKit
 
 protocol CreateTrackerProtocol: AnyObject{
-    func createNewTracker(name: String, shedule: [String], category: TrackerCategory, emoji: String)
+    func createNewTracker(name: String, shedule: [String], category: TrackerCategory, emoji: String, color: UIColor)
 }

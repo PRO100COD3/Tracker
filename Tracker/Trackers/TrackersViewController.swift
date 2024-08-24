@@ -119,8 +119,8 @@ class TrackersViewController: UIViewController, CreateTrackerProtocol, TrackerRe
         dateButton.addTarget(self, action: #selector(changeDate), for: .editingDidEnd)
     }
     
-    func createNewTracker(name: String, shedule: [String], category: TrackerCategory, emoji: String) {
-        let tracker = Tracker(id: UUID(), name: name, color: UIColor.orange, emoji: emoji, schedule: shedule)
+    func createNewTracker(name: String, shedule: [String], category: TrackerCategory, emoji: String, color: UIColor) {
+        let tracker = Tracker(id: UUID(), name: name, color: color, emoji: emoji, schedule: shedule)
         trackers.append(tracker)
         
         for (i, _) in categories.enumerated(){

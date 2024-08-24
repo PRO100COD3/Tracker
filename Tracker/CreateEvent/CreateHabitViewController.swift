@@ -10,6 +10,7 @@ import UIKit
 final class CreateHabitViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SheduleProtocol, CategoryProtocol {
     
     weak var addCategoryDelegate: AddNewCategoryProtocol?
+    weak var addCategoryAtCreatorDelegate: AddNewCategoryProtocol?
     weak var closeDelegate: CloseControllerProtocol?
     weak var delegate: CreateTrackerProtocol?
     private let label = UILabel()
@@ -240,6 +241,7 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
         categoryViewController.delegate = self
         categoryViewController.addCategoryDelegate = self.addCategoryDelegate
         categoryViewController.categories = self.categories
+        categoryViewController.addCategoryAtCreatorDelegate = self.addCategoryAtCreatorDelegate
         let navigationController = UINavigationController(rootViewController: categoryViewController)
         present(navigationController, animated: true)
     }
@@ -287,7 +289,7 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
             assertionFailure("Категория пуста")
             return
         }
-        delegate?.createNewTracker(name: nameOfTracker, shedule: selectedDays, category: category, emoji: selectedEmoji)
+        delegate?.createNewTracker(name: nameOfTracker, shedule: selectedDays, category: category, emoji: selectedEmoji, color: selectedColor)
         closeThisWindow()
         closeDelegate?.closeController()
     }

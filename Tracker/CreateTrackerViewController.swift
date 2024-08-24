@@ -79,6 +79,7 @@ final class CreateTrackerViewController: UIViewController, CloseControllerProtoc
         let createHabitViewController = CreateHabitViewController()
         createHabitViewController.categories = self.categories
         createHabitViewController.addCategoryDelegate = self.addCategoryDelegate
+        createHabitViewController.addCategoryAtCreatorDelegate = self
         createHabitViewController.closeDelegate = self
         createHabitViewController.delegate = self.delegate
         let navigationController = UINavigationController(rootViewController: createHabitViewController)

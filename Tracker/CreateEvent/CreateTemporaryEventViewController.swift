@@ -264,7 +264,7 @@ final class CreateTemporaryEventViewController: UIViewController, UITableViewDat
         dateFormatter.timeStyle = .none
         let formattedDate = dateFormatter.string(from: currentDate)
         
-        delegate?.createNewTracker(name: nameOfTracker, shedule: [formattedDate], category: category, emoji: selectedEmoji)
+        delegate?.createNewTracker(name: nameOfTracker, shedule: [formattedDate], category: category, emoji: selectedEmoji, color: selectedColor)
         closeThisWindow()
         closeDelegate?.closeController()
     }
