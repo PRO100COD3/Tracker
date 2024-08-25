@@ -240,10 +240,8 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.row == 0 {
-            print(1)
             categoryButtonTapped()
         } else if indexPath.row == 1 {
-            print(2)
             sheduleButtonTapped()
         }
     }

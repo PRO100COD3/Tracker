@@ -12,7 +12,7 @@ struct TrackerCategory{
     var name: String
     var trackers: [Tracker]
     
-    mutating func addTracker(tracker: Tracker){
-        trackers.append(tracker)
-    }
+    //mutating func addTracker(tracker: Tracker){
+    //    trackers.append(tracker)
+    //}
 }

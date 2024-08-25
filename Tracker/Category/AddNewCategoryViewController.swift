@@ -14,6 +14,7 @@ final class AddNewCategoryViewController: UIViewController {
     private let label = UILabel()
     private let buttonAddNewCategory = UIButton(type: .system)
     private let nameOfCategory = UITextField()
+    private let categoryStore = TrackerCategoryStore()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -84,6 +85,8 @@ final class AddNewCategoryViewController: UIViewController {
             assertionFailure("пустая строка добавления категории")
             return
         }
+        
+        categoryStore.saveNewCategory(nameOfCategory: text)
         addCategoryDelegate?.addCategoryAtArray(nameOfCategory: text)
         dismiss(animated: true, completion: nil)
         delegate?.reloadTable(nameOfCategory: text)

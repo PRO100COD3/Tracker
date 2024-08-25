@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let container = NSPersistentContainer(name: "Model")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {    
-                assertionFailure("ошибка persistentContainer")
+                assertionFailure("ошибка создания persistentContainer")
             }
         })
         return container

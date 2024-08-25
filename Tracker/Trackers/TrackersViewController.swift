@@ -9,6 +9,7 @@ import UIKit
 
 class TrackersViewController: UIViewController, CreateTrackerProtocol, TrackerRecordProtocol {
     
+    private let categoryStore = TrackerCategoryStore()
     private var imageView = UIImageView()
     private var button = UIButton(type: .system)
     private let label = UILabel()
@@ -16,9 +17,9 @@ class TrackersViewController: UIViewController, CreateTrackerProtocol, TrackerRe
     private let searchBar = UISearchTextField()
     private let dateButton = UIDatePicker()
     private var currentDate: Date = Date()
-    private var categories: [TrackerCategory] = []//TrackerCategory(name: "Cat", trackers: [Tracker(id: UUID(), name: "1", color: .orange, emoji: "😻", schedule: ["Monday"])])
+    private var categories: [TrackerCategory] = []
     private var completedTrackers: [TrackerRecord] = []
-    private var trackers: [Tracker] = []//Tracker(id: UUID(), name: "1", color: .red, emoji: "😻", schedule: nil)
+    private var trackers: [Tracker] = []
     private var trackersCategoryOnCollection: [TrackerCategory] = []
     private let collectionView: UICollectionView = {
         let collectionView = UICollectionView(
@@ -237,6 +238,7 @@ extension TrackersViewController: AddNewCategoryProtocol{
         let newCategory = TrackerCategory(name: nameOfCategory, trackers: [])
         newArray.append(newCategory)
         categories = newArray
+        categoryStore.receiveCategories()
     }
 }
 extension TrackersViewController: UICollectionViewDataSource {

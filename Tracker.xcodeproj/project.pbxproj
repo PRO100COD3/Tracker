@@ -11,6 +11,7 @@
 		3C2A71802C7A81C3008E0CCB /* TrackerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2A717F2C7A81C3008E0CCB /* TrackerStore.swift */; };
 		3C2A71822C7A81FA008E0CCB /* TrackerCategoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2A71812C7A81FA008E0CCB /* TrackerCategoryStore.swift */; };
 		3C2A71842C7A8210008E0CCB /* TrackerRecordStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2A71832C7A8210008E0CCB /* TrackerRecordStore.swift */; };
+		3C2A71882C7B170F008E0CCB /* DataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2A71872C7B170F008E0CCB /* DataProvider.swift */; };
 		3C2E90C22C2B23A00081F7B7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2E90C12C2B23A00081F7B7 /* AppDelegate.swift */; };
 		3C2E90C42C2B23A00081F7B7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2E90C32C2B23A00081F7B7 /* SceneDelegate.swift */; };
 		3C2E90C62C2B23A00081F7B7 /* TrackersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2E90C52C2B23A00081F7B7 /* TrackersViewController.swift */; };
@@ -68,6 +69,7 @@
 		3C2A717F2C7A81C3008E0CCB /* TrackerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerStore.swift; sourceTree = "<group>"; };
 		3C2A71812C7A81FA008E0CCB /* TrackerCategoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategoryStore.swift; sourceTree = "<group>"; };
 		3C2A71832C7A8210008E0CCB /* TrackerRecordStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecordStore.swift; sourceTree = "<group>"; };
+		3C2A71872C7B170F008E0CCB /* DataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataProvider.swift; sourceTree = "<group>"; };
 		3C2E90BE2C2B23A00081F7B7 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C2E90C12C2B23A00081F7B7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3C2E90C32C2B23A00081F7B7 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -206,6 +208,7 @@
 				3C2A717F2C7A81C3008E0CCB /* TrackerStore.swift */,
 				3C2A71812C7A81FA008E0CCB /* TrackerCategoryStore.swift */,
 				3C2A71832C7A8210008E0CCB /* TrackerRecordStore.swift */,
+				3C2A71872C7B170F008E0CCB /* DataProvider.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -429,6 +432,7 @@
 				3CB90D192C4143F60074BD2D /* SheduleTableViewCell.swift in Sources */,
 				3C2E90C22C2B23A00081F7B7 /* AppDelegate.swift in Sources */,
 				3CE1CB1D2C4E3D02007E96CB /* TrackerRecordProtocol.swift in Sources */,
+				3C2A71882C7B170F008E0CCB /* DataProvider.swift in Sources */,
 				3CE1CB0E2C4428E0007E96CB /* CloseControllerProtocol.swift in Sources */,
 				3CE1CB712C71CCFC007E96CB /* CustomEmojiCell.swift in Sources */,
 				3CE1CB072C43EED8007E96CB /* CategoryProtocol.swift in Sources */,
