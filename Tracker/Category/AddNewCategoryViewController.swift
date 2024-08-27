@@ -10,11 +10,11 @@ import UIKit
 final class AddNewCategoryViewController: UIViewController {
     
     weak var delegate: CategoryViewController?
-    weak var addCategoryDelegate: AddNewCategoryProtocol?
+    //weak var addCategoryDelegate: AddNewCategoryProtocol?
     private let label = UILabel()
     private let buttonAddNewCategory = UIButton(type: .system)
     private let nameOfCategory = UITextField()
-    private let categoryStore = TrackerCategoryStore()
+    private let categoryStore = TrackerCategoryStore.shared
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -85,11 +85,10 @@ final class AddNewCategoryViewController: UIViewController {
             assertionFailure("пустая строка добавления категории")
             return
         }
-        
-        categoryStore.saveNewCategory(nameOfCategory: text)
-        addCategoryDelegate?.addCategoryAtArray(nameOfCategory: text)
+        categoryStore.addNewCategory(nameOfCategory: text)
+        //addCategoryDelegate?.addCategoryAtArray(nameOfCategory: text)
         dismiss(animated: true, completion: nil)
-        delegate?.reloadTable(nameOfCategory: text)
+        //delegate?.reloadTable(nameOfCategory: text)
     }
     
     @objc private func dismissKeyboard() {

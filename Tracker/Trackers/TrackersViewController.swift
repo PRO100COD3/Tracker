@@ -132,7 +132,6 @@ class TrackersViewController: UIViewController, CreateTrackerProtocol, TrackerRe
         checkTrackers()
     }
     
-    
     private func addNewRecord(indexPath: IndexPath) {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
@@ -238,7 +237,6 @@ extension TrackersViewController: AddNewCategoryProtocol{
         let newCategory = TrackerCategory(name: nameOfCategory, trackers: [])
         newArray.append(newCategory)
         categories = newArray
-        categoryStore.receiveCategories()
     }
 }
 extension TrackersViewController: UICollectionViewDataSource {

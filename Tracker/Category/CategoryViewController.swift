@@ -9,6 +9,7 @@ import UIKit
 
 final class CategoryViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
+    
     weak var addCategoryDelegate: AddNewCategoryProtocol?
     weak var delegate: CategoryProtocol?
     weak var addCategoryAtCreatorDelegate: AddNewCategoryProtocol?
@@ -17,6 +18,7 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
     private let tableView = UITableView()
     private var imageView = UIImageView()
     private let quote = UILabel()
+    private let categoryStore = TrackerCategoryStore.shared
     var categories: [TrackerCategory] = []
     private var newCategories:[String] = []
     private var selectedIndexPath: IndexPath?
@@ -80,7 +82,7 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
     @objc private func addNewCategory() {
         let addNewCategoryViewController = AddNewCategoryViewController()
         addNewCategoryViewController.delegate = self
-        addNewCategoryViewController.addCategoryDelegate = self.addCategoryDelegate
+        //addNewCategoryViewController.addCategoryDelegate = self.addCategoryDelegate
         let navigationController = UINavigationController(rootViewController: addNewCategoryViewController)
         present(navigationController, animated: true)
     }
@@ -127,7 +129,10 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CategoriesTableViewCell
         
-        cell.textLabel?.text = categories[indexPath.row].name
+        guard let record = TrackerCategoryStore.shared.object(at: indexPath) else { return UITableViewCell() }
+        
+        //TrackerCategoryStore.shared.simpleFetch()
+        cell.textLabel?.text = record.name
         cell.accessoryType = .none
         if indexPath == selectedIndexPath {
             cell.accessoryType = .checkmark

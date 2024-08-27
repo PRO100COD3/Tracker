@@ -8,24 +8,30 @@
 import CoreData
 import UIKit
 
-
-final class TrackerCategoryStore: NSObject, NSFetchedResultsControllerDelegate{
-    private let context: NSManagedObjectContext
-    private var fetchedResultsController: NSFetchedResultsController<TrackerCategoryCoreData>!
-
-    convenience override init() {
-        let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-        try! self.init(context: context)
+public final class TrackerCategoryStore: NSObject, NSFetchedResultsControllerDelegate {
+    
+    public static let shared = TrackerCategoryStore()
+    
+    private var appDelegate: AppDelegate {
+        UIApplication.shared.delegate as! AppDelegate
     }
 
-    init(context: NSManagedObjectContext) throws {
-        self.context = context
+    private var context: NSManagedObjectContext {
+        appDelegate.persistentContainer.viewContext
+    }
+
+    private var fetchedResultsController: NSFetchedResultsController<TrackerCategoryCoreData>!
+
+    var numberOfSections: Int {
+        fetchedResultsController.sections?.count ?? 0
+    }
+
+    public override init() {
         super.init()
 
-        let fetchRequest = TrackerCategoryCoreData.fetchRequest()
-        fetchRequest.sortDescriptors = [
-            NSSortDescriptor(keyPath: \TrackerCategoryCoreData.name, ascending: true)
-        ]
+        let fetchRequest = NSFetchRequest<TrackerCategoryCoreData>(entityName: "TrackerCategoryCoreData")
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: false)]
+        
         let controller = NSFetchedResultsController(
             fetchRequest: fetchRequest,
             managedObjectContext: context,
@@ -34,32 +40,51 @@ final class TrackerCategoryStore: NSObject, NSFetchedResultsControllerDelegate{
         )
         controller.delegate = self
         self.fetchedResultsController = controller
-        try controller.performFetch()
-    }
-    
-    func saveContext() {
-        if context.hasChanges {
-            do {
-                try context.save()
-            } catch {
-                context.rollback()
-            }
+        
+        do {
+            try controller.performFetch()
+        } catch {
+            print("Failed to fetch TrackerCategoryCoreData: \(error)")
         }
     }
     
-    func saveNewCategory(nameOfCategory: String){
-        let trackerCategoryCoreData = TrackerCategoryCoreData(context: context)
-        
-        trackerCategoryCoreData.name = nameOfCategory
-        saveContext()
-    }
-
-    func receiveCategories(){
+    func simpleFetch() {
+        // Создаём запрос.
+        // Указываем, что хотим получить записи Author и ответ привести к типу Author.
         let request = NSFetchRequest<TrackerCategoryCoreData>(entityName: "TrackerCategoryCoreData")
-        let categories = try? context.fetch(request)
-        request.returnsObjectsAsFaults = false
-        var cat = [TrackerCategory(name: categories.name, trackers: categories.tracker)]
-        categories?.forEach { print("\($0.name)") }
-
+        // Выполняем запрос, используя контекст.
+        // В результате получаем массив объектов Author.
+        let authors = try? context.fetch(request)
+        // Печатаем в консоль имена и год автора.
+        authors?.forEach { print("\($0.name)") }
     }
+    
+    func addNewCategory(nameOfCategory: String) {
+        let category = TrackerCategoryCoreData(context: context)
+        category.name = nameOfCategory
+        print("\(nameOfCategory)")
+        appDelegate.saveContext()
+    }
+    
+    func object(at indexPath: IndexPath) -> TrackerCategoryCoreData? {
+        return fetchedResultsController.object(at: indexPath)
+    }
+    
+    func fetchAllCategories() -> [TrackerCategory] {
+        let fetchRequest = NSFetchRequest<TrackerCategoryCoreData>(entityName: "TrackerCategoryCoreData")
+        fetchRequest.returnsObjectsAsFaults = false
+        
+        do {
+            var result: [TrackerCategory]
+            let categories = try context.fetch(fetchRequest)
+            categories.forEach { cat in
+                result.append(TrackerCategory(name: cat.name!, trackers: <#[Tracker]#>))
+            }
+            return result
+        } catch {
+            print("Failed to fetch TrackerCategoryCoreData: \(error)")
+            return []
+        }
+    }
+
 }
