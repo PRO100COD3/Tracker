@@ -5,29 +5,31 @@
 //  Created by Вадим Дзюба on 12.07.2024.
 //
 
+
 import UIKit
 
 final class CategoryViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     
-    weak var addCategoryDelegate: AddNewCategoryProtocol?
+    //weak var addCategoryDelegate: AddNewCategoryProtocol?
     weak var delegate: CategoryProtocol?
-    weak var addCategoryAtCreatorDelegate: AddNewCategoryProtocol?
+    //weak var addCategoryAtCreatorDelegate: AddNewCategoryProtocol?
     private let label = UILabel()
     private let buttonAddNewCategory = UIButton(type: .system)
     private let tableView = UITableView()
     private var imageView = UIImageView()
     private let quote = UILabel()
-    private let categoryStore = TrackerCategoryStore.shared
-    var categories: [TrackerCategory] = []
-    private var newCategories:[String] = []
+    
+    private lazy var dataProvider = TrackerCategoryStore(delegate: self)
+    //var categories: [TrackerCategory] = []
+    //private var newCategories:[String] = []
     private var selectedIndexPath: IndexPath?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        categoryToString()
-        if categories.isEmpty == false {
+        //categoryToString()
+        if dataProvider.isContextEmpty(for: "TrackerCategoryCoreData") == false {
             addTableView()
         } else {
             addImageView()
@@ -79,10 +81,14 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         quote.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
     }
     
+    private func deleteCentre() {
+        quote.removeFromSuperview()
+        imageView.removeFromSuperview()
+    }
+    
     @objc private func addNewCategory() {
         let addNewCategoryViewController = AddNewCategoryViewController()
         addNewCategoryViewController.delegate = self
-        //addNewCategoryViewController.addCategoryDelegate = self.addCategoryDelegate
         let navigationController = UINavigationController(rootViewController: addNewCategoryViewController)
         present(navigationController, animated: true)
     }
@@ -103,34 +109,18 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         tableView.heightAnchor.constraint(equalToConstant: 524).isActive = true
     }
     
-    func reloadTable(nameOfCategory: String) {
-        let newCategory = TrackerCategory(name: nameOfCategory, trackers: [])
-        categories.append(newCategory)
-        newCategories.append(nameOfCategory)
-        
-        if categories.count == 1 {
-            imageView.removeFromSuperview()
-            quote.removeFromSuperview()
-            addTableView()
-        } else {
-            let newIndexPath = IndexPath(row: categories.count - 1, section: 0)
-            tableView.insertRows(at: [newIndexPath], with: .automatic)
-        }
-        delegate?.addCategoryAtProtocol(name: nameOfCategory)
-        addCategoryAtCreatorDelegate?.addCategoryAtArray(nameOfCategory: nameOfCategory)
-        
-        tableView.reloadData()
+    func numberOfSections(in tableView: UITableView) -> Int {
+        dataProvider.numberOfSections
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return categories.count
+        return dataProvider.numberOfRowsInSection(section)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CategoriesTableViewCell
         
-        guard let record = TrackerCategoryStore.shared.object(at: indexPath) else { return UITableViewCell() }
-        
+        guard let record = dataProvider.object(at: indexPath) else { return UITableViewCell() }
         //TrackerCategoryStore.shared.simpleFetch()
         cell.textLabel?.text = record.name
         cell.accessoryType = .none
@@ -156,33 +146,63 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         
         selectedIndexPath = indexPath
         
-        guard let select = selectedIndexPath else {
+//        guard let select = selectedIndexPath else {
+//            return
+//        }
+        tableView.reloadData()
+//        let selectedCategory = newCategories[select.row]
+        guard let selectedCategory = dataProvider.object(at: indexPath) else {
             return
         }
-        tableView.reloadData()
-        let selectedCategory = newCategories[select.row]
-        let category = findCategory(name: selectedCategory)
+        //let category = findCategory(name: selectedCategory)
         
-        delegate?.selectCategory(selected: category)
+        delegate?.selectCategory(selected: selectedCategory)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 75
     }
     
-    private func categoryToString() {
-        for i in categories {
-            newCategories.append(i.name)
-        }
+//    private func categoryToString() {
+//        for i in categories {
+//            newCategories.append(i.name)
+//        }
+//    }
+//    
+//    private func findCategory(name: String) -> TrackerCategory {
+//        for i in categories {
+//            if name == i.name {
+//                return i
+//            }
+//        }
+//        assertionFailure("ошибка, не найдена категория из ячейки")
+//        return TrackerCategory(name: "", trackers: [])
+//    }
+}
+
+extension CategoryViewController: CategoryProviderDelegate {
+    func didUpdate(_ update: TrackerCategoryStoreUpdate) {
+        tableView.performBatchUpdates({
+            let insertedIndexPaths = update.insertedIndexes.map { IndexPath(item: $0, section: 0) }
+            let deletedIndexPaths = update.deletedIndexes.map { IndexPath(item: $0, section: 0) }
+            let updatedIndexPaths = update.updatedIndexes.map { IndexPath(item: $0, section: 0) }
+            
+            tableView.insertRows(at: insertedIndexPaths, with: .automatic)
+            tableView.deleteRows(at: deletedIndexPaths, with: .fade)
+            tableView.reloadRows(at: updatedIndexPaths, with: .automatic)
+        }, completion: nil)
     }
-    
-    private func findCategory(name: String) -> TrackerCategory {
-        for i in categories {
-            if name == i.name {
-                return i
-            }
+}
+extension CategoryViewController: NewCategoryViewControllerDelegate {
+    func add(name title: String) {
+        dataProvider.add(name: title)
+        if dataProvider.isContextEmpty(for: "TrackerCategoryCoreData") == false {
+            deleteCentre()
+            addTableView()
+        } else {
+            addImageView()
+            addCentreText()
         }
-        assertionFailure("ошибка, не найдена категория из ячейки")
-        return TrackerCategory(name: "", trackers: [])
+        dismiss(animated: true)
     }
 }

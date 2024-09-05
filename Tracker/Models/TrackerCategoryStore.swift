@@ -8,83 +8,137 @@
 import CoreData
 import UIKit
 
-public final class TrackerCategoryStore: NSObject, NSFetchedResultsControllerDelegate {
-    
-    public static let shared = TrackerCategoryStore()
-    
-    private var appDelegate: AppDelegate {
-        UIApplication.shared.delegate as! AppDelegate
-    }
 
+struct TrackerCategoryStoreUpdate {
+    let insertedIndexes: IndexSet
+    let deletedIndexes: IndexSet
+    let updatedIndexes: IndexSet
+}
+
+final class TrackerCategoryStore: NSObject{
+    
+    weak var delegate: CategoryProviderDelegate?
+    
+    private var insertedIndexes: IndexSet?
+    private var deletedIndexes: IndexSet?
+    private var updatedIndexes: IndexSet?
+        
     private var context: NSManagedObjectContext {
-        appDelegate.persistentContainer.viewContext
+        (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     }
+        
+    private lazy var fetchedResultsController: NSFetchedResultsController<TrackerCategoryCoreData> = {
+        let fetchRequest = TrackerCategoryCoreData.fetchRequest()
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+        
+        let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
+                                                                  managedObjectContext: context,
+                                                                  sectionNameKeyPath: nil,
+                                                                  cacheName: nil)
+        fetchedResultsController.delegate = self
+        try? fetchedResultsController.performFetch()
+        return fetchedResultsController
+    }()
+        
+    init(delegate: CategoryProviderDelegate) {
+        self.delegate = delegate
+    }
+    
+    func isContextEmpty(for entityName: String) -> Bool {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+        fetchRequest.fetchLimit = 1
+        do {
+            let count = try context.count(for: fetchRequest)
+            return count == 0
+        } catch {
+            print("Ошибка при проверке данных в контексте: \(error)")
+            return true
+        }
+    }
+    
+    func saveContext() {
+        if context.hasChanges {
+            do {
+                try context.save()
+            } catch {
+                print("Error saving context: \(error)")
+            }
+        }
+    }
+}
 
-    private var fetchedResultsController: NSFetchedResultsController<TrackerCategoryCoreData>!
-
+extension TrackerCategoryStore: CategoryProviderProtocol {
     var numberOfSections: Int {
         fetchedResultsController.sections?.count ?? 0
     }
-
-    public override init() {
-        super.init()
-
-        let fetchRequest = NSFetchRequest<TrackerCategoryCoreData>(entityName: "TrackerCategoryCoreData")
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: false)]
-        
-        let controller = NSFetchedResultsController(
-            fetchRequest: fetchRequest,
-            managedObjectContext: context,
-            sectionNameKeyPath: nil,
-            cacheName: nil
-        )
-        controller.delegate = self
-        self.fetchedResultsController = controller
-        
-        do {
-            try controller.performFetch()
-        } catch {
-            print("Failed to fetch TrackerCategoryCoreData: \(error)")
-        }
-    }
     
-    func simpleFetch() {
-        // Создаём запрос.
-        // Указываем, что хотим получить записи Author и ответ привести к типу Author.
-        let request = NSFetchRequest<TrackerCategoryCoreData>(entityName: "TrackerCategoryCoreData")
-        // Выполняем запрос, используя контекст.
-        // В результате получаем массив объектов Author.
-        let authors = try? context.fetch(request)
-        // Печатаем в консоль имена и год автора.
-        authors?.forEach { print("\($0.name)") }
-    }
-    
-    func addNewCategory(nameOfCategory: String) {
-        let category = TrackerCategoryCoreData(context: context)
-        category.name = nameOfCategory
-        print("\(nameOfCategory)")
-        appDelegate.saveContext()
+    func numberOfRowsInSection(_ section: Int) -> Int {
+        fetchedResultsController.sections?[section].numberOfObjects ?? 0
     }
     
     func object(at indexPath: IndexPath) -> TrackerCategoryCoreData? {
-        return fetchedResultsController.object(at: indexPath)
+        fetchedResultsController.object(at: indexPath)
     }
     
-    func fetchAllCategories() -> [TrackerCategory] {
-        let fetchRequest = NSFetchRequest<TrackerCategoryCoreData>(entityName: "TrackerCategoryCoreData")
-        fetchRequest.returnsObjectsAsFaults = false
+    func add(name: String) {
+        let newCategory = TrackerCategoryCoreData(context: context)
+        newCategory.name = name
+        newCategory.trackers = []
+        saveContext()
+    }
+    
+    func delete(record: NSManagedObject) {
+        context.delete(record)
+        saveContext()
+    }
+    
+    
+}
+
+// MARK: - NSFetchedResultsControllerDelegate
+
+extension TrackerCategoryStore: NSFetchedResultsControllerDelegate {
+    
+    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        print("начало")
+        insertedIndexes = IndexSet()
+        deletedIndexes = IndexSet()
+        updatedIndexes = IndexSet()
+    }
+    
+    func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+        print("конец")
+
+        guard let insertedIndexes = insertedIndexes,
+              let deletedIndexes = deletedIndexes,
+              let updatedIndexes = updatedIndexes else {
+            return
+        }
         
-        do {
-            var result: [TrackerCategory]
-            let categories = try context.fetch(fetchRequest)
-            categories.forEach { cat in
-                result.append(TrackerCategory(name: cat.name!, trackers: <#[Tracker]#>))
-            }
-            return result
-        } catch {
-            print("Failed to fetch TrackerCategoryCoreData: \(error)")
-            return []
+        delegate?.didUpdate(TrackerCategoryStoreUpdate(insertedIndexes: insertedIndexes, deletedIndexes: deletedIndexes, updatedIndexes: updatedIndexes))
+        
+        self.insertedIndexes = nil
+        self.deletedIndexes = nil
+        self.updatedIndexes = nil
+    }
+    
+    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+        
+        switch type {
+            case .delete:
+                if let indexPath = indexPath {
+                    deletedIndexes?.insert(indexPath.item)
+                }
+            case .insert:
+                if let indexPath = newIndexPath {
+                    insertedIndexes?.insert(indexPath.item)
+                }
+            case .update:
+                if let indexPath = indexPath {
+                    updatedIndexes?.insert(indexPath.item)
+                }
+            default:
+                break
         }
     }
-
 }

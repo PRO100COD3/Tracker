@@ -9,8 +9,8 @@ import UIKit
 
 final class CreateHabitViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SheduleProtocol, CategoryProtocol {
     
-    weak var addCategoryDelegate: AddNewCategoryProtocol?
-    weak var addCategoryAtCreatorDelegate: AddNewCategoryProtocol?
+    //weak var addCategoryDelegate: AddNewCategoryProtocol?
+    //weak var addCategoryAtCreatorDelegate: AddNewCategoryProtocol?
     weak var closeDelegate: CloseControllerProtocol?
     weak var delegate: CreateTrackerProtocol?
     private let scrollView = UIScrollView()
@@ -44,7 +44,7 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
     }()
     private let colors = [UIColor.ypRedPlate1, UIColor.ypOrangePlate2, UIColor.ypBluePlate3, UIColor.ypVioletPlate4, UIColor.ypGreenPlate5, UIColor.ypPinkPlate6, UIColor.ypPinkPlate7, UIColor.ypBluePlate8, UIColor.ypGreenPlate9, UIColor.ypVioletPlate10, UIColor.ypOrangePlate11, UIColor.ypPinkPlate12, UIColor.ypOrangePlate13, UIColor.ypBluePlate14, UIColor.ypVioletPlate15, UIColor.ypVioletPlate16, UIColor.ypVioletPlate17, UIColor.ypGreenPlate18]
     var categories: [TrackerCategory] = []
-    private var selectedCategory: TrackerCategory?
+    private var selectedCategory: TrackerCategoryCoreData?
     private var selectedDays: [String] = []
     private var selectedEmoji: String = ""
     private var selectedEmojiIndexPath: IndexPath?
@@ -264,10 +264,10 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
     
     private func categoryButtonTapped(){
         let categoryViewController = CategoryViewController()
-        categoryViewController.delegate = self
-        categoryViewController.addCategoryDelegate = self.addCategoryDelegate
-        categoryViewController.categories = self.categories
-        categoryViewController.addCategoryAtCreatorDelegate = self.addCategoryAtCreatorDelegate
+        //categoryViewController.delegate = self
+        //categoryViewController.addCategoryDelegate = self.addCategoryDelegate
+        //categoryViewController.categories = self.categories
+        //categoryViewController.addCategoryAtCreatorDelegate = self.addCategoryAtCreatorDelegate
         let navigationController = UINavigationController(rootViewController: categoryViewController)
         present(navigationController, animated: true)
     }
@@ -283,7 +283,7 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
         checkAllConditions()
     }
     
-    func selectCategory(selected: TrackerCategory) {
+    func selectCategory(selected: TrackerCategoryCoreData) {
         selectedCategory = selected
         checkAllConditions()
     }

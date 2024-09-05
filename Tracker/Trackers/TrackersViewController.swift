@@ -9,7 +9,6 @@ import UIKit
 
 class TrackersViewController: UIViewController, CreateTrackerProtocol, TrackerRecordProtocol {
     
-    private let categoryStore = TrackerCategoryStore()
     private var imageView = UIImageView()
     private var button = UIButton(type: .system)
     private let label = UILabel()
@@ -109,7 +108,6 @@ class TrackersViewController: UIViewController, CreateTrackerProtocol, TrackerRe
         searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
         searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
         searchBar.placeholder = "Поиск"
-        //searchBar.text = "Поиск"
         searchBar.heightAnchor.constraint(equalToConstant: 36).isActive = true
     }
     
@@ -222,21 +220,12 @@ class TrackersViewController: UIViewController, CreateTrackerProtocol, TrackerRe
     
     @objc private func сreateButtonTapped() {
         let createTrackerViewController = CreateTrackerViewController()
-        createTrackerViewController.addCategoryDelegate = self
         createTrackerViewController.delegate = self
         createTrackerViewController.categories = self.categories
         createTrackerViewController.trackers = self.trackers
         createTrackerViewController.currentDate = self.currentDate
         let navigationController = UINavigationController(rootViewController: createTrackerViewController)
         present(navigationController, animated: true)
-    }
-}
-extension TrackersViewController: AddNewCategoryProtocol{
-    func addCategoryAtArray(nameOfCategory: String) {
-        var newArray:[TrackerCategory] = categories
-        let newCategory = TrackerCategory(name: nameOfCategory, trackers: [])
-        newArray.append(newCategory)
-        categories = newArray
     }
 }
 extension TrackersViewController: UICollectionViewDataSource {
