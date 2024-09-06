@@ -12,7 +12,8 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
     //weak var addCategoryDelegate: AddNewCategoryProtocol?
     //weak var addCategoryAtCreatorDelegate: AddNewCategoryProtocol?
     weak var closeDelegate: CloseControllerProtocol?
-    weak var delegate: CreateTrackerProtocol?
+    weak var delegate: NewTrackerDelegate?
+    //weak var delegate: CreateTrackerProtocol?
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     private let label = UILabel()
@@ -315,7 +316,9 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
             assertionFailure("Категория пуста")
             return
         }
-        delegate?.createNewTracker(name: nameOfTracker, shedule: selectedDays, category: category, emoji: selectedEmoji, color: selectedColor)
+        delegate?.add(name: nameOfTracker, color: UIColorMarshalling().hexString(from: selectedColor), emoji: selectedEmoji, shedule: "", category: category)
+
+        //delegate?.createNewTracker(name: nameOfTracker, shedule: selectedDays, category: category, emoji: selectedEmoji, color: selectedColor)
         closeThisWindow()
         closeDelegate?.closeController()
     }

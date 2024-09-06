@@ -9,14 +9,35 @@ import CoreData
 import UIKit
 
 
+struct TrackerStoreUpdate {
+    struct Move: Hashable {
+        let oldIndex: Int
+        let newIndex: Int
+    }
+    let insertedIndexes: IndexSet
+    let deletedIndexes: IndexSet
+    let updatedIndexes: IndexSet
+    let movedIndexes: Set<Move>
+}
+
 final class TrackerStore: NSObject{
 
-    weak var delegate: CategoryProviderDelegate?
+    weak var delegate: TrackerProviderDelegate?
+    private let uiColorMarshalling = UIColorMarshalling()
     
     private var insertedIndexes: IndexSet?
     private var deletedIndexes: IndexSet?
     private var updatedIndexes: IndexSet?
-        
+    private var movedIndexes: Set<TrackerStoreUpdate.Move>?
+    
+    var emojiMixes: [Tracker] {
+        guard
+            let objects = self.fetchedResultsController.fetchedObjects,
+            let emojiMixes = try? objects.map({ try self.trackerMix(from: $0) })
+        else { return [] }
+        return emojiMixes
+    }
+            
     private var context: NSManagedObjectContext {
         (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     }
@@ -34,7 +55,7 @@ final class TrackerStore: NSObject{
         return fetchedResultsController
     }()
         
-    init(delegate: CategoryProviderDelegate) {
+    init(delegate: TrackerProviderDelegate) {
         self.delegate = delegate
     }
     
@@ -50,6 +71,30 @@ final class TrackerStore: NSObject{
         }
     }
     
+    func trackerMix(from trackerCoreData: TrackerCoreData) throws -> Tracker {
+        guard let emojies = trackerCoreData.emoji else {
+            assertionFailure("Нет эмоджи в бд")
+            return Tracker(id: UUID(), name: "", color: UIColor(), emoji: "", schedule: "")
+        }
+        guard let colorHex = trackerCoreData.color else {
+            assertionFailure("Нет цвета в бд")
+            return Tracker(id: UUID(), name: "", color: UIColor(), emoji: "", schedule: "")
+        }
+        guard let id = trackerCoreData.id else {
+            assertionFailure("Нет id в бд")
+            return Tracker(id: UUID(), name: "", color: UIColor(), emoji: "", schedule: "")
+        }
+        guard let schedule = trackerCoreData.schedule else {
+            assertionFailure("Нет расписания в бд")
+            return Tracker(id: UUID(), name: "", color: UIColor(), emoji: "", schedule: "")
+        }
+        guard let name = trackerCoreData.name else {
+            assertionFailure("Нет названия в бд")
+            return Tracker(id: UUID(), name: "", color: UIColor(), emoji: "", schedule: "")
+        }
+        return Tracker(id: id, name: name, color: uiColorMarshalling.color(from: colorHex), emoji: emojies, schedule: schedule)
+    }
+
     func saveContext() {
         if context.hasChanges {
             do {
@@ -97,20 +142,23 @@ extension TrackerStore: NSFetchedResultsControllerDelegate {
         insertedIndexes = IndexSet()
         deletedIndexes = IndexSet()
         updatedIndexes = IndexSet()
+        movedIndexes = Set<TrackerStoreUpdate.Move>()
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
         guard let insertedIndexes = insertedIndexes,
               let deletedIndexes = deletedIndexes,
-              let updatedIndexes = updatedIndexes else {
+              let updatedIndexes = updatedIndexes,
+              let movedIndexes = movedIndexes else {
             return
         }
         
-        delegate?.didUpdate(StoreUpdate(insertedIndexes: insertedIndexes, deletedIndexes: deletedIndexes, updatedIndexes: updatedIndexes))
+        delegate?.didUpdate(TrackerStoreUpdate(insertedIndexes: insertedIndexes, deletedIndexes: deletedIndexes, updatedIndexes: updatedIndexes, movedIndexes: movedIndexes))
         
         self.insertedIndexes = nil
         self.deletedIndexes = nil
         self.updatedIndexes = nil
+        self.movedIndexes = nil
     }
     
     func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
@@ -128,6 +176,9 @@ extension TrackerStore: NSFetchedResultsControllerDelegate {
                 if let indexPath = indexPath {
                     updatedIndexes?.insert(indexPath.item)
                 }
+            case .move:
+                guard let oldIndexPath = indexPath, let newIndexPath = newIndexPath else { fatalError() }
+                movedIndexes?.insert(.init(oldIndex: oldIndexPath.item, newIndex: newIndexPath.item))
             default:
                 break
         }

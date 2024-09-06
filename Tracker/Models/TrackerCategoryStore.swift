@@ -9,7 +9,7 @@ import CoreData
 import UIKit
 
 
-struct StoreUpdate {
+struct CategoryStoreUpdate {
     let insertedIndexes: IndexSet
     let deletedIndexes: IndexSet
     let updatedIndexes: IndexSet
@@ -110,7 +110,7 @@ extension TrackerCategoryStore: NSFetchedResultsControllerDelegate {
             return
         }
         
-        delegate?.didUpdate(StoreUpdate(insertedIndexes: insertedIndexes, deletedIndexes: deletedIndexes, updatedIndexes: updatedIndexes))
+        delegate?.didUpdate(CategoryStoreUpdate(insertedIndexes: insertedIndexes, deletedIndexes: deletedIndexes, updatedIndexes: updatedIndexes))
         
         self.insertedIndexes = nil
         self.deletedIndexes = nil

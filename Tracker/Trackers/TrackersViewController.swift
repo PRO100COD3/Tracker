@@ -7,8 +7,9 @@
 
 import UIKit
 
-class TrackersViewController: UIViewController, CreateTrackerProtocol, TrackerRecordProtocol {
+class TrackersViewController: UIViewController, TrackerRecordProtocol {
     
+    private lazy var dataProvider = TrackerStore(delegate: self)
     private var imageView = UIImageView()
     private var button = UIButton(type: .system)
     private let label = UILabel()
@@ -40,6 +41,7 @@ class TrackersViewController: UIViewController, CreateTrackerProtocol, TrackerRe
         view.addGestureRecognizer(tapGesture)
         
         currentDate = dateButton.date
+        trackers = dataProvider.emojiMixes
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: button)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: dateButton)
@@ -203,7 +205,7 @@ class TrackersViewController: UIViewController, CreateTrackerProtocol, TrackerRe
             }
         }
         addCollectionView()
-        if (trackersCategoryOnCollection.isEmpty){
+        if (dataProvider.isContextEmpty(for: "TrackerCoreData")/*trackersCategoryOnCollection.isEmpty*/){
             addCentrePictures()
             addCentreText()
         }
@@ -234,7 +236,7 @@ extension TrackersViewController: UICollectionViewDataSource {
         _ collectionView: UICollectionView,
         numberOfItemsInSection section: Int
     ) -> Int {
-        return trackersCategoryOnCollection[section].trackers.count
+        return trackers.count
     }
     
     func collectionView(
@@ -307,4 +309,30 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
         return CGSize(width: collectionView.bounds.width, height: 52)
     }
     
+}
+
+extension TrackersViewController: NewTrackerDelegate {
+    func add(name: String, color: String, emoji: String, shedule: String, category: TrackerCategoryCoreData) {
+        dataProvider.add(name: name, color: color, emoji: emoji, shedule: shedule, category: category)
+    }
+}
+
+extension TrackersViewController: TrackerProviderDelegate {
+    func didUpdate(_ update: TrackerStoreUpdate) {
+        trackers = dataProvider.emojiMixes
+        collectionView.performBatchUpdates {
+            let insertedIndexPaths = update.insertedIndexes.map { IndexPath(item: $0, section: 0) }
+            let deletedIndexPaths = update.deletedIndexes.map { IndexPath(item: $0, section: 0) }
+            let updatedIndexPaths = update.updatedIndexes.map { IndexPath(item: $0, section: 0) }
+            collectionView.insertItems(at: insertedIndexPaths)
+            collectionView.insertItems(at: deletedIndexPaths)
+            collectionView.insertItems(at: updatedIndexPaths)
+            for move in update.movedIndexes {
+                collectionView.moveItem(
+                    at: IndexPath(item: move.oldIndex, section: 0),
+                    to: IndexPath(item: move.newIndex, section: 0)
+                )
+            }
+        }
+    }
 }

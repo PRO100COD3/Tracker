@@ -11,9 +11,7 @@ import UIKit
 final class CategoryViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     
-    //weak var addCategoryDelegate: AddNewCategoryProtocol?
     weak var delegate: CategoryProtocol?
-    //weak var addCategoryAtCreatorDelegate: AddNewCategoryProtocol?
     private let label = UILabel()
     private let buttonAddNewCategory = UIButton(type: .system)
     private let tableView = UITableView()
@@ -21,8 +19,6 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
     private let quote = UILabel()
     
     private lazy var dataProvider = TrackerCategoryStore(delegate: self)
-    //var categories: [TrackerCategory] = []
-    //private var newCategories:[String] = []
     private var selectedIndexPath: IndexPath?
     
     override func viewDidLoad() {
@@ -146,15 +142,10 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         
         selectedIndexPath = indexPath
         
-//        guard let select = selectedIndexPath else {
-//            return
-//        }
         tableView.reloadData()
-//        let selectedCategory = newCategories[select.row]
         guard let selectedCategory = dataProvider.object(at: indexPath) else {
             return
         }
-        //let category = findCategory(name: selectedCategory)
         
         delegate?.selectCategory(selected: selectedCategory)
     }
@@ -162,26 +153,10 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 75
     }
-    
-//    private func categoryToString() {
-//        for i in categories {
-//            newCategories.append(i.name)
-//        }
-//    }
-//    
-//    private func findCategory(name: String) -> TrackerCategory {
-//        for i in categories {
-//            if name == i.name {
-//                return i
-//            }
-//        }
-//        assertionFailure("ошибка, не найдена категория из ячейки")
-//        return TrackerCategory(name: "", trackers: [])
-//    }
 }
 
 extension CategoryViewController: CategoryProviderDelegate {
-    func didUpdate(_ update: StoreUpdate) {
+    func didUpdate(_ update: CategoryStoreUpdate) {
         tableView.performBatchUpdates({
             let insertedIndexPaths = update.insertedIndexes.map { IndexPath(item: $0, section: 0) }
             let deletedIndexPaths = update.deletedIndexes.map { IndexPath(item: $0, section: 0) }

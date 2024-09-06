@@ -10,7 +10,8 @@ import UIKit
 final class CreateTrackerViewController: UIViewController, CloseControllerProtocol{
 
     //weak var addCategoryDelegate: AddNewCategoryProtocol?
-    weak var delegate: CreateTrackerProtocol?
+    //weak var delegate: CreateTrackerProtocol?
+    weak var delegate: NewTrackerDelegate?
     private let habitButton = UIButton(type: .system)
     private let temporaryEventButton = UIButton(type: .system)
     private let label = UILabel()

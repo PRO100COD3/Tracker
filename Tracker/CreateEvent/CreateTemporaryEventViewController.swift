@@ -43,8 +43,9 @@ final class CreateTemporaryEventViewController: UIViewController, UITableViewDat
     }()
     //weak var addCategoryDelegate: AddNewCategoryProtocol?
     //weak var addCategoryAtCreatorDelegate: AddNewCategoryProtocol?
+    weak var delegate: NewTrackerDelegate?
     weak var closeDelegate: CloseControllerProtocol?
-    weak var delegate: CreateTrackerProtocol?
+    //weak var delegate: CreateTrackerProtocol?
     //var categories: [TrackerCategory] = []
     private var selectedCategory: TrackerCategoryCoreData?
     
@@ -244,7 +245,7 @@ final class CreateTemporaryEventViewController: UIViewController, UITableViewDat
     
     private func categoryButtonTapped(){
         let categoryViewController = CategoryViewController()
-        //categoryViewController.delegate = self
+        categoryViewController.delegate = self
         //categoryViewController.addCategoryDelegate = self.addCategoryDelegate
         //categoryViewController.categories = self.categories
         //categoryViewController.addCategoryAtCreatorDelegate = self.addCategoryAtCreatorDelegate
@@ -290,9 +291,8 @@ final class CreateTemporaryEventViewController: UIViewController, UITableViewDat
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .none
-        let formattedDate = dateFormatter.string(from: currentDate)
-        
-        delegate?.createNewTracker(name: nameOfTracker, shedule: [formattedDate], category: category, emoji: selectedEmoji, color: selectedColor)
+        let formattedDate = dateFormatter.string(from: currentDate)        
+        delegate?.add(name: nameOfTracker, color: UIColorMarshalling().hexString(from: selectedColor), emoji: selectedEmoji, shedule: formattedDate, category: category)
         closeThisWindow()
         closeDelegate?.closeController()
     }
