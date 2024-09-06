@@ -10,7 +10,7 @@ import UIKit
 final class AddNewCategoryViewController: UIViewController {
     
     
-    weak var delegate: NewCategoryViewControllerDelegate?
+    weak var delegate: NewCategoryDelegate?
     //weak var addCategoryDelegate: NewCategoryViewControllerDelegate?
     private let label = UILabel()
     private let buttonAddNewCategory = UIButton(type: .system)

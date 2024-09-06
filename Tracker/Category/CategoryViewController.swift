@@ -181,7 +181,7 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
 }
 
 extension CategoryViewController: CategoryProviderDelegate {
-    func didUpdate(_ update: TrackerCategoryStoreUpdate) {
+    func didUpdate(_ update: StoreUpdate) {
         tableView.performBatchUpdates({
             let insertedIndexPaths = update.insertedIndexes.map { IndexPath(item: $0, section: 0) }
             let deletedIndexPaths = update.deletedIndexes.map { IndexPath(item: $0, section: 0) }
@@ -193,7 +193,7 @@ extension CategoryViewController: CategoryProviderDelegate {
         }, completion: nil)
     }
 }
-extension CategoryViewController: NewCategoryViewControllerDelegate {
+extension CategoryViewController: NewCategoryDelegate {
     func add(name title: String) {
         dataProvider.add(name: title)
         if dataProvider.isContextEmpty(for: "TrackerCategoryCoreData") == false {

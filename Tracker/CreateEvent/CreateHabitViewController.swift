@@ -45,7 +45,7 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
     private let colors = [UIColor.ypRedPlate1, UIColor.ypOrangePlate2, UIColor.ypBluePlate3, UIColor.ypVioletPlate4, UIColor.ypGreenPlate5, UIColor.ypPinkPlate6, UIColor.ypPinkPlate7, UIColor.ypBluePlate8, UIColor.ypGreenPlate9, UIColor.ypVioletPlate10, UIColor.ypOrangePlate11, UIColor.ypPinkPlate12, UIColor.ypOrangePlate13, UIColor.ypBluePlate14, UIColor.ypVioletPlate15, UIColor.ypVioletPlate16, UIColor.ypVioletPlate17, UIColor.ypGreenPlate18]
     var categories: [TrackerCategory] = []
     private var selectedCategory: TrackerCategoryCoreData?
-    private var selectedDays: [String] = []
+    private var selectedDays: String = ""
     private var selectedEmoji: String = ""
     private var selectedEmojiIndexPath: IndexPath?
     

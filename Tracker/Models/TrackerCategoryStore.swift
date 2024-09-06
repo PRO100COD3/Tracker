@@ -9,7 +9,7 @@ import CoreData
 import UIKit
 
 
-struct TrackerCategoryStoreUpdate {
+struct StoreUpdate {
     let insertedIndexes: IndexSet
     let deletedIndexes: IndexSet
     let updatedIndexes: IndexSet
@@ -91,8 +91,6 @@ extension TrackerCategoryStore: CategoryProviderProtocol {
         context.delete(record)
         saveContext()
     }
-    
-    
 }
 
 // MARK: - NSFetchedResultsControllerDelegate
@@ -100,22 +98,19 @@ extension TrackerCategoryStore: CategoryProviderProtocol {
 extension TrackerCategoryStore: NSFetchedResultsControllerDelegate {
     
     func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        print("начало")
         insertedIndexes = IndexSet()
         deletedIndexes = IndexSet()
         updatedIndexes = IndexSet()
     }
     
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        print("конец")
-
         guard let insertedIndexes = insertedIndexes,
               let deletedIndexes = deletedIndexes,
               let updatedIndexes = updatedIndexes else {
             return
         }
         
-        delegate?.didUpdate(TrackerCategoryStoreUpdate(insertedIndexes: insertedIndexes, deletedIndexes: deletedIndexes, updatedIndexes: updatedIndexes))
+        delegate?.didUpdate(StoreUpdate(insertedIndexes: insertedIndexes, deletedIndexes: deletedIndexes, updatedIndexes: updatedIndexes))
         
         self.insertedIndexes = nil
         self.deletedIndexes = nil

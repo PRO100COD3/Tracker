@@ -118,7 +118,7 @@ class TrackersViewController: UIViewController, CreateTrackerProtocol, TrackerRe
         dateButton.addTarget(self, action: #selector(changeDate), for: .editingDidEnd)
     }
     
-    func createNewTracker(name: String, shedule: [String], category: TrackerCategory, emoji: String, color: UIColor) {
+    func createNewTracker(name: String, shedule: String, category: TrackerCategory, emoji: String, color: UIColor) {
         let tracker = Tracker(id: UUID(), name: name, color: color, emoji: emoji, schedule: shedule)
         trackers.append(tracker)
         
@@ -190,7 +190,8 @@ class TrackersViewController: UIViewController, CreateTrackerProtocol, TrackerRe
             var tempCat: TrackerCategory
             var trackersOnCollection: [Tracker] = []
             for tr in cat.trackers{
-                for s in tr.schedule{
+                let daysArray = tr.schedule.components(separatedBy: " ")
+                for s in daysArray {
                     if (s == dayName || s == formattedDate){
                         trackersOnCollection.append(tr)
                     }

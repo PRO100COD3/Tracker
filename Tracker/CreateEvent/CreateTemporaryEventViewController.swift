@@ -46,7 +46,7 @@ final class CreateTemporaryEventViewController: UIViewController, UITableViewDat
     weak var closeDelegate: CloseControllerProtocol?
     weak var delegate: CreateTrackerProtocol?
     //var categories: [TrackerCategory] = []
-    private var selectedCategory: TrackerCategory?
+    private var selectedCategory: TrackerCategoryCoreData?
     
     private let data = ["Категория"]
     private let emoji = ["🙂", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶", "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝", "😪"]
@@ -262,7 +262,7 @@ final class CreateTemporaryEventViewController: UIViewController, UITableViewDat
         checkAllConditions()
     }
     
-    func selectCategory(selected: TrackerCategory) {
+    func selectCategory(selected: TrackerCategoryCoreData) {
         selectedCategory = selected
         checkAllConditions()
     }

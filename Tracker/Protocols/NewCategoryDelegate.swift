@@ -8,6 +8,6 @@
 import Foundation
 
 
-protocol NewCategoryViewControllerDelegate: AnyObject {
+protocol NewCategoryDelegate: AnyObject {
     func add(name: String)
 }

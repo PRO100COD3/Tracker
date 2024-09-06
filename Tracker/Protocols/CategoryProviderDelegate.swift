@@ -9,5 +9,5 @@ import Foundation
 
 
 protocol CategoryProviderDelegate: AnyObject {
-    func didUpdate(_ update: TrackerCategoryStoreUpdate)
+    func didUpdate(_ update: StoreUpdate)
 }
