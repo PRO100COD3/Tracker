@@ -9,7 +9,7 @@ import UIKit
 
 class TrackersViewController: UIViewController, TrackerRecordProtocol {
     
-    private lazy var dataProvider = TrackerStore(delegate: self)
+    private lazy var dataProvider = TrackerStore(delegate: self, date: currentDate)
     private var imageView = UIImageView()
     private var button = UIButton(type: .system)
     private let label = UILabel()
@@ -39,9 +39,9 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
-        
+           
         currentDate = dateButton.date
-        trackers = dataProvider.emojiMixes
+        trackersCategoryOnCollection = dataProvider.trackerMixes
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: button)
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: dateButton)
@@ -180,7 +180,13 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
     }
     
     private func checkTrackers(){
-        trackersCategoryOnCollection = []
+        //trackersCategoryOnCollection = []
+        trackersCategoryOnCollection.forEach { category in
+            if category.trackers.isEmpty {
+                
+            }
+        }
+            
         let dateFormatterDay = DateFormatter()
         dateFormatterDay.dateFormat = "EEEE"
         let dayName = dateFormatterDay.string(from: currentDate)
@@ -205,7 +211,7 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
             }
         }
         addCollectionView()
-        if (dataProvider.isContextEmpty(for: "TrackerCoreData")/*trackersCategoryOnCollection.isEmpty*/){
+        if (/*dataProvider.isContextEmpty(for: "TrackerCoreData")*/trackersCategoryOnCollection.isEmpty ){
             addCentrePictures()
             addCentreText()
         }
@@ -231,12 +237,15 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
         present(navigationController, animated: true)
     }
 }
+
 extension TrackersViewController: UICollectionViewDataSource {
-    func collectionView(
-        _ collectionView: UICollectionView,
-        numberOfItemsInSection section: Int
-    ) -> Int {
-        return trackers.count
+
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return trackersCategoryOnCollection.count 
+    }
+
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return trackersCategoryOnCollection[section].trackers.count
     }
     
     func collectionView(
@@ -278,10 +287,6 @@ extension TrackersViewController: UICollectionViewDataSource {
         header.configure(with: category.name)
         return header
     }
-    
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return trackersCategoryOnCollection.count
-    }
 }
 
 extension TrackersViewController: UICollectionViewDelegate {
@@ -317,9 +322,9 @@ extension TrackersViewController: NewTrackerDelegate {
     }
 }
 
-extension TrackersViewController: TrackerProviderDelegate {
+extension TrackersViewController: CollectionViewProviderDelegate {
     func didUpdate(_ update: TrackerStoreUpdate) {
-        trackers = dataProvider.emojiMixes
+        trackersCategoryOnCollection = dataProvider.trackerMixes
         collectionView.performBatchUpdates {
             let insertedIndexPaths = update.insertedIndexes.map { IndexPath(item: $0, section: 0) }
             let deletedIndexPaths = update.deletedIndexes.map { IndexPath(item: $0, section: 0) }

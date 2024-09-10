@@ -22,28 +22,47 @@ struct TrackerStoreUpdate {
 
 final class TrackerStore: NSObject{
 
-    weak var delegate: TrackerProviderDelegate?
+    weak var delegate: CollectionViewProviderDelegate?
     private let uiColorMarshalling = UIColorMarshalling()
+    var currentDate = Date()
     
     private var insertedIndexes: IndexSet?
     private var deletedIndexes: IndexSet?
     private var updatedIndexes: IndexSet?
     private var movedIndexes: Set<TrackerStoreUpdate.Move>?
     
-    var emojiMixes: [Tracker] {
+    var trackerMixes: [TrackerCategory] {
         guard
-            let objects = self.fetchedResultsController.fetchedObjects,
-            let emojiMixes = try? objects.map({ try self.trackerMix(from: $0) })
+            let objects = self.fetchedResultsController?.fetchedObjects,
+            let trackerMixes = try? objects.map({ try self.trackerMix(from: $0) })
         else { return [] }
-        return emojiMixes
+        return trackerMixes
     }
             
     private var context: NSManagedObjectContext {
         (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     }
         
-    private lazy var fetchedResultsController: NSFetchedResultsController<TrackerCoreData> = {
-        let fetchRequest = TrackerCoreData.fetchRequest()
+    private lazy var fetchedResultsController: NSFetchedResultsController<TrackerCategoryCoreData>? = {
+        let fetchRequest = TrackerCategoryCoreData.fetchRequest()
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .none
+        let formattedDate = dateFormatter.string(from: self.currentDate)
+        
+        let daysArray = formattedDate.components(separatedBy: " ")
+//        for s in daysArray {
+//            if (s == dayName || s == formattedDate){
+//                trackersOnCollection.append(tr)
+//            }
+//        }
+
+        
+        let predicate = NSPredicate(format: "ANY trackers.schedule == %@", formattedDate)
+
+        fetchRequest.predicate = predicate
+
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
         
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
@@ -55,8 +74,24 @@ final class TrackerStore: NSObject{
         return fetchedResultsController
     }()
         
-    init(delegate: TrackerProviderDelegate) {
+    init(delegate: CollectionViewProviderDelegate, date: Date) {
         self.delegate = delegate
+        self.currentDate = date
+    }
+    
+    func addFetchResultController() {
+        fetchedResultsController = {
+            let fetchRequest = TrackerCategoryCoreData.fetchRequest()
+            fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+            
+            let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
+                                                                      managedObjectContext: context,
+                                                                      sectionNameKeyPath: nil,
+                                                                      cacheName: nil)
+            fetchedResultsController.delegate = self
+            try? fetchedResultsController.performFetch()
+            return fetchedResultsController
+        }()
     }
     
     func isContextEmpty(for entityName: String) -> Bool {
@@ -71,28 +106,46 @@ final class TrackerStore: NSObject{
         }
     }
     
-    func trackerMix(from trackerCoreData: TrackerCoreData) throws -> Tracker {
-        guard let emojies = trackerCoreData.emoji else {
-            assertionFailure("Нет эмоджи в бд")
-            return Tracker(id: UUID(), name: "", color: UIColor(), emoji: "", schedule: "")
+    func transformTrackerCoreDataToTracker (trackerCoreData: [TrackerCoreData]) -> [Tracker] {
+        var result: [Tracker] = []
+        for element in trackerCoreData {
+            guard let emojie = element.emoji else {
+                assertionFailure("Нет эмоджи в бд")
+                return []
+            }
+            guard let colorHex = element.color else {
+                assertionFailure("Нет цвета в бд")
+                return []
+            }
+            guard let id = element.id else {
+                assertionFailure("Нет id в бд")
+                return []
+            }
+            guard let schedule = element.schedule else {
+                assertionFailure("Нет расписания в бд")
+                return []
+            }
+            guard let name = element.name else {
+                assertionFailure("Нет названия в бд")
+                return []
+            }
+            result.append(Tracker(id: id, name: name, color: uiColorMarshalling.color(from: colorHex), emoji: emojie, schedule: schedule))
         }
-        guard let colorHex = trackerCoreData.color else {
-            assertionFailure("Нет цвета в бд")
-            return Tracker(id: UUID(), name: "", color: UIColor(), emoji: "", schedule: "")
+        return result
+    }
+    
+    func trackerMix(from trackerCategoryCoreData: TrackerCategoryCoreData) throws -> TrackerCategory {
+        guard let name = trackerCategoryCoreData.name else {
+            assertionFailure("Нет названия категории в бд")
+            return TrackerCategory(name: "", trackers: [])
         }
-        guard let id = trackerCoreData.id else {
-            assertionFailure("Нет id в бд")
-            return Tracker(id: UUID(), name: "", color: UIColor(), emoji: "", schedule: "")
+        guard let setTrackers = trackerCategoryCoreData.trackers else {
+            assertionFailure("Нет трекеров в бд")
+            return TrackerCategory(name: "", trackers: [])
         }
-        guard let schedule = trackerCoreData.schedule else {
-            assertionFailure("Нет расписания в бд")
-            return Tracker(id: UUID(), name: "", color: UIColor(), emoji: "", schedule: "")
-        }
-        guard let name = trackerCoreData.name else {
-            assertionFailure("Нет названия в бд")
-            return Tracker(id: UUID(), name: "", color: UIColor(), emoji: "", schedule: "")
-        }
-        return Tracker(id: id, name: name, color: uiColorMarshalling.color(from: colorHex), emoji: emojies, schedule: schedule)
+        let trackersCoreData = setTrackers.allObjects as! [TrackerCoreData]
+        let trackers = transformTrackerCoreDataToTracker(trackerCoreData: trackersCoreData)
+        return TrackerCategory(name: name, trackers: trackers)
     }
 
     func saveContext() {
@@ -107,16 +160,17 @@ final class TrackerStore: NSObject{
 }
 
 extension TrackerStore: TrackerProviderProtocol {
+    
     var numberOfSections: Int {
-        fetchedResultsController.sections?.count ?? 0
+        fetchedResultsController?.sections?.count ?? 0
     }
     
     func numberOfRowsInSection(_ section: Int) -> Int {
-        fetchedResultsController.sections?[section].numberOfObjects ?? 0
+        fetchedResultsController?.sections?[section].numberOfObjects ?? 0
     }
     
-    func object(at indexPath: IndexPath) -> TrackerCoreData? {
-        fetchedResultsController.object(at: indexPath)
+    func object(at indexPath: IndexPath) -> TrackerCategoryCoreData? {
+        fetchedResultsController?.object(at: indexPath)
     }
     
     func add(name: String, color: String, emoji: String, shedule: String, category: TrackerCategoryCoreData) {

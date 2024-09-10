@@ -8,10 +8,10 @@
 import Foundation
 
 
-protocol CategoryProviderDelegate: AnyObject {
+protocol TableViewProviderDelegate: AnyObject {
     func didUpdate(_ update: CategoryStoreUpdate)
 }
 
-protocol TrackerProviderDelegate: AnyObject {
+protocol CollectionViewProviderDelegate: AnyObject {
     func didUpdate(_ update: TrackerStoreUpdate)
 }

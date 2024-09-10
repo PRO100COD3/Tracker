@@ -87,7 +87,10 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         addNewCategoryViewController.delegate = self
         let navigationController = UINavigationController(rootViewController: addNewCategoryViewController)
         present(navigationController, animated: true)
-    }
+        
+        
+        
+        }
     
     private func addTableView() {
         tableView.frame = self.view.bounds
@@ -155,7 +158,7 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
     }
 }
 
-extension CategoryViewController: CategoryProviderDelegate {
+extension CategoryViewController: TableViewProviderDelegate {
     func didUpdate(_ update: CategoryStoreUpdate) {
         tableView.performBatchUpdates({
             let insertedIndexPaths = update.insertedIndexes.map { IndexPath(item: $0, section: 0) }
@@ -171,7 +174,7 @@ extension CategoryViewController: CategoryProviderDelegate {
 extension CategoryViewController: NewCategoryDelegate {
     func add(name title: String) {
         dataProvider.add(name: title)
-        if dataProvider.isContextEmpty(for: "TrackerCategoryCoreData") == false {
+        if !dataProvider.isContextEmpty(for: "TrackerCategoryCoreData") {
             deleteCentre()
             addTableView()
         } else {

@@ -291,7 +291,7 @@ final class CreateTemporaryEventViewController: UIViewController, UITableViewDat
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .none
-        let formattedDate = dateFormatter.string(from: currentDate)        
+        let formattedDate = dateFormatter.string(from: currentDate)       
         delegate?.add(name: nameOfTracker, color: UIColorMarshalling().hexString(from: selectedColor), emoji: selectedEmoji, shedule: formattedDate, category: category)
         closeThisWindow()
         closeDelegate?.closeController()
