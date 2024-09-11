@@ -166,7 +166,8 @@ extension TrackerStore: TrackerProviderProtocol {
     }
     
     func numberOfRowsInSection(_ section: Int) -> Int {
-        fetchedResultsController?.sections?[section].numberOfObjects ?? 0
+        print(fetchedResultsController?.sections?[section].numberOfObjects ?? 0)
+        return fetchedResultsController?.sections?[section].numberOfObjects ?? 0
     }
     
     func object(at indexPath: IndexPath) -> TrackerCategoryCoreData? {
