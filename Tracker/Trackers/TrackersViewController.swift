@@ -239,72 +239,90 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
 }
 
 extension TrackersViewController: UICollectionViewDataSource {
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return dataProvider.numberOfSections
-    }
-
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return trackersCategoryOnCollection.count
+        dataProvider.
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrackersCollectionViewCell.identifier, for: indexPath) as? TrackersCollectionViewCell else {
-            assertionFailure("Cell not found")
-            return UICollectionViewCell()
-        }
-        
-        let tracker = trackersCategoryOnCollection[indexPath.row].trackers[indexPath.section]
-        let uuid = tracker.id
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .none
-        let formattedDate = dateFormatter.string(from: currentDate)
-        
-        let recordDaysCount = completedTrackers.filter { $0.id == uuid }.reduce(0) { $0 + $1.daysCount }
-        let checkThisDayRecord = completedTrackers.contains { $0.id == uuid && $0.date == formattedDate }
-        
-        cell.changeCell(color: tracker.color, emoji: tracker.emoji, title: tracker.name, daysCount: 0, checkThisDayRecord: false)
-        cell.delegate = self
-        return cell
+        <#code#>
     }
     
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: CollectionViewHeaders.identifier, for: indexPath) as! CollectionViewHeaders
-        if !dataProvider.isContextEmpty(for: "TrackerCoreData"){
-            let category = dataProvider.object(at: indexPath)
-            header.configure(with: category?.name ?? "")
-        }
-        return header
-    }
 }
 
 extension TrackersViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        addNewRecord(indexPath: indexPath)
-    }
+    
 }
 
 extension TrackersViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: (collectionView.bounds.width - 9) / 2, height: 148)
-    }
     
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: collectionView.bounds.width, height: 52)
-    }
 }
-
-extension TrackersViewController: NewTrackerDelegate {
-    func add(name: String, color: String, emoji: String, shedule: String, category: TrackerCategoryCoreData) {
-        dataProvider.add(name: name, color: color, emoji: emoji, shedule: shedule, category: category)
-    }
-}
-
+//extension TrackersViewController: UICollectionViewDataSource {
+//    func numberOfSections(in collectionView: UICollectionView) -> Int {
+//        return dataProvider.numberOfSections
+//    }
+//
+//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//        return trackersCategoryOnCollection.count
+//    }
+//    
+//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrackersCollectionViewCell.identifier, for: indexPath) as? TrackersCollectionViewCell else {
+//            assertionFailure("Cell not found")
+//            return UICollectionViewCell()
+//        }
+//        
+//        let tracker = trackersCategoryOnCollection[indexPath.row].trackers[indexPath.section]
+//        let uuid = tracker.id
+//        
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateStyle = .medium
+//        dateFormatter.timeStyle = .none
+//        let formattedDate = dateFormatter.string(from: currentDate)
+//        
+//        let recordDaysCount = completedTrackers.filter { $0.id == uuid }.reduce(0) { $0 + $1.daysCount }
+//        let checkThisDayRecord = completedTrackers.contains { $0.id == uuid && $0.date == formattedDate }
+//        
+//        cell.changeCell(color: tracker.color, emoji: tracker.emoji, title: tracker.name, daysCount: 0, checkThisDayRecord: false)
+//        cell.delegate = self
+//        return cell
+//    }
+//    
+//    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+//        let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: CollectionViewHeaders.identifier, for: indexPath) as! CollectionViewHeaders
+//        if !dataProvider.isContextEmpty(for: "TrackerCoreData"){
+//            let category = dataProvider.object(at: indexPath)
+//            header.configure(with: category?.name ?? "")
+//        }
+//        return header
+//    }
+//}
+//
+//extension TrackersViewController: UICollectionViewDelegate {
+//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        addNewRecord(indexPath: indexPath)
+//    }
+//}
+//
+//extension TrackersViewController: UICollectionViewDelegateFlowLayout {
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//        return CGSize(width: (collectionView.bounds.width - 9) / 2, height: 148)
+//    }
+//    
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+//        return 0
+//    }
+//    
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+//        return CGSize(width: collectionView.bounds.width, height: 52)
+//    }
+//}
+//
+//extension TrackersViewController: NewTrackerDelegate {
+//    func add(name: String, color: String, emoji: String, shedule: String, category: TrackerCategoryCoreData) {
+//        dataProvider.add(name: name, color: color, emoji: emoji, shedule: shedule, category: category)
+//    }
+//}
+//
 extension TrackersViewController: CollectionViewProviderDelegate {
     func didUpdate(_ update: TrackerStoreUpdate) {
         trackersCategoryOnCollection = dataProvider.trackerMixes
