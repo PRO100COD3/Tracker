@@ -62,6 +62,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     }()
     
     func changeCell(color: UIColor, emoji: String, title: String, daysCount: Int, checkThisDayRecord: Bool){
+        
         mainView.backgroundColor = color
         emojiLabel.text = emoji
         titleLabel.text = title

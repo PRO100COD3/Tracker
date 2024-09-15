@@ -51,7 +51,7 @@ final class TrackerStore: NSObject{
         dateFormatter.timeStyle = .none
         let formattedDate = dateFormatter.string(from: self.currentDate)
         
-        let daysArray = formattedDate.components(separatedBy: " ")
+        //let daysArray = formattedDate.components(separatedBy: " ")
 //        for s in daysArray {
 //            if (s == dayName || s == formattedDate){
 //                trackersOnCollection.append(tr)
@@ -146,6 +146,24 @@ final class TrackerStore: NSObject{
         let trackersCoreData = setTrackers.allObjects as! [TrackerCoreData]
         let trackers = transformTrackerCoreDataToTracker(trackerCoreData: trackersCoreData)
         return TrackerCategory(name: name, trackers: trackers)
+    }
+    
+    func fromCoreDataToTrackerCategory(coreData: NSSet) -> [TrackerCategory]{
+        var result: [TrackerCategory] = []
+        for category in coreData {
+            let cat = TrackerCategory(name: (category as AnyObject).name ?? "", trackers: fromCoreDataToTrackers(coreData: (category as AnyObject).trackers ?? []))
+            result.append(cat)
+        }
+        return result
+    }
+    
+    func fromCoreDataToTrackers(coreData: NSSet) -> [Tracker] {
+        var result: [Tracker] = []
+        for tracker in coreData {
+            let tr = Tracker(id: (tracker as AnyObject).id ?? UUID(), name: (tracker as AnyObject).name ?? "", color: uiColorMarshalling.color(from: (tracker as AnyObject).color ?? ""), emoji: (tracker as AnyObject).emoji ?? "", schedule: (tracker as AnyObject).schedule ?? "")
+            result.append(tr)
+        }
+        return result
     }
 
     func saveContext() {
