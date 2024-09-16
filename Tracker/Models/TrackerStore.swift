@@ -148,15 +148,15 @@ final class TrackerStore: NSObject{
         return TrackerCategory(name: name, trackers: trackers)
     }
     
-    func fromCoreDataToTrackerCategory(coreData: NSSet) -> [TrackerCategory]{
-        var result: [TrackerCategory] = []
-        for category in coreData {
-            let cat = TrackerCategory(name: (category as AnyObject).name ?? "", trackers: fromCoreDataToTrackers(coreData: (category as AnyObject).trackers ?? []))
-            result.append(cat)
-        }
-        return result
-    }
-    
+//    func fromCoreDataToTrackerCategory(coreData: NSSet) -> [TrackerCategory]{
+//        var result: [TrackerCategory] = []
+//        for category in coreData {
+//            let cat = TrackerCategory(name: (category as AnyObject).name ?? "", trackers: fromCoreDataToTrackers(coreData: (category as AnyObject).trackers ?? []))
+//            result.append(cat)
+//        }
+//        return result
+//    }
+//    
     func fromCoreDataToTrackers(coreData: NSSet) -> [Tracker] {
         var result: [Tracker] = []
         for tracker in coreData {
@@ -180,11 +180,12 @@ final class TrackerStore: NSObject{
 extension TrackerStore: TrackerProviderProtocol {
     
     var numberOfSections: Int {
-        fetchedResultsController?.sections?.count ?? 0
+        print(fetchedResultsController?.sections?.count ?? 0)
+        return fetchedResultsController?.sections?.count ?? 0
     }
     
     func numberOfRowsInSection(_ section: Int) -> Int {
-        print(fetchedResultsController?.sections?[section].numberOfObjects ?? 0)
+        //print(fetchedResultsController?.sections?[section].numberOfObjects ?? 0)
         return fetchedResultsController?.sections?[section].numberOfObjects ?? 0
     }
     

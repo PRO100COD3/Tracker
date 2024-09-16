@@ -183,38 +183,43 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
     
     private func checkTrackers() {
         //trackersCategoryOnCollection.removeAll()
-        
-        let dateFormatterDay = DateFormatter()
-        dateFormatterDay.dateFormat = "EEEE"
-        let dayName = dateFormatterDay.string(from: currentDate)
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .none
-        let formattedDate = dateFormatter.string(from: currentDate)
-        
-        categories.forEach { cat in
-            var trackersOnCollection: [Tracker] = []
-            cat.trackers.forEach { tr in
-                let daysArray = tr.schedule.components(separatedBy: " ")
-                if daysArray.contains(dayName) || daysArray.contains(formattedDate) {
-                    trackersOnCollection.append(tr)
-                }
-            }
-            if !trackersOnCollection.isEmpty {
-                let tempCat = TrackerCategory(name: cat.name, trackers: trackersOnCollection)
-                trackersCategoryOnCollection.append(tempCat)
-            }
-        }
-
+        //collectionView.reloadData()
+//        let dateFormatterDay = DateFormatter()
+//        dateFormatterDay.dateFormat = "EEEE"
+//        let dayName = dateFormatterDay.string(from: currentDate)
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateStyle = .medium
+//        dateFormatter.timeStyle = .none
+//        let formattedDate = dateFormatter.string(from: currentDate)
+//        
+//        categories.forEach { cat in
+//            var trackersOnCollection: [Tracker] = []
+//            cat.trackers.forEach { tr in
+//                let daysArray = tr.schedule.components(separatedBy: " ")
+//                if daysArray.contains(dayName) || daysArray.contains(formattedDate) {
+//                    trackersOnCollection.append(tr)
+//                }
+//            }
+//            if !trackersOnCollection.isEmpty {
+//                let tempCat = TrackerCategory(name: cat.name, trackers: trackersOnCollection)
+//                trackersCategoryOnCollection.append(tempCat)
+//            }
+//        }
         if dataProvider.isContextEmpty(for: "TrackerCoreData") {
             addCentrePictures()
             addCentreText()
         }
         else {
             setupCollectionView()
+            deleteCentre()
         }
         
-        collectionView.reloadData()
+        //collectionView.reloadData()
+    }
+    
+    func deleteCentre() {
+        centreText.removeFromSuperview()
+        imageView.removeFromSuperview()
     }
     
     @objc private func changeDate() {
@@ -229,7 +234,7 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
     @objc private func createButtonTapped() {
         let createTrackerViewController = CreateTrackerViewController()
         createTrackerViewController.delegate = self
-        createTrackerViewController.categories = self.categories
+        //createTrackerViewController.categories = self.categories
         //createTrackerViewController.trackers = self.trackers
         createTrackerViewController.currentDate = self.currentDate
         let navigationController = UINavigationController(rootViewController: createTrackerViewController)
@@ -239,11 +244,18 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
 
 extension TrackersViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        dataProvider.numberOfRowsInSection(section)
+        //let int = dataProvider.numberOfRowsInSection(section)
+        let int = trackersCategoryOnCollection[section].trackers.count
+
+        return int
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        dataProvider.numberOfSections
+        //let int = dataProvider.trackerMixes.count
+//        let int = dataProvider.numberOfSections
+        let int = trackersCategoryOnCollection.count
+        return int
+//        dataProvider.numberOfSections
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -262,8 +274,8 @@ extension TrackersViewController: UICollectionViewDataSource {
         dateFormatter.timeStyle = .none
         let formattedDate = dateFormatter.string(from: currentDate)
         
-        let recordDaysCount = completedTrackers.filter { $0.id == uuid }.reduce(0) { $0 + $1.daysCount }
-        let checkThisDayRecord = completedTrackers.contains { $0.id == uuid && $0.date == formattedDate }
+        _ = completedTrackers.filter { $0.id == uuid }.reduce(0) { $0 + $1.daysCount }
+        _ = completedTrackers.contains { $0.id == uuid && $0.date == formattedDate }
         
         cell.changeCell(color: tracker.color, emoji: tracker.emoji, title: tracker.name, daysCount: 0, checkThisDayRecord: false)
         cell.delegate = self
@@ -281,8 +293,9 @@ extension TrackersViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: CollectionViewHeaders.identifier, for: indexPath) as! CollectionViewHeaders
         if !dataProvider.isContextEmpty(for: "TrackerCoreData"){
-            let category = dataProvider.object(at: indexPath)
-            header.configure(with: category?.name ?? "")
+            //let category = dataProvider.object(at: indexPath)
+            let category = dataProvider.trackerMixes[indexPath.section]
+            header.configure(with: category.name)
         }
         return header
     }
@@ -316,9 +329,10 @@ extension TrackersViewController: NewTrackerDelegate {
 
 extension TrackersViewController: CollectionViewProviderDelegate {
     func didUpdate(_ update: TrackerStoreUpdate) {
-        checkTrackers()
+        //collectionView.reloadData()
         trackersCategoryOnCollection = dataProvider.trackerMixes
-        collectionView.performBatchUpdates {
+        checkTrackers()
+        collectionView.performBatchUpdates({
             let insertedIndexPaths = update.insertedIndexes.map { IndexPath(item: $0, section: 0) }
             let deletedIndexPaths = update.deletedIndexes.map { IndexPath(item: $0, section: 0) }
             let updatedIndexPaths = update.updatedIndexes.map { IndexPath(item: $0, section: 0) }
@@ -333,6 +347,8 @@ extension TrackersViewController: CollectionViewProviderDelegate {
                     to: IndexPath(item: move.newIndex, section: 0)
                 )
             }
-        }
+        }, completion: nil)
+            //self.collectionView.reloadData()
+//            print("Before update: \(self.dataProvider.trackerMixes.count) sections with item counts: \(self.dataProvider.trackerMixes.map { $0.trackers.count })")
     }
 }
