@@ -13,5 +13,5 @@ protocol TableViewProviderDelegate: AnyObject {
 }
 
 protocol CollectionViewProviderDelegate: AnyObject {
-    func didUpdate(_ update: TrackerStoreUpdate)
+    func didUpdate()
 }

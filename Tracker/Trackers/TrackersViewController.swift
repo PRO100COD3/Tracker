@@ -180,27 +180,57 @@ extension TrackersViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrackersCollectionViewCell.identifier, for: indexPath) as? TrackersCollectionViewCell else {
-            assertionFailure("Cell not found")
-            return UICollectionViewCell()
-        }
-        if !categories.isEmpty {
-            let trackerCategory = categories[indexPath.section]
-            let tracker = trackerCategory.trackers[indexPath.row]
-            cell.changeCell(color: tracker.color, emoji: tracker.emoji, title: tracker.name, daysCount: 0, checkThisDayRecord: false)
+        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrackersCollectionViewCell.identifier, for: indexPath) as? TrackersCollectionViewCell {
+            let tracker = categories[indexPath.section].trackers[indexPath.row]
+            
+            //                    let uuid = trackersCategoryOnCollection[indexPath.section].trackers[indexPath.row].id
+            //
+            var recordDaysCount = 0
+            var i = false
+            //
+            //                    for record in completedTrackers{
+            //                        let dateFormatter = DateFormatter()
+            //                        dateFormatter.dateStyle = .medium
+            //                        dateFormatter.timeStyle = .none
+            //                        let formattedDate = dateFormatter.string(from: currentDate)
+            //                        if (uuid == record.id && record.date == formattedDate){
+            //                            i = true
+            //                        }
+            //                        if (uuid == record.id) {
+            //                            recordDaysCount += 1
+            //                        }
+            //                    }
+            cell.changeCell(color: tracker.color, emoji: tracker.emoji, title: tracker.name, daysCount: recordDaysCount, checkThisDayRecord: i)
             cell.delegate = self
+            return cell
         }
-        return cell
+        assertionFailure("не найдена ячейка")
+        return UICollectionViewCell()//        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrackersCollectionViewCell.identifier, for: indexPath) as? TrackersCollectionViewCell else {
+        //            assertionFailure("Cell not found")
+        //            return UICollectionViewCell()
+        //        }
+        //        if !categories.isEmpty {
+        //            let trackerCategory = categories[indexPath.section]
+        //            let tracker = trackerCategory.trackers[indexPath.row]
+        //            cell.changeCell(color: tracker.color, emoji: tracker.emoji, title: tracker.name, daysCount: 0, checkThisDayRecord: false)
+        //            cell.delegate = self
+        //        }
+        //        return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: CollectionViewHeaders.identifier, for: indexPath) as! CollectionViewHeaders
-        if !categories.isEmpty/*dataProvider.isContextEmpty(for: "TrackerCoreData")*/{
-            let category = categories[indexPath.section]
-            header.configure(with: category.name)
-            return header
-        }
+        let category = categories[indexPath.section]
+        header.configure(with: category.name)
         return header
+        
+//        if !categories.isEmpty/*dataProvider.isContextEmpty(for: "TrackerCoreData")*/{
+//            let category = categories[indexPath.section]
+//            header.configure(with: category.name)
+//            return header
+//        }
+//        return header
     }
 }
 
@@ -225,34 +255,35 @@ extension TrackersViewController: NewTrackerDelegate {
 }
 
 extension TrackersViewController: CollectionViewProviderDelegate {
-    func didUpdate(_ update: TrackerStoreUpdate) {
+    func didUpdate() {
         categories = dataProvider.trackerMixes
+        checkTrackers()
         collectionView.reloadData()
-        collectionView.performBatchUpdates({
-            if !update.insertedSections.isEmpty {
-                collectionView.insertSections(update.insertedSections)
-            }
-            if !update.deletedSections.isEmpty {
-                collectionView.deleteSections(update.deletedSections)
-            }
-            if !update.updatedSections.isEmpty {
-                collectionView.reloadSections(update.updatedSections)
-            }
-            for move in update.movedSections {
-                collectionView.moveSection(move.oldIndex, toSection: move.newIndex)
-            }
-            
-            let insertedIndexPaths = update.insertedIndexes.map { IndexPath(item: $0, section: 0) }
-            let deletedIndexPaths = update.deletedIndexes.map { IndexPath(item: $0, section: 0) }
-            let updatedIndexPaths = update.updatedIndexes.map { IndexPath(item: $0, section: 0) }
-            
-            collectionView.insertItems(at: insertedIndexPaths)
-            collectionView.deleteItems(at: deletedIndexPaths)
-            collectionView.reloadItems(at: updatedIndexPaths)
-            
-            for move in update.movedIndexes {
-                collectionView.moveItem(at: IndexPath(item: move.oldIndex, section: 0), to: IndexPath(item: move.newIndex, section: 0))
-            }
-        }, completion: nil)
+//        collectionView.performBatchUpdates({
+//            if !update.insertedSections.isEmpty {
+//                collectionView.insertSections(update.insertedSections)
+//            }
+//            if !update.deletedSections.isEmpty {
+//                collectionView.deleteSections(update.deletedSections)
+//            }
+//            if !update.updatedSections.isEmpty {
+//                collectionView.reloadSections(update.updatedSections)
+//            }
+//            for move in update.movedSections {
+//                collectionView.moveSection(move.oldIndex, toSection: move.newIndex)
+//            }
+//            
+//            let insertedIndexPaths = update.insertedIndexes.map { IndexPath(item: $0, section: 0) }
+//            let deletedIndexPaths = update.deletedIndexes.map { IndexPath(item: $0, section: 0) }
+//            let updatedIndexPaths = update.updatedIndexes.map { IndexPath(item: $0, section: 0) }
+//            
+//            collectionView.insertItems(at: insertedIndexPaths)
+//            collectionView.deleteItems(at: deletedIndexPaths)
+//            collectionView.reloadItems(at: updatedIndexPaths)
+//            
+//            for move in update.movedIndexes {
+//                collectionView.moveItem(at: IndexPath(item: move.oldIndex, section: 0), to: IndexPath(item: move.newIndex, section: 0))
+//            }
+//        }, completion: nil)
     }
 }
