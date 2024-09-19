@@ -11,5 +11,5 @@ import Foundation
 struct TrackerRecord{
     let id: UUID
     let date: String
-    var daysCount: Int
+    //var daysCount: Int
 }

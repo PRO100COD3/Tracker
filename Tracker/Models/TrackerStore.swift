@@ -77,6 +77,13 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
     
     func isContextEmpty(for entityName: String) -> Bool {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .none
+        let formattedDate = dateFormatter.string(from: self.currentDate)
+        
+        let predicate = NSPredicate(format: "schedule == %@", formattedDate)
+        fetchRequest.predicate = predicate
         fetchRequest.fetchLimit = 1
         do {
             let count = try context.count(for: fetchRequest)
@@ -86,6 +93,7 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
             return true
         }
     }
+    
     func transformTrackerCoreDataToTracker(trackerCoreData: [TrackerCoreData]) -> [Tracker] {
         var result: [Tracker] = []
         for element in trackerCoreData {
@@ -208,7 +216,6 @@ extension TrackerStore: TrackerProviderProtocol {
     func numberOfRowsInSection(_ section: Int) -> Int {
         guard let sectionInfo = fetchedResultsController?.sections?[section] else { return 0 }
         return trackerMixes[section].trackers.count
-        //return sectionInfo.numberOfObjects
     }
     
     func object(at indexPath: IndexPath) -> TrackerCategoryCoreData? {

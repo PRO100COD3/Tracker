@@ -11,6 +11,7 @@ import CoreData
 class TrackersViewController: UIViewController, TrackerRecordProtocol {
     
     private lazy var dataProvider = TrackerStore(delegate: self, date: currentDate)
+    private lazy var recordsProvider = TrackerRecordStore(delegate: self, currentDate: currentDate)
     private var imageView = UIImageView()
     private var button = UIButton(type: .system)
     private let label = UILabel()
@@ -24,6 +25,8 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
     }()
     private var currentDate: Date = Date()
     private var categories: [TrackerCategory] = []
+    private var trackersCategoriesOnCollection: [TrackerCategory] = []
+    private var records: [TrackerRecord] = []
     
     private let collectionView: UICollectionView = {
         let collectionView = UICollectionView(
@@ -45,6 +48,7 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
         view.addGestureRecognizer(tapGesture)
         
         categories = dataProvider.trackerMixes
+        records = recordsProvider.records
         
         currentDate = dateButton.date
         
@@ -106,16 +110,57 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
         dateButton.widthAnchor.constraint(equalToConstant: 110).isActive = true
     }
     
+    private func tempEventOrHabit(date: String) -> Bool {
+        let digitsSet = CharacterSet(charactersIn: "123456789")
+        if date.rangeOfCharacter(from: digitsSet) != nil {
+            return true
+        }
+        return false
+    }
+
+    
     private func checkTrackers() {
-        setupCollectionView()
+        trackersCategoriesOnCollection = []
         categories = TrackerStore(delegate: self, date: currentDate).trackerMixes
-        collectionView.reloadData()
+                let dateFormatterDay = DateFormatter()
+                dateFormatterDay.dateFormat = "EEEE"
+                let dayName = dateFormatterDay.string(from: currentDate)
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateStyle = .medium
+                dateFormatter.timeStyle = .none
+                let formattedDate = dateFormatter.string(from: currentDate)
+            //let formattedDateArray = formattedDate.components(separatedBy: " ")
+                for cat in categories{
+                    var tempCat: TrackerCategory
+                    var trackersOnCollection: [Tracker] = []
+                    for tr in cat.trackers{
+                        if tempEventOrHabit(date: tr.schedule) {
+                            if tr.schedule == formattedDate{
+                                trackersOnCollection.append(tr)
+                            }
+                        } else {
+                            let wordsArray = tr.schedule.components(separatedBy: " ")
+                            for s in wordsArray {
+                                if s == dayName {
+                                    trackersOnCollection.append(tr)
+                                }
+                            }
+                        }
+
+                    }
+                    if (!trackersOnCollection.isEmpty){
+                        tempCat = TrackerCategory(name: cat.name, trackers: trackersOnCollection)
+                        trackersCategoriesOnCollection.append(tempCat)
+                    }
+                }
+        setupCollectionView()
         if dataProvider.isContextEmpty(for: "TrackerCoreData") {
             addCentrePictures()
             addCentreText()
         } else {
             deleteCentre()
         }
+        collectionView.reloadData()
     }
     
     private func addCentrePictures() {
@@ -142,16 +187,53 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
     }
     
     func didTapAddButton(on cell: TrackersCollectionViewCell) {
-        
+        guard let indexPath = collectionView.indexPath(for: cell) else { return }
+        addNewRecord(indexPath: indexPath)
+        checkTrackers()
     }
     
     func didRetapAddButton(on cell: TrackersCollectionViewCell) {
+        guard let indexPath = collectionView.indexPath(for: cell) else { return }
+        deleteRecord(indexPath: indexPath)
+        checkTrackers()
+    }
+    
+    private func addNewRecord(indexPath: IndexPath) {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .none
+        let formattedDate = dateFormatter.string(from: currentDate)
         
+        let uuid = trackersCategoriesOnCollection[indexPath.section].trackers[indexPath.row].id
+        
+        if var record = records.first(where: { $0.id == uuid && $0.date == formattedDate }) {
+            //record.daysCount += 1
+        } else {
+            recordsProvider.add(date: formattedDate, uuid: uuid)
+                //let newRecord = TrackerRecord(id: uuid, date: formattedDate)
+            
+            //completedTrackers.append(newRecord)
+        }
+    }
+    
+    private func deleteRecord(indexPath: IndexPath){
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .none
+        let formattedDate = dateFormatter.string(from: currentDate)
+        let uuid = trackersCategoriesOnCollection[indexPath.section].trackers[indexPath.row].id
+        if let index = records.firstIndex(where: { $0.id == uuid && $0.date == formattedDate }) {
+            if records.count > 1 {
+                //completedTrackers[index].daysCount -= 1
+            } else {
+                recordsProvider.delete(id: uuid, date: formattedDate)
+            }
+        }
     }
     
     @objc private func changeDate() {
         currentDate = dateButton.date
-        dataProvider.currentDate = currentDate
+        dataProvider = TrackerStore(delegate: self, date: currentDate)
         checkTrackers()
     }
     
@@ -170,67 +252,54 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
 
 extension TrackersViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return categories[section].trackers.count
-        return dataProvider.numberOfRowsInSection(section)
+        return trackersCategoriesOnCollection[section].trackers.count
     }
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return categories.count
-        return dataProvider.numberOfSections
+        return trackersCategoriesOnCollection.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrackersCollectionViewCell.identifier, for: indexPath) as? TrackersCollectionViewCell {
-            let tracker = categories[indexPath.section].trackers[indexPath.row]
+            let tracker = trackersCategoriesOnCollection[indexPath.section].trackers[indexPath.row]
             
-            //                    let uuid = trackersCategoryOnCollection[indexPath.section].trackers[indexPath.row].id
-            //
+            let uuid = trackersCategoriesOnCollection[indexPath.section].trackers[indexPath.row].id
+            
             var recordDaysCount = 0
             var i = false
-            //
-            //                    for record in completedTrackers{
-            //                        let dateFormatter = DateFormatter()
-            //                        dateFormatter.dateStyle = .medium
-            //                        dateFormatter.timeStyle = .none
-            //                        let formattedDate = dateFormatter.string(from: currentDate)
-            //                        if (uuid == record.id && record.date == formattedDate){
-            //                            i = true
-            //                        }
-            //                        if (uuid == record.id) {
-            //                            recordDaysCount += 1
-            //                        }
-            //                    }
+            
+            for record in records{
+                let dateFormatter = DateFormatter()
+                dateFormatter.dateStyle = .medium
+                dateFormatter.timeStyle = .none
+                let formattedDate = dateFormatter.string(from: currentDate)
+                if (uuid == record.id && record.date == formattedDate){
+                    i = true
+                }
+                if (uuid == record.id) {
+                    recordDaysCount += 1
+                }
+            }
             cell.changeCell(color: tracker.color, emoji: tracker.emoji, title: tracker.name, daysCount: recordDaysCount, checkThisDayRecord: i)
             cell.delegate = self
             return cell
         }
         assertionFailure("не найдена ячейка")
-        return UICollectionViewCell()//        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrackersCollectionViewCell.identifier, for: indexPath) as? TrackersCollectionViewCell else {
-        //            assertionFailure("Cell not found")
-        //            return UICollectionViewCell()
-        //        }
-        //        if !categories.isEmpty {
-        //            let trackerCategory = categories[indexPath.section]
-        //            let tracker = trackerCategory.trackers[indexPath.row]
-        //            cell.changeCell(color: tracker.color, emoji: tracker.emoji, title: tracker.name, daysCount: 0, checkThisDayRecord: false)
-        //            cell.delegate = self
-        //        }
-        //        return cell
+        return UICollectionViewCell()
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: CollectionViewHeaders.identifier, for: indexPath) as! CollectionViewHeaders
-        let category = categories[indexPath.section]
+        let category = trackersCategoriesOnCollection[indexPath.section]
         header.configure(with: category.name)
         return header
-        
-//        if !categories.isEmpty/*dataProvider.isContextEmpty(for: "TrackerCoreData")*/{
-//            let category = categories[indexPath.section]
-//            header.configure(with: category.name)
-//            return header
-//        }
-//        return header
+    }
+}
+
+extension TrackersViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        addNewRecord(indexPath: indexPath)
     }
 }
 
@@ -254,36 +323,18 @@ extension TrackersViewController: NewTrackerDelegate {
     }
 }
 
+extension TrackersViewController: RecordProviderDelegate {
+    func didUpdateRecords() {
+        records = recordsProvider.records
+        checkTrackers()
+        collectionView.reloadData()
+    }
+}
+
 extension TrackersViewController: CollectionViewProviderDelegate {
     func didUpdate() {
         categories = dataProvider.trackerMixes
         checkTrackers()
         collectionView.reloadData()
-//        collectionView.performBatchUpdates({
-//            if !update.insertedSections.isEmpty {
-//                collectionView.insertSections(update.insertedSections)
-//            }
-//            if !update.deletedSections.isEmpty {
-//                collectionView.deleteSections(update.deletedSections)
-//            }
-//            if !update.updatedSections.isEmpty {
-//                collectionView.reloadSections(update.updatedSections)
-//            }
-//            for move in update.movedSections {
-//                collectionView.moveSection(move.oldIndex, toSection: move.newIndex)
-//            }
-//            
-//            let insertedIndexPaths = update.insertedIndexes.map { IndexPath(item: $0, section: 0) }
-//            let deletedIndexPaths = update.deletedIndexes.map { IndexPath(item: $0, section: 0) }
-//            let updatedIndexPaths = update.updatedIndexes.map { IndexPath(item: $0, section: 0) }
-//            
-//            collectionView.insertItems(at: insertedIndexPaths)
-//            collectionView.deleteItems(at: deletedIndexPaths)
-//            collectionView.reloadItems(at: updatedIndexPaths)
-//            
-//            for move in update.movedIndexes {
-//                collectionView.moveItem(at: IndexPath(item: move.oldIndex, section: 0), to: IndexPath(item: move.newIndex, section: 0))
-//            }
-//        }, completion: nil)
     }
 }

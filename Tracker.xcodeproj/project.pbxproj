@@ -48,6 +48,7 @@
 		3CE1CB1D2C4E3D02007E96CB /* TrackerRecordProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE1CB1C2C4E3D02007E96CB /* TrackerRecordProtocol.swift */; };
 		3CE1CB712C71CCFC007E96CB /* CustomEmojiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE1CB702C71CCFC007E96CB /* CustomEmojiCell.swift */; };
 		3CE1CB732C748CC3007E96CB /* CustomColorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE1CB722C748CC3007E96CB /* CustomColorCell.swift */; };
+		3CF46DFA2C9B7BFA00F3AFCC /* RecordProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CF46DF92C9B7BFA00F3AFCC /* RecordProviderProtocol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -113,6 +114,7 @@
 		3CE1CB1C2C4E3D02007E96CB /* TrackerRecordProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecordProtocol.swift; sourceTree = "<group>"; };
 		3CE1CB702C71CCFC007E96CB /* CustomEmojiCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomEmojiCell.swift; sourceTree = "<group>"; };
 		3CE1CB722C748CC3007E96CB /* CustomColorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColorCell.swift; sourceTree = "<group>"; };
+		3CF46DF92C9B7BFA00F3AFCC /* RecordProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordProviderProtocol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -262,6 +264,7 @@
 				3CD336272C89C97700784414 /* ProviderDelegate.swift */,
 				3CD336252C89C71000784414 /* CategoryProviderProtocol.swift */,
 				3CD3362B2C8AF58700784414 /* TrackerProviderProtocol.swift */,
+				3CF46DF92C9B7BFA00F3AFCC /* RecordProviderProtocol.swift */,
 				3CD336292C89CC4F00784414 /* NewCategoryDelegate.swift */,
 				3CD3362D2C8AF93C00784414 /* NewTrackerDelegate.swift */,
 			);
@@ -438,6 +441,7 @@
 				3CD3362E2C8AF93C00784414 /* NewTrackerDelegate.swift in Sources */,
 				3CB90D142C3E597E0074BD2D /* CustomTableViewCell.swift in Sources */,
 				3CE1CB102C4532F4007E96CB /* TrackersCollectionViewCell.swift in Sources */,
+				3CF46DFA2C9B7BFA00F3AFCC /* RecordProviderProtocol.swift in Sources */,
 				3CB90D192C4143F60074BD2D /* SheduleTableViewCell.swift in Sources */,
 				3C2E90C22C2B23A00081F7B7 /* AppDelegate.swift in Sources */,
 				3CE1CB1D2C4E3D02007E96CB /* TrackerRecordProtocol.swift in Sources */,

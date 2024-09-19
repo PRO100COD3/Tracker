@@ -15,3 +15,7 @@ protocol TableViewProviderDelegate: AnyObject {
 protocol CollectionViewProviderDelegate: AnyObject {
     func didUpdate()
 }
+
+protocol RecordProviderDelegate: AnyObject {
+    func didUpdateRecords()
+}
