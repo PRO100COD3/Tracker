@@ -20,7 +20,7 @@ final class UIColorMarshalling {
             lroundf(Float(b * 255))
         )
     }
-
+    
     func color(from hex: String) -> UIColor {
         var rgbValue:UInt64 = 0
         Scanner(string: hex).scanHexInt64(&rgbValue)

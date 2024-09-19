@@ -7,10 +7,9 @@
 
 import UIKit
 
-final class CreateTrackerViewController: UIViewController, CloseControllerProtocol{
 
-    //weak var addCategoryDelegate: AddNewCategoryProtocol?
-    //weak var delegate: CreateTrackerProtocol?
+final class CreateTrackerViewController: UIViewController, CloseControllerProtocol{
+    
     weak var delegate: NewTrackerDelegate?
     private let habitButton = UIButton(type: .system)
     private let temporaryEventButton = UIButton(type: .system)
@@ -79,7 +78,6 @@ final class CreateTrackerViewController: UIViewController, CloseControllerProtoc
     @objc private func habitButtonTapped() {
         let createHabitViewController = CreateHabitViewController()
         createHabitViewController.categories = self.categories
-        //createHabitViewController.addCategoryAtCreatorDelegate = self
         createHabitViewController.closeDelegate = self
         createHabitViewController.delegate = self.delegate
         let navigationController = UINavigationController(rootViewController: createHabitViewController)
@@ -88,10 +86,7 @@ final class CreateTrackerViewController: UIViewController, CloseControllerProtoc
     
     @objc private func temporaryEventButtonTapped() {
         let createTemporaryEventViewController = CreateTemporaryEventViewController()
-        //createTemporaryEventViewController.categories = self.categories
-        //createTemporaryEventViewController.addCategoryDelegate = self.addCategoryDelegate
         createTemporaryEventViewController.closeDelegate = self
-        //createTemporaryEventViewController.addCategoryAtCreatorDelegate = self
         createTemporaryEventViewController.delegate = self.delegate
         createTemporaryEventViewController.currentDate = self.currentDate
         let navigationController = UINavigationController(rootViewController: createTemporaryEventViewController)

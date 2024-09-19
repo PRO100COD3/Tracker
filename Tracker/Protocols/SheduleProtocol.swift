@@ -7,6 +7,7 @@
 
 import UIKit
 
+
 protocol SheduleProtocol: AnyObject{
     func addDayAtShedule(numOfDay: [Bool])
 }

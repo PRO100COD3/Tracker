@@ -10,8 +10,6 @@ import CoreData
 
 
 protocol RecordProviderProtocol {
-    //var numberOfSections: Int { get }
-    //func numberOfRowsInSection(_ section: Int) -> Int
     func object(at indexPath: IndexPath) -> TrackerRecordCoreData?
     func add(date: String, uuid: UUID, tracker: TrackerCoreData)
     func delete(id: UUID, date: String)

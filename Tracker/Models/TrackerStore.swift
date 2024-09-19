@@ -14,7 +14,7 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
     weak var delegate: CollectionViewProviderDelegate?
     private let uiColorMarshalling = UIColorMarshalling()
     var currentDate = Date()
-        
+    
     var trackerMixes: [TrackerCategory] {
         guard let objects = fetchedResultsController?.fetchedObjects else { return [] }
         return objects.compactMap { try? self.trackerMix(from: $0) }
@@ -143,34 +143,17 @@ extension TrackerStore: TrackerProviderProtocol {
     }
     
     func object(at indexPath: IndexPath, id: UUID) -> TrackerCoreData? {
-        // Получаем объект TrackerCategoryCoreData для данного indexPath
         guard let category = fetchedResultsController?.object(at: indexPath) as? TrackerCategoryCoreData else {
             return nil
         }
-
-        // Проверяем трекеры в категории
+        
         if let trackers = category.trackers as? Set<TrackerCoreData> {
-            // Ищем трекер с нужным id
             if let tracker = trackers.first(where: { $0.id == id }) {
                 return tracker
             }
         }
-
         return nil
     }
-
-    
-//    func object(at indexPath: IndexPath, id: UUID) -> TrackerCoreData? {
-////        fetchedResultsController?.object(at: indexPath)
-////        guard let objects = fetchedResultsController?.fetchedObjects else { return nil }
-////        let predicate = NSPredicate(format: "tracker.id == %@", id as CVarArg)
-////        let filteredObjects = objects.filter(predicate.withSubstitutionVariables([id]))
-////        
-////        
-////        
-////        return TrackerCoreData(context: context)
-//        
-//    }
     
     func add(name: String, color: String, emoji: String, shedule: String, category: TrackerCategoryCoreData) {
         let newTracker = TrackerCoreData(context: context)

@@ -49,8 +49,6 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
         
         categories = dataProvider.trackerMixes
         records = recordsProvider.records
-
-        //recordsProvider.categories = categories
         
         currentDate = dateButton.date
         
@@ -146,14 +144,12 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
                         }
                     }
                 }
-                
             }
             if (!trackersOnCollection.isEmpty){
                 tempCat = TrackerCategory(name: cat.name, trackers: trackersOnCollection)
                 trackersCategoriesOnCollection.append(tempCat)
             }
         }
-//        recordsProvider.categories = trackersCategoriesOnCollection
         setupCollectionView()
         if dataProvider.isContextEmpty(for: "TrackerCoreData") {
             addCentrePictures()
@@ -206,7 +202,6 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
         let formattedDate = dateFormatter.string(from: currentDate)
         
         let uuid = trackersCategoriesOnCollection[indexPath.section].trackers[indexPath.row].id
-        //let tracker = trackersCategoriesOnCollection[indexPath.section].trackers[indexPath.row]
         guard let tracker = dataProvider.object(at: indexPath, id: uuid) else { return }
         recordsProvider.add(date: formattedDate, uuid: uuid, tracker: tracker)
     }

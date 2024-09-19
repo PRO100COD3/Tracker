@@ -41,12 +41,8 @@ final class CreateTemporaryEventViewController: UIViewController, UITableViewDat
         collectionView.register(CustomColorCell.self, forCellWithReuseIdentifier: CustomColorCell.identifier)
         return collectionView
     }()
-    //weak var addCategoryDelegate: AddNewCategoryProtocol?
-    //weak var addCategoryAtCreatorDelegate: AddNewCategoryProtocol?
     weak var delegate: NewTrackerDelegate?
     weak var closeDelegate: CloseControllerProtocol?
-    //weak var delegate: CreateTrackerProtocol?
-    //var categories: [TrackerCategory] = []
     private var selectedCategory: TrackerCategoryCoreData?
     
     private let data = ["Категория"]
@@ -72,26 +68,24 @@ final class CreateTemporaryEventViewController: UIViewController, UITableViewDat
     }
     
     private func setupScrollView() {
-            scrollView.translatesAutoresizingMaskIntoConstraints = false
-            contentView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        
+        NSLayoutConstraint.activate([
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
-            view.addSubview(scrollView)
-            scrollView.addSubview(contentView)
-            
-            NSLayoutConstraint.activate([
-                // ScrollView constraints
-                scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-                scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-                
-                // ContentView constraints
-                contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-                contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-                contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-                contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-                contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            ])
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+        ])
     }
     
     private func addEmojiLabel() {
@@ -215,11 +209,6 @@ final class CreateTemporaryEventViewController: UIViewController, UITableViewDat
         buttonAccept.addTarget(self, action: #selector(addNewTempEvent), for: .touchUpInside)
     }
     
-//    func addCategoryAtProtocol(name: String) {
-//        let newCategory = TrackerCategory(name: name, trackers: [])
-//        categories.append(newCategory)
-//    }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return data.count
     }
@@ -246,9 +235,6 @@ final class CreateTemporaryEventViewController: UIViewController, UITableViewDat
     private func categoryButtonTapped(){
         let categoryViewController = CategoryViewController()
         categoryViewController.delegate = self
-        //categoryViewController.addCategoryDelegate = self.addCategoryDelegate
-        //categoryViewController.categories = self.categories
-        //categoryViewController.addCategoryAtCreatorDelegate = self.addCategoryAtCreatorDelegate
         let navigationController = UINavigationController(rootViewController: categoryViewController)
         present(navigationController, animated: true)
     }
@@ -291,7 +277,7 @@ final class CreateTemporaryEventViewController: UIViewController, UITableViewDat
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .none
-        let formattedDate = dateFormatter.string(from: currentDate)       
+        let formattedDate = dateFormatter.string(from: currentDate)
         delegate?.add(name: nameOfTracker, color: UIColorMarshalling().hexString(from: selectedColor), emoji: selectedEmoji, shedule: formattedDate, category: category)
         closeThisWindow()
         closeDelegate?.closeController()

@@ -7,7 +7,7 @@
 
 import UIKit
 
+
 protocol CategoryProtocol: AnyObject{
     func selectCategory(selected: TrackerCategoryCoreData)
-    //func addCategoryAtProtocol(name: String)
 }

@@ -14,11 +14,8 @@ final class TrackerRecordStore: NSObject{
         return (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     }
     
-    //var idOfSearching: UUID?
     weak var delegate: RecordProviderDelegate?
     var currentDate = Date()
-    
-//    var categories: [TrackerCategory] = []
     
     var records: [TrackerRecord] {
         guard let objects = fetchedResultsController?.fetchedObjects else { return [] }
@@ -27,14 +24,6 @@ final class TrackerRecordStore: NSObject{
     
     private lazy var fetchedResultsController: NSFetchedResultsController<TrackerRecordCoreData>? = {
         let fetchRequest = TrackerRecordCoreData.fetchRequest()
-//        
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateStyle = .medium
-//        dateFormatter.timeStyle = .none
-//        let formattedDate = dateFormatter.string(from: self.currentDate)
-//        
-//        let predicate = NSPredicate(format: "date == %@", formattedDate)
-//        fetchRequest.predicate = predicate
         
         fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
         
@@ -71,7 +60,7 @@ final class TrackerRecordStore: NSObject{
         }
         return TrackerRecord(id: id, date: date)
     }
-        
+    
     func saveContext() {
         if context.hasChanges {
             do {

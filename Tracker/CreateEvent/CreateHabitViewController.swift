@@ -9,12 +9,9 @@ import UIKit
 
 final class CreateHabitViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, SheduleProtocol, CategoryProtocol {
     
-    //weak var addCategoryDelegate: AddNewCategoryProtocol?
-    //weak var addCategoryAtCreatorDelegate: AddNewCategoryProtocol?
     weak var closeDelegate: CloseControllerProtocol?
     weak var delegate: NewTrackerDelegate?
     private var selectedCategory: TrackerCategoryCoreData?
-    //weak var delegate: NewTrackerDelegate?
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     private let label = UILabel()
@@ -72,24 +69,24 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
     }
     
     private func setupScrollView() {
-            scrollView.translatesAutoresizingMaskIntoConstraints = false
-            contentView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(scrollView)
+        scrollView.addSubview(contentView)
+        
+        NSLayoutConstraint.activate([
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
-            view.addSubview(scrollView)
-            scrollView.addSubview(contentView)
-            
-            NSLayoutConstraint.activate([
-                scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                scrollView.topAnchor.constraint(equalTo: view.topAnchor),
-                scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-                
-                contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-                contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-                contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-                contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-                contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            ])
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
+        ])
     }
     
     func addCategoryAtProtocol(name: String) {
@@ -264,10 +261,6 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
     private func categoryButtonTapped(){
         let categoryViewController = CategoryViewController()
         categoryViewController.delegate = self
-        //categoryViewController.delegate = self
-        //categoryViewController.addCategoryDelegate = self.addCategoryDelegate
-        //categoryViewController.categories = self.categories
-        //categoryViewController.addCategoryAtCreatorDelegate = self.addCategoryAtCreatorDelegate
         let navigationController = UINavigationController(rootViewController: categoryViewController)
         present(navigationController, animated: true)
     }
@@ -316,8 +309,7 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
             return
         }
         delegate?.add(name: nameOfTracker, color: UIColorMarshalling().hexString(from: selectedColor), emoji: selectedEmoji, shedule: selectedDays, category: category)
-
-        //delegate?.createNewTracker(name: nameOfTracker, shedule: selectedDays, category: category, emoji: selectedEmoji, color: selectedColor)
+        
         closeThisWindow()
         closeDelegate?.closeController()
     }

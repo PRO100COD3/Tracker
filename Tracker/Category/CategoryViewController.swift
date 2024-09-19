@@ -24,7 +24,6 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        //categoryToString()
         if dataProvider.isContextEmpty(for: "TrackerCategoryCoreData") == false {
             addTableView()
         } else {
@@ -87,7 +86,7 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         addNewCategoryViewController.delegate = self
         let navigationController = UINavigationController(rootViewController: addNewCategoryViewController)
         present(navigationController, animated: true)
-        }
+    }
     
     private func addTableView() {
         tableView.frame = self.view.bounds
