@@ -18,6 +18,8 @@ final class TrackerRecordStore: NSObject{
     weak var delegate: RecordProviderDelegate?
     var currentDate = Date()
     
+//    var categories: [TrackerCategory] = []
+    
     var records: [TrackerRecord] {
         guard let objects = fetchedResultsController?.fetchedObjects else { return [] }
         return objects.compactMap { try? self.recordMix(from: $0) }
@@ -25,16 +27,16 @@ final class TrackerRecordStore: NSObject{
     
     private lazy var fetchedResultsController: NSFetchedResultsController<TrackerRecordCoreData>? = {
         let fetchRequest = TrackerRecordCoreData.fetchRequest()
+//        
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateStyle = .medium
+//        dateFormatter.timeStyle = .none
+//        let formattedDate = dateFormatter.string(from: self.currentDate)
+//        
+//        let predicate = NSPredicate(format: "date == %@", formattedDate)
+//        fetchRequest.predicate = predicate
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .none
-        let formattedDate = dateFormatter.string(from: self.currentDate)
-        
-        let predicate = NSPredicate(format: "date == %@", formattedDate/* as CVarArg*/)
-        fetchRequest.predicate = predicate
-        
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "id", ascending: true)]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "date", ascending: true)]
         
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
                                                                   managedObjectContext: context,
@@ -67,12 +69,6 @@ final class TrackerRecordStore: NSObject{
             assertionFailure("Некорректные данные из Core Data")
             return TrackerRecord(id: UUID(), date: "")
         }
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateStyle = .medium
-//        dateFormatter.timeStyle = .none
-//        let formattedDate = dateFormatter.string(from: date)
-        //let trackerRecordCoreData = setTrackers.allObjects as! [TrackerRecordCoreData]
-        //let trackers = transformTrackerRecordCoreDataToTrackerRecord(trackerRecordCoreData: trackerRecordCoreData)
         return TrackerRecord(id: id, date: date)
     }
         
@@ -92,10 +88,11 @@ extension TrackerRecordStore: RecordProviderProtocol {
         fetchedResultsController?.object(at: indexPath)
     }
     
-    func add(date: String, uuid: UUID) {
+    func add(date: String, uuid: UUID, tracker: TrackerCoreData) {
         let record = TrackerRecordCoreData(context: context)
         record.date = date
         record.id = uuid
+        record.tracker = tracker
         saveContext()
     }
     

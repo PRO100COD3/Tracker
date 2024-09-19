@@ -49,6 +49,8 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
         
         categories = dataProvider.trackerMixes
         records = recordsProvider.records
+
+        //recordsProvider.categories = categories
         
         currentDate = dateButton.date
         
@@ -117,42 +119,41 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
         }
         return false
     }
-
+    
     
     private func checkTrackers() {
         trackersCategoriesOnCollection = []
-        categories = TrackerStore(delegate: self, date: currentDate).trackerMixes
-                let dateFormatterDay = DateFormatter()
-                dateFormatterDay.dateFormat = "EEEE"
-                let dayName = dateFormatterDay.string(from: currentDate)
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateStyle = .medium
-                dateFormatter.timeStyle = .none
-                let formattedDate = dateFormatter.string(from: currentDate)
-            //let formattedDateArray = formattedDate.components(separatedBy: " ")
-                for cat in categories{
-                    var tempCat: TrackerCategory
-                    var trackersOnCollection: [Tracker] = []
-                    for tr in cat.trackers{
-                        if tempEventOrHabit(date: tr.schedule) {
-                            if tr.schedule == formattedDate{
-                                trackersOnCollection.append(tr)
-                            }
-                        } else {
-                            let wordsArray = tr.schedule.components(separatedBy: " ")
-                            for s in wordsArray {
-                                if s == dayName {
-                                    trackersOnCollection.append(tr)
-                                }
-                            }
-                        }
-
+        let dateFormatterDay = DateFormatter()
+        dateFormatterDay.dateFormat = "EEEE"
+        let dayName = dateFormatterDay.string(from: currentDate)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .none
+        let formattedDate = dateFormatter.string(from: currentDate)
+        for cat in categories{
+            var tempCat: TrackerCategory
+            var trackersOnCollection: [Tracker] = []
+            for tr in cat.trackers{
+                if tempEventOrHabit(date: tr.schedule) {
+                    if tr.schedule == formattedDate{
+                        trackersOnCollection.append(tr)
                     }
-                    if (!trackersOnCollection.isEmpty){
-                        tempCat = TrackerCategory(name: cat.name, trackers: trackersOnCollection)
-                        trackersCategoriesOnCollection.append(tempCat)
+                } else {
+                    let wordsArray = tr.schedule.components(separatedBy: " ")
+                    for s in wordsArray {
+                        if s == dayName {
+                            trackersOnCollection.append(tr)
+                        }
                     }
                 }
+                
+            }
+            if (!trackersOnCollection.isEmpty){
+                tempCat = TrackerCategory(name: cat.name, trackers: trackersOnCollection)
+                trackersCategoriesOnCollection.append(tempCat)
+            }
+        }
+//        recordsProvider.categories = trackersCategoriesOnCollection
         setupCollectionView()
         if dataProvider.isContextEmpty(for: "TrackerCoreData") {
             addCentrePictures()
@@ -205,15 +206,9 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
         let formattedDate = dateFormatter.string(from: currentDate)
         
         let uuid = trackersCategoriesOnCollection[indexPath.section].trackers[indexPath.row].id
-        
-        if var record = records.first(where: { $0.id == uuid && $0.date == formattedDate }) {
-            //record.daysCount += 1
-        } else {
-            recordsProvider.add(date: formattedDate, uuid: uuid)
-                //let newRecord = TrackerRecord(id: uuid, date: formattedDate)
-            
-            //completedTrackers.append(newRecord)
-        }
+        //let tracker = trackersCategoriesOnCollection[indexPath.section].trackers[indexPath.row]
+        guard let tracker = dataProvider.object(at: indexPath, id: uuid) else { return }
+        recordsProvider.add(date: formattedDate, uuid: uuid, tracker: tracker)
     }
     
     private func deleteRecord(indexPath: IndexPath){
@@ -222,18 +217,16 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
         dateFormatter.timeStyle = .none
         let formattedDate = dateFormatter.string(from: currentDate)
         let uuid = trackersCategoriesOnCollection[indexPath.section].trackers[indexPath.row].id
-        if let index = records.firstIndex(where: { $0.id == uuid && $0.date == formattedDate }) {
-            if records.count > 1 {
-                //completedTrackers[index].daysCount -= 1
-            } else {
-                recordsProvider.delete(id: uuid, date: formattedDate)
-            }
-        }
+        
+        recordsProvider.delete(id: uuid, date: formattedDate)
     }
     
     @objc private func changeDate() {
         currentDate = dateButton.date
+        recordsProvider = TrackerRecordStore(delegate: self, currentDate: currentDate)
         dataProvider = TrackerStore(delegate: self, date: currentDate)
+        categories = dataProvider.trackerMixes
+        records = recordsProvider.records
         checkTrackers()
     }
     

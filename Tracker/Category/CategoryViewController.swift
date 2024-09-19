@@ -87,9 +87,6 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         addNewCategoryViewController.delegate = self
         let navigationController = UINavigationController(rootViewController: addNewCategoryViewController)
         present(navigationController, animated: true)
-        
-        
-        
         }
     
     private func addTableView() {

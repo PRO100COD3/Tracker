@@ -12,7 +12,7 @@ import CoreData
 protocol TrackerProviderProtocol {
     var numberOfSections: Int { get }
     func numberOfRowsInSection(_ section: Int) -> Int
-    func object(at: IndexPath) -> TrackerCategoryCoreData?
+    func object(at: IndexPath, id: UUID) -> TrackerCoreData?
     func add(name: String, color: String, emoji: String, shedule: String, category: TrackerCategoryCoreData)
     func delete(record: NSManagedObject)
 }

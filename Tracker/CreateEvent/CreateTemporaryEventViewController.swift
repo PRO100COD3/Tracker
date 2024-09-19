@@ -282,7 +282,7 @@ final class CreateTemporaryEventViewController: UIViewController, UITableViewDat
     @objc private func addNewTempEvent(){
         guard let nameOfTracker = nameOfHabit.text
         else{
-            fatalError("Что-то с именем привычки")
+            fatalError("Что-то с именем события")
         }
         guard let category = selectedCategory
         else{

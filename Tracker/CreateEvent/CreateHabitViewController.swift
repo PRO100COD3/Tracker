@@ -13,7 +13,8 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
     //weak var addCategoryAtCreatorDelegate: AddNewCategoryProtocol?
     weak var closeDelegate: CloseControllerProtocol?
     weak var delegate: NewTrackerDelegate?
-    //weak var delegate: CreateTrackerProtocol?
+    private var selectedCategory: TrackerCategoryCoreData?
+    //weak var delegate: NewTrackerDelegate?
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     private let label = UILabel()
@@ -45,7 +46,6 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
     }()
     private let colors = [UIColor.ypRedPlate1, UIColor.ypOrangePlate2, UIColor.ypBluePlate3, UIColor.ypVioletPlate4, UIColor.ypGreenPlate5, UIColor.ypPinkPlate6, UIColor.ypPinkPlate7, UIColor.ypBluePlate8, UIColor.ypGreenPlate9, UIColor.ypVioletPlate10, UIColor.ypOrangePlate11, UIColor.ypPinkPlate12, UIColor.ypOrangePlate13, UIColor.ypBluePlate14, UIColor.ypVioletPlate15, UIColor.ypVioletPlate16, UIColor.ypVioletPlate17, UIColor.ypGreenPlate18]
     var categories: [TrackerCategory] = []
-    private var selectedCategory: TrackerCategoryCoreData?
     private var selectedDays: String = ""
     private var selectedEmoji: String = ""
     private var selectedEmojiIndexPath: IndexPath?
@@ -79,13 +79,11 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
             scrollView.addSubview(contentView)
             
             NSLayoutConstraint.activate([
-                // ScrollView constraints
                 scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
                 scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
                 scrollView.topAnchor.constraint(equalTo: view.topAnchor),
                 scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
                 
-                // ContentView constraints
                 contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
                 contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
                 contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
@@ -265,6 +263,7 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
     
     private func categoryButtonTapped(){
         let categoryViewController = CategoryViewController()
+        categoryViewController.delegate = self
         //categoryViewController.delegate = self
         //categoryViewController.addCategoryDelegate = self.addCategoryDelegate
         //categoryViewController.categories = self.categories
@@ -278,7 +277,7 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
         
         for (i, day) in daysOfWeek.enumerated(){
             if numOfDay[i] == true{
-                selectedDays.append(day)
+                selectedDays.append(" " + day)
             }
         }
         checkAllConditions()
@@ -316,7 +315,7 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
             assertionFailure("Категория пуста")
             return
         }
-        delegate?.add(name: nameOfTracker, color: UIColorMarshalling().hexString(from: selectedColor), emoji: selectedEmoji, shedule: "", category: category)
+        delegate?.add(name: nameOfTracker, color: UIColorMarshalling().hexString(from: selectedColor), emoji: selectedEmoji, shedule: selectedDays, category: category)
 
         //delegate?.createNewTracker(name: nameOfTracker, shedule: selectedDays, category: category, emoji: selectedEmoji, color: selectedColor)
         closeThisWindow()
