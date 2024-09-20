@@ -23,12 +23,30 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>0</integer>
+			<integer>1</integer>
 		</dict>
 		<key>Tracker.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
+		</dict>
+	</dict>
+	<key>SuppressBuildableAutocreation</key>
+	<dict>
+		<key>3C2E90BD2C2B23A00081F7B7</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>3C2E90D32C2B23A20081F7B7</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>3C2E90DD2C2B23A20081F7B7</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>
