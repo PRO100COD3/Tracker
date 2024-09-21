@@ -116,7 +116,6 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CategoriesTableViewCell
         
         guard let record = dataProvider.object(at: indexPath) else { return UITableViewCell() }
-        //TrackerCategoryStore.shared.simpleFetch()
         cell.textLabel?.text = record.name
         cell.accessoryType = .none
         if indexPath == selectedIndexPath {

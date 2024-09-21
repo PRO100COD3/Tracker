@@ -8,7 +8,7 @@
 import UIKit
 
 
-class CustomEmojiCell: UICollectionViewCell {
+final class CustomEmojiCell: UICollectionViewCell {
     static let identifier = "CustomCell"
     private var emojiLabel: UILabel = {
         let emojiLabel = UILabel()

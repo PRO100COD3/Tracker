@@ -7,7 +7,7 @@
 import UIKit
 
 
-class CustomColorCell: UICollectionViewCell {
+final class CustomColorCell: UICollectionViewCell {
     static let identifier = "CustomColorCell"
     
     private let centeredView: UIView = {
