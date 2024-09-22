@@ -13,7 +13,7 @@ final class SheduleViewController: UIViewController, UITableViewDataSource, UITa
     private let label = UILabel()
     private let buttonAccept = UIButton(type: .system)
     private let tableView = UITableView()
-    private var switchStates = [Bool](repeating: false, count: 7)
+    var switchStates = [Bool](repeating: false, count: 7)
     
     private let data = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"]
     

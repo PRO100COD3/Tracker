@@ -251,6 +251,16 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
     func sheduleButtonTapped() {
         let sheduleViewController = SheduleViewController()
         sheduleViewController.delegate = self
+        
+        let daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        var selectedDaysBool = [Bool](repeating: false, count: daysOfWeek.count)
+        for (i, day) in daysOfWeek.enumerated() {
+            if selectedDays.contains(day) {
+                selectedDaysBool[i] = true
+            }
+        }
+        sheduleViewController.switchStates = selectedDaysBool
+        
         let navigationController = UINavigationController(rootViewController: sheduleViewController)
         present(navigationController, animated: true)
     }
