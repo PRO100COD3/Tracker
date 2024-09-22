@@ -42,6 +42,7 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        searchBar.delegate = self
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tapGesture.cancelsTouchesInView = false
@@ -106,7 +107,7 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
     }
     
     private func addDateButton() {
-        dateButton.addTarget(self, action: #selector(changeDate), for: .editingDidEnd)
+        dateButton.addTarget(self, action: #selector(changeDate), for: .valueChanged)
         dateButton.widthAnchor.constraint(equalToConstant: 110).isActive = true
     }
     
@@ -324,5 +325,12 @@ extension TrackersViewController: CollectionViewProviderDelegate {
         categories = dataProvider.trackerMixes
         checkTrackers()
         collectionView.reloadData()
+    }
+}
+
+extension TrackersViewController: UISearchTextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }
