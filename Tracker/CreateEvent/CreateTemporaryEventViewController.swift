@@ -55,6 +55,7 @@ final class CreateTemporaryEventViewController: UIViewController, UITableViewDat
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
         view.backgroundColor = .white
+        nameOfHabit.delegate = self
         setupScrollView()
         addLabel()
         addTextField()
@@ -216,7 +217,7 @@ final class CreateTemporaryEventViewController: UIViewController, UITableViewDat
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CustomTableViewCell
         
-        cell.textLabel?.text = data[indexPath.row]
+        cell.configureTemporaryEvent(with: data[indexPath.row], optionalText: selectedCategory?.name)
         cell.accessoryType = .disclosureIndicator
         
         return cell
@@ -251,6 +252,7 @@ final class CreateTemporaryEventViewController: UIViewController, UITableViewDat
     
     func selectCategory(selected: TrackerCategoryCoreData) {
         selectedCategory = selected
+        tableView.reloadData()
         checkAllConditions()
     }
     
@@ -371,5 +373,12 @@ extension CreateTemporaryEventViewController: UICollectionViewDelegate {
             }
             selectColor(indexPath: indexPath)
         }
+    }
+}
+
+extension CreateTemporaryEventViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }

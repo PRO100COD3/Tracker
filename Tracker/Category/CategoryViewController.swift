@@ -146,6 +146,7 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         }
         
         delegate?.selectCategory(selected: selectedCategory)
+        dismiss(animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -166,6 +167,7 @@ extension CategoryViewController: TableViewProviderDelegate {
         }, completion: nil)
     }
 }
+
 extension CategoryViewController: NewCategoryDelegate {
     func add(name title: String) {
         dataProvider.add(name: title)

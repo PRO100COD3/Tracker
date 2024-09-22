@@ -44,6 +44,7 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
     private let colors = [UIColor.ypRedPlate1, UIColor.ypOrangePlate2, UIColor.ypBluePlate3, UIColor.ypVioletPlate4, UIColor.ypGreenPlate5, UIColor.ypPinkPlate6, UIColor.ypPinkPlate7, UIColor.ypBluePlate8, UIColor.ypGreenPlate9, UIColor.ypVioletPlate10, UIColor.ypOrangePlate11, UIColor.ypPinkPlate12, UIColor.ypOrangePlate13, UIColor.ypBluePlate14, UIColor.ypVioletPlate15, UIColor.ypVioletPlate16, UIColor.ypVioletPlate17, UIColor.ypGreenPlate18]
     var categories: [TrackerCategory] = []
     private var selectedDays: String = ""
+    private var selectedDaysForTable: String = ""
     private var selectedEmoji: String = ""
     private var selectedEmojiIndexPath: IndexPath?
     
@@ -56,6 +57,7 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
         view.backgroundColor = .white
+        nameOfHabit.delegate = self
         setupScrollView()
         addLabel()
         addTextField()
@@ -223,7 +225,7 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? CustomTableViewCell{
-            cell.textLabel?.text = data[indexPath.row]
+            cell.configureHabit(with: data[indexPath.row], optionalCategoryText: selectedCategory?.name, optionalDaysText: selectedDaysForTable)
             cell.accessoryType = .disclosureIndicator
             return cell
         }
@@ -266,18 +268,31 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
     }
     
     func addDayAtShedule(numOfDay: [Bool]) {
+        selectedDays = ""
+        selectedDaysForTable = ""
         let daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-        
+        let daysOfWeekForTable = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
         for (i, day) in daysOfWeek.enumerated(){
             if numOfDay[i] == true{
-                selectedDays.append(" " + day)
+                selectedDays.append(day + " ")
             }
         }
+        for (i, day) in daysOfWeekForTable.enumerated(){
+            if numOfDay[i] == true{
+                if selectedDaysForTable.isEmpty {
+                    selectedDaysForTable.append(day)
+                } else {
+                    selectedDaysForTable.append(", " + day)
+                }
+            }
+        }
+        tableView.reloadData()
         checkAllConditions()
     }
     
     func selectCategory(selected: TrackerCategoryCoreData) {
         selectedCategory = selected
+        tableView.reloadData()
         checkAllConditions()
     }
     
@@ -404,3 +419,9 @@ extension CreateHabitViewController: UICollectionViewDelegate {
     }
 }
 
+extension CreateHabitViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+}

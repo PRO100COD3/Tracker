@@ -22,6 +22,8 @@ final class AddNewCategoryViewController: UIViewController {
         view.addGestureRecognizer(tapGesture)
         view.backgroundColor = .white
         
+        nameOfCategory.delegate = self  
+
         addLabel()
         addTextField()
         addButtonAddNewCategory()
@@ -90,5 +92,12 @@ final class AddNewCategoryViewController: UIViewController {
     
     @objc private func dismissKeyboard() {
         view.endEditing(true)
+    }
+}
+
+extension AddNewCategoryViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }
