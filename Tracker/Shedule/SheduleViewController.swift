@@ -10,12 +10,12 @@ import UIKit
 final class SheduleViewController: UIViewController, UITableViewDataSource, UITableViewDelegate{
     
     weak var delegate: SheduleProtocol?
-    let label = UILabel()
-    let buttonAccept = UIButton(type: .system)
-    let tableView = UITableView()
+    private let label = UILabel()
+    private let buttonAccept = UIButton(type: .system)
+    private let tableView = UITableView()
     var switchStates = [Bool](repeating: false, count: 7)
     
-    let data = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"]
+    private let data = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"]
     
     override func viewDidLoad() {
         view.backgroundColor = .white
@@ -24,7 +24,7 @@ final class SheduleViewController: UIViewController, UITableViewDataSource, UITa
         addButtonAccept()
     }
     
-    func addTableView(){
+    private func addTableView(){
         tableView.frame = self.view.bounds
         tableView.dataSource = self
         tableView.delegate = self
@@ -42,13 +42,13 @@ final class SheduleViewController: UIViewController, UITableViewDataSource, UITa
         tableView.separatorColor = .ypLightGrey
     }
     
-    func addLabel(){
+    private func addLabel(){
         label.text = "Расписание"
         label.font = UIFont(name: "SFPro-Medium", size: 16)
         navigationItem.titleView = label
     }
     
-    func addButtonAccept(){
+    private func addButtonAccept(){
         buttonAccept.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(buttonAccept)
         buttonAccept.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
@@ -85,11 +85,11 @@ final class SheduleViewController: UIViewController, UITableViewDataSource, UITa
         return 75
     }
     
-    @objc func didTapAcceptButton(){
+    @objc private func didTapAcceptButton(){
         delegate?.addDayAtShedule(numOfDay: switchStates)
         dismiss(animated: true, completion: nil)
     }
-    @objc func switchValueChanged(_ sender: UISwitch) {
+    @objc private func switchValueChanged(_ sender: UISwitch) {
         switchStates[sender.tag] = sender.isOn
     }
 }

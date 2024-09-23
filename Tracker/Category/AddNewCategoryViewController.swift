@@ -9,11 +9,11 @@ import UIKit
 
 final class AddNewCategoryViewController: UIViewController {
     
-    weak var delegate: CategoryViewController?
-    weak var addCategoryDelegate: AddNewCategoryProtocol?
+    
+    weak var delegate: NewCategoryDelegate?
     private let label = UILabel()
-    let buttonAddNewCategory = UIButton(type: .system)
-    let nameOfCategory = UITextField()
+    private let buttonAddNewCategory = UIButton(type: .system)
+    private let nameOfCategory = UITextField()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,18 +22,20 @@ final class AddNewCategoryViewController: UIViewController {
         view.addGestureRecognizer(tapGesture)
         view.backgroundColor = .white
         
+        nameOfCategory.delegate = self  
+
         addLabel()
         addTextField()
         addButtonAddNewCategory()
     }
     
-    func addLabel() {
+    private func addLabel() {
         label.text = "Новая категория"
         label.font = UIFont(name: "SFPro-Medium", size: 16)
         navigationItem.titleView = label
     }
     
-    func addButtonAddNewCategory() {
+    private func addButtonAddNewCategory() {
         buttonAddNewCategory.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(buttonAddNewCategory)
         buttonAddNewCategory.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
@@ -50,7 +52,7 @@ final class AddNewCategoryViewController: UIViewController {
         buttonAddNewCategory.addTarget(self, action: #selector(didTapAddButton), for: .touchUpInside)
     }
     
-    func addTextField() {
+    private func addTextField() {
         nameOfCategory.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(nameOfCategory)
         nameOfCategory.placeholder = "Введите название категории"
@@ -69,7 +71,7 @@ final class AddNewCategoryViewController: UIViewController {
         nameOfCategory.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
     }
     
-    @objc func textFieldDidChange() {
+    @objc private func textFieldDidChange() {
         if let text = nameOfCategory.text, !text.isEmpty {
             buttonAddNewCategory.backgroundColor = .yPblack
             buttonAddNewCategory.isEnabled = true
@@ -79,16 +81,23 @@ final class AddNewCategoryViewController: UIViewController {
         }
     }
     
-    @objc func didTapAddButton(){
+    @objc private func didTapAddButton(){
         guard let text = nameOfCategory.text else{
-            fatalError("пустая строка добавления категории")
+            assertionFailure("пустая строка добавления категории")
+            return
         }
-        addCategoryDelegate?.addCategoryAtArray(nameOfCategory: text)
+        delegate?.add(name: text)
         dismiss(animated: true, completion: nil)
-        delegate?.reloadTable(nameOfCategory: text)
     }
     
-    @objc func dismissKeyboard() {
+    @objc private func dismissKeyboard() {
         view.endEditing(true)
+    }
+}
+
+extension AddNewCategoryViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }

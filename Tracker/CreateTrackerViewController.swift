@@ -7,13 +7,13 @@
 
 import UIKit
 
+
 final class CreateTrackerViewController: UIViewController, CloseControllerProtocol{
     
-    weak var addCategoryDelegate: AddNewCategoryProtocol?
-    weak var delegate: CreateTrackerProtocol?
-    let habitButton = UIButton(type: .system)
-    let temporaryEventButton = UIButton(type: .system)
-    let label = UILabel()
+    weak var delegate: NewTrackerDelegate?
+    private let habitButton = UIButton(type: .system)
+    private let temporaryEventButton = UIButton(type: .system)
+    private let label = UILabel()
     var categories: [TrackerCategory] = []
     var trackers: [Tracker] = []
     var currentDate: Date = Date()
@@ -26,13 +26,13 @@ final class CreateTrackerViewController: UIViewController, CloseControllerProtoc
         addTemporaryEventButton()
     }
     
-    func addLabel(){
+    private func addLabel(){
         label.text = "Создание трекера"
         label.font = UIFont(name: "SFPro-Medium", size: 16)
         navigationItem.titleView = label
     }
     
-    func addHabitButton() {
+    private func addHabitButton() {
         habitButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(habitButton)
         habitButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 281).isActive = true
@@ -48,7 +48,7 @@ final class CreateTrackerViewController: UIViewController, CloseControllerProtoc
         habitButton.addTarget(self, action: #selector(habitButtonTapped), for: .touchUpInside)
     }
     
-    func addTemporaryEventButton(){
+    private func addTemporaryEventButton(){
         temporaryEventButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(temporaryEventButton)
         temporaryEventButton.topAnchor.constraint(equalTo: habitButton.bottomAnchor, constant: 16).isActive = true
@@ -68,20 +68,24 @@ final class CreateTrackerViewController: UIViewController, CloseControllerProtoc
         dismiss(animated: true, completion: nil)
     }
     
-    @objc func habitButtonTapped() {
+    func addCategoryAtArray(nameOfCategory: String) {
+        var newArray:[TrackerCategory] = categories
+        let newCategory = TrackerCategory(name: nameOfCategory, trackers: [])
+        newArray.append(newCategory)
+        categories = newArray
+    }
+    
+    @objc private func habitButtonTapped() {
         let createHabitViewController = CreateHabitViewController()
         createHabitViewController.categories = self.categories
-        createHabitViewController.addCategoryDelegate = self.addCategoryDelegate
         createHabitViewController.closeDelegate = self
         createHabitViewController.delegate = self.delegate
         let navigationController = UINavigationController(rootViewController: createHabitViewController)
         present(navigationController, animated: true)
     }
     
-    @objc func temporaryEventButtonTapped() {
+    @objc private func temporaryEventButtonTapped() {
         let createTemporaryEventViewController = CreateTemporaryEventViewController()
-        createTemporaryEventViewController.categories = self.categories
-        createTemporaryEventViewController.addCategoryDelegate = self.addCategoryDelegate
         createTemporaryEventViewController.closeDelegate = self
         createTemporaryEventViewController.delegate = self.delegate
         createTemporaryEventViewController.currentDate = self.currentDate

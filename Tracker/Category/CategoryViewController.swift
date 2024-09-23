@@ -5,26 +5,26 @@
 //  Created by Вадим Дзюба on 12.07.2024.
 //
 
+
 import UIKit
 
 final class CategoryViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
-    weak var addCategoryDelegate: AddNewCategoryProtocol?
+    
     weak var delegate: CategoryProtocol?
-    let label = UILabel()
-    let buttonAddNewCategory = UIButton(type: .system)
-    let tableView = UITableView()
+    private let label = UILabel()
+    private let buttonAddNewCategory = UIButton(type: .system)
+    private let tableView = UITableView()
     private var imageView = UIImageView()
-    let quote = UILabel()
-    var categories: [TrackerCategory] = []
-    var newCategories:[String] = []
-    var selectedIndexPath: IndexPath?
+    private let quote = UILabel()
+    
+    private lazy var dataProvider = TrackerCategoryStore(delegate: self)
+    private var selectedIndexPath: IndexPath?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        categoryToString()
-        if categories.isEmpty == false {
+        if dataProvider.isContextEmpty(for: "TrackerCategoryCoreData") == false {
             addTableView()
         } else {
             addImageView()
@@ -34,13 +34,13 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         addButtonAddNewCategory()
     }
     
-    func addLabel() {
+    private func addLabel() {
         label.text = "Категория"
         label.font = UIFont(name: "SFPro-Medium", size: 16)
         navigationItem.titleView = label
     }
     
-    func addButtonAddNewCategory() {
+    private func addButtonAddNewCategory() {
         buttonAddNewCategory.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(buttonAddNewCategory)
         buttonAddNewCategory.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
@@ -56,7 +56,7 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         buttonAddNewCategory.addTarget(self, action: #selector(addNewCategory), for: .touchUpInside)
     }
     
-    func addImageView() {
+    private func addImageView() {
         let image = UIImage(named: "Star")
         imageView = UIImageView(image: image)
         view.addSubview(imageView)
@@ -65,7 +65,7 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
     
-    func addCentreText() {
+    private func addCentreText() {
         quote.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(quote)
         quote.numberOfLines = 2
@@ -76,15 +76,19 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         quote.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
     }
     
-    @objc func addNewCategory() {
+    private func deleteCentre() {
+        quote.removeFromSuperview()
+        imageView.removeFromSuperview()
+    }
+    
+    @objc private func addNewCategory() {
         let addNewCategoryViewController = AddNewCategoryViewController()
         addNewCategoryViewController.delegate = self
-        addNewCategoryViewController.addCategoryDelegate = self.addCategoryDelegate
         let navigationController = UINavigationController(rootViewController: addNewCategoryViewController)
         present(navigationController, animated: true)
     }
     
-    func addTableView() {
+    private func addTableView() {
         tableView.frame = self.view.bounds
         tableView.dataSource = self
         tableView.delegate = self
@@ -100,31 +104,19 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         tableView.heightAnchor.constraint(equalToConstant: 524).isActive = true
     }
     
-    func reloadTable(nameOfCategory: String) {
-        let newCategory = TrackerCategory(name: nameOfCategory, trackers: [])
-        categories.append(newCategory)
-        newCategories.append(nameOfCategory)
-        
-        if categories.count == 1 {
-            imageView.removeFromSuperview()
-            quote.removeFromSuperview()
-            addTableView()
-        } else {
-            let newIndexPath = IndexPath(row: categories.count - 1, section: 0)
-            tableView.insertRows(at: [newIndexPath], with: .automatic)
-        }
-        
-        tableView.reloadData()
+    func numberOfSections(in tableView: UITableView) -> Int {
+        dataProvider.numberOfSections
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return categories.count
+        return dataProvider.numberOfRowsInSection(section)
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CategoriesTableViewCell
         
-        cell.textLabel?.text = categories[indexPath.row].name
+        guard let record = dataProvider.object(at: indexPath) else { return UITableViewCell() }
+        cell.textLabel?.text = record.name
         cell.accessoryType = .none
         if indexPath == selectedIndexPath {
             cell.accessoryType = .checkmark
@@ -148,32 +140,44 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         
         selectedIndexPath = indexPath
         
-        guard let select = selectedIndexPath else {
+        tableView.reloadData()
+        guard let selectedCategory = dataProvider.object(at: indexPath) else {
             return
         }
-        tableView.reloadData()
-        let selectedCategory = newCategories[select.row]
-        let category = findCategory(name: selectedCategory)
         
-        delegate?.selectCategory(selected: category)
+        delegate?.selectCategory(selected: selectedCategory)
+        dismiss(animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 75
     }
-    
-    func categoryToString() {
-        for i in categories {
-            newCategories.append(i.name)
-        }
+}
+
+extension CategoryViewController: TableViewProviderDelegate {
+    func didUpdate(_ update: CategoryStoreUpdate) {
+        tableView.performBatchUpdates({
+            let insertedIndexPaths = update.insertedIndexes.map { IndexPath(item: $0, section: 0) }
+            let deletedIndexPaths = update.deletedIndexes.map { IndexPath(item: $0, section: 0) }
+            let updatedIndexPaths = update.updatedIndexes.map { IndexPath(item: $0, section: 0) }
+            
+            tableView.insertRows(at: insertedIndexPaths, with: .automatic)
+            tableView.deleteRows(at: deletedIndexPaths, with: .fade)
+            tableView.reloadRows(at: updatedIndexPaths, with: .automatic)
+        }, completion: nil)
     }
-    
-    func findCategory(name: String) -> TrackerCategory {
-        for i in categories {
-            if name == i.name {
-                return i
-            }
+}
+
+extension CategoryViewController: NewCategoryDelegate {
+    func add(name title: String) {
+        dataProvider.add(name: title)
+        if !dataProvider.isContextEmpty(for: "TrackerCategoryCoreData") {
+            deleteCentre()
+            addTableView()
+        } else {
+            addImageView()
+            addCentreText()
         }
-        fatalError("ошибка, не найдена категория из ячейки")
+        dismiss(animated: true)
     }
 }

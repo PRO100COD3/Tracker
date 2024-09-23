@@ -7,14 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3C2A71802C7A81C3008E0CCB /* TrackerStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2A717F2C7A81C3008E0CCB /* TrackerStore.swift */; };
+		3C2A71822C7A81FA008E0CCB /* TrackerCategoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2A71812C7A81FA008E0CCB /* TrackerCategoryStore.swift */; };
+		3C2A71842C7A8210008E0CCB /* TrackerRecordStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2A71832C7A8210008E0CCB /* TrackerRecordStore.swift */; };
 		3C2E90C22C2B23A00081F7B7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2E90C12C2B23A00081F7B7 /* AppDelegate.swift */; };
 		3C2E90C42C2B23A00081F7B7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2E90C32C2B23A00081F7B7 /* SceneDelegate.swift */; };
 		3C2E90C62C2B23A00081F7B7 /* TrackersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2E90C52C2B23A00081F7B7 /* TrackersViewController.swift */; };
 		3C2E90CB2C2B23A10081F7B7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3C2E90CA2C2B23A10081F7B7 /* Assets.xcassets */; };
 		3C2E90CE2C2B23A10081F7B7 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 3C2E90CD2C2B23A10081F7B7 /* Base */; };
-		3C2E90D92C2B23A20081F7B7 /* TrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2E90D82C2B23A20081F7B7 /* TrackerTests.swift */; };
-		3C2E90E32C2B23A20081F7B7 /* TrackerUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2E90E22C2B23A20081F7B7 /* TrackerUITests.swift */; };
-		3C2E90E52C2B23A20081F7B7 /* TrackerUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2E90E42C2B23A20081F7B7 /* TrackerUITestsLaunchTests.swift */; };
 		3C2E91BA2C373A690081F7B7 /* SF-Pro.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3C2E91B92C373A690081F7B7 /* SF-Pro.ttf */; };
 		3C2E91BC2C3751880081F7B7 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2E91BB2C3751880081F7B7 /* TabBarViewController.swift */; };
 		3C2E91BE2C37521D0081F7B7 /* StatisticViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2E91BD2C37521D0081F7B7 /* StatisticViewController.swift */; };
@@ -29,15 +29,25 @@
 		3CB90D192C4143F60074BD2D /* SheduleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB90D182C4143F60074BD2D /* SheduleTableViewCell.swift */; };
 		3CB90D1B2C4153AD0074BD2D /* CategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB90D1A2C4153AD0074BD2D /* CategoryViewController.swift */; };
 		3CB90D1D2C41CDCE0074BD2D /* AddNewCategoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB90D1C2C41CDCE0074BD2D /* AddNewCategoryViewController.swift */; };
+		3CD336262C89C71000784414 /* CategoryProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD336252C89C71000784414 /* CategoryProviderProtocol.swift */; };
+		3CD336282C89C97700784414 /* ProviderDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD336272C89C97700784414 /* ProviderDelegate.swift */; };
+		3CD3362A2C89CC4F00784414 /* NewCategoryDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD336292C89CC4F00784414 /* NewCategoryDelegate.swift */; };
+		3CD3362C2C8AF58700784414 /* TrackerProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD3362B2C8AF58700784414 /* TrackerProviderProtocol.swift */; };
+		3CD3362E2C8AF93C00784414 /* NewTrackerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD3362D2C8AF93C00784414 /* NewTrackerDelegate.swift */; };
+		3CD336302C8B021100784414 /* UIColorMarshalling.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD3362F2C8B021100784414 /* UIColorMarshalling.swift */; };
+		3CDE2FCA2CA0E64400FD3D06 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3CDE2FC82CA0E64400FD3D06 /* Model.xcdatamodeld */; };
+		3CDE2FCB2CA0E64400FD3D06 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3CDE2FC82CA0E64400FD3D06 /* Model.xcdatamodeld */; };
+		3CDE2FCC2CA0E64400FD3D06 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 3CDE2FC82CA0E64400FD3D06 /* Model.xcdatamodeld */; };
 		3CE1CB022C43E4A2007E96CB /* CategoriesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE1CB012C43E4A2007E96CB /* CategoriesTableViewCell.swift */; };
 		3CE1CB052C43EE92007E96CB /* SheduleProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE1CB042C43EE92007E96CB /* SheduleProtocol.swift */; };
 		3CE1CB072C43EED8007E96CB /* CategoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE1CB062C43EED8007E96CB /* CategoryProtocol.swift */; };
-		3CE1CB092C44210B007E96CB /* CreateTrackerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE1CB082C44210B007E96CB /* CreateTrackerProtocol.swift */; };
-		3CE1CB0B2C44236E007E96CB /* AddNewCategoryProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE1CB0A2C44236E007E96CB /* AddNewCategoryProtocol.swift */; };
 		3CE1CB0E2C4428E0007E96CB /* CloseControllerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE1CB0D2C4428E0007E96CB /* CloseControllerProtocol.swift */; };
 		3CE1CB102C4532F4007E96CB /* TrackersCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE1CB0F2C4532F4007E96CB /* TrackersCollectionViewCell.swift */; };
 		3CE1CB132C486CAD007E96CB /* CollectionViewHeaders.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE1CB122C486CAD007E96CB /* CollectionViewHeaders.swift */; };
 		3CE1CB1D2C4E3D02007E96CB /* TrackerRecordProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE1CB1C2C4E3D02007E96CB /* TrackerRecordProtocol.swift */; };
+		3CE1CB712C71CCFC007E96CB /* CustomEmojiCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE1CB702C71CCFC007E96CB /* CustomEmojiCell.swift */; };
+		3CE1CB732C748CC3007E96CB /* CustomColorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CE1CB722C748CC3007E96CB /* CustomColorCell.swift */; };
+		3CF46DFA2C9B7BFA00F3AFCC /* RecordProviderProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CF46DF92C9B7BFA00F3AFCC /* RecordProviderProtocol.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +68,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3C2A717F2C7A81C3008E0CCB /* TrackerStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerStore.swift; sourceTree = "<group>"; };
+		3C2A71812C7A81FA008E0CCB /* TrackerCategoryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategoryStore.swift; sourceTree = "<group>"; };
+		3C2A71832C7A8210008E0CCB /* TrackerRecordStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecordStore.swift; sourceTree = "<group>"; };
 		3C2E90BE2C2B23A00081F7B7 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3C2E90C12C2B23A00081F7B7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3C2E90C32C2B23A00081F7B7 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -66,10 +79,7 @@
 		3C2E90CD2C2B23A10081F7B7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3C2E90CF2C2B23A10081F7B7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3C2E90D42C2B23A20081F7B7 /* TrackerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrackerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		3C2E90D82C2B23A20081F7B7 /* TrackerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerTests.swift; sourceTree = "<group>"; };
 		3C2E90DE2C2B23A20081F7B7 /* TrackerUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TrackerUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		3C2E90E22C2B23A20081F7B7 /* TrackerUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerUITests.swift; sourceTree = "<group>"; };
-		3C2E90E42C2B23A20081F7B7 /* TrackerUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		3C2E91B92C373A690081F7B7 /* SF-Pro.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SF-Pro.ttf"; sourceTree = "<group>"; };
 		3C2E91BB2C3751880081F7B7 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		3C2E91BD2C37521D0081F7B7 /* StatisticViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatisticViewController.swift; sourceTree = "<group>"; };
@@ -84,15 +94,23 @@
 		3CB90D182C4143F60074BD2D /* SheduleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheduleTableViewCell.swift; sourceTree = "<group>"; };
 		3CB90D1A2C4153AD0074BD2D /* CategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewController.swift; sourceTree = "<group>"; };
 		3CB90D1C2C41CDCE0074BD2D /* AddNewCategoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewCategoryViewController.swift; sourceTree = "<group>"; };
+		3CD336252C89C71000784414 /* CategoryProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryProviderProtocol.swift; sourceTree = "<group>"; };
+		3CD336272C89C97700784414 /* ProviderDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderDelegate.swift; sourceTree = "<group>"; };
+		3CD336292C89CC4F00784414 /* NewCategoryDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewCategoryDelegate.swift; sourceTree = "<group>"; };
+		3CD3362B2C8AF58700784414 /* TrackerProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerProviderProtocol.swift; sourceTree = "<group>"; };
+		3CD3362D2C8AF93C00784414 /* NewTrackerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTrackerDelegate.swift; sourceTree = "<group>"; };
+		3CD3362F2C8B021100784414 /* UIColorMarshalling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColorMarshalling.swift; sourceTree = "<group>"; };
+		3CDE2FC92CA0E64400FD3D06 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		3CE1CB012C43E4A2007E96CB /* CategoriesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesTableViewCell.swift; sourceTree = "<group>"; };
 		3CE1CB042C43EE92007E96CB /* SheduleProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheduleProtocol.swift; sourceTree = "<group>"; };
 		3CE1CB062C43EED8007E96CB /* CategoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryProtocol.swift; sourceTree = "<group>"; };
-		3CE1CB082C44210B007E96CB /* CreateTrackerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTrackerProtocol.swift; sourceTree = "<group>"; };
-		3CE1CB0A2C44236E007E96CB /* AddNewCategoryProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewCategoryProtocol.swift; sourceTree = "<group>"; };
 		3CE1CB0D2C4428E0007E96CB /* CloseControllerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloseControllerProtocol.swift; sourceTree = "<group>"; };
 		3CE1CB0F2C4532F4007E96CB /* TrackersCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersCollectionViewCell.swift; sourceTree = "<group>"; };
 		3CE1CB122C486CAD007E96CB /* CollectionViewHeaders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewHeaders.swift; sourceTree = "<group>"; };
 		3CE1CB1C2C4E3D02007E96CB /* TrackerRecordProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecordProtocol.swift; sourceTree = "<group>"; };
+		3CE1CB702C71CCFC007E96CB /* CustomEmojiCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomEmojiCell.swift; sourceTree = "<group>"; };
+		3CE1CB722C748CC3007E96CB /* CustomColorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomColorCell.swift; sourceTree = "<group>"; };
+		3CF46DF92C9B7BFA00F3AFCC /* RecordProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordProviderProtocol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -123,9 +141,8 @@
 		3C2E90B52C2B23A00081F7B7 = {
 			isa = PBXGroup;
 			children = (
+				3CDE2FC82CA0E64400FD3D06 /* Model.xcdatamodeld */,
 				3C2E90C02C2B23A00081F7B7 /* Tracker */,
-				3C2E90D72C2B23A20081F7B7 /* TrackerTests */,
-				3C2E90E12C2B23A20081F7B7 /* TrackerUITests */,
 				3C2E90BF2C2B23A00081F7B7 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -159,23 +176,6 @@
 			path = Tracker;
 			sourceTree = "<group>";
 		};
-		3C2E90D72C2B23A20081F7B7 /* TrackerTests */ = {
-			isa = PBXGroup;
-			children = (
-				3C2E90D82C2B23A20081F7B7 /* TrackerTests.swift */,
-			);
-			path = TrackerTests;
-			sourceTree = "<group>";
-		};
-		3C2E90E12C2B23A20081F7B7 /* TrackerUITests */ = {
-			isa = PBXGroup;
-			children = (
-				3C2E90E22C2B23A20081F7B7 /* TrackerUITests.swift */,
-				3C2E90E42C2B23A20081F7B7 /* TrackerUITestsLaunchTests.swift */,
-			);
-			path = TrackerUITests;
-			sourceTree = "<group>";
-		};
 		3C2E91B82C373A450081F7B7 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
@@ -190,6 +190,10 @@
 				3C2E91FC2C393B160081F7B7 /* Tracker.swift */,
 				3C2E91FE2C393D0B0081F7B7 /* TrackerCategory.swift */,
 				3C2E92002C393E7F0081F7B7 /* TrackerRecord.swift */,
+				3C2A717F2C7A81C3008E0CCB /* TrackerStore.swift */,
+				3C2A71812C7A81FA008E0CCB /* TrackerCategoryStore.swift */,
+				3C2A71832C7A8210008E0CCB /* TrackerRecordStore.swift */,
+				3CD3362F2C8B021100784414 /* UIColorMarshalling.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -200,6 +204,8 @@
 				3CB90D102C3E56DF0074BD2D /* CreateTemporaryEventViewController.swift */,
 				3C2E92042C3C83460081F7B7 /* CreateHabitViewController.swift */,
 				3CB90D132C3E597E0074BD2D /* CustomTableViewCell.swift */,
+				3CE1CB702C71CCFC007E96CB /* CustomEmojiCell.swift */,
+				3CE1CB722C748CC3007E96CB /* CustomColorCell.swift */,
 			);
 			path = CreateEvent;
 			sourceTree = "<group>";
@@ -230,10 +236,14 @@
 			children = (
 				3CE1CB042C43EE92007E96CB /* SheduleProtocol.swift */,
 				3CE1CB062C43EED8007E96CB /* CategoryProtocol.swift */,
-				3CE1CB082C44210B007E96CB /* CreateTrackerProtocol.swift */,
-				3CE1CB0A2C44236E007E96CB /* AddNewCategoryProtocol.swift */,
 				3CE1CB0D2C4428E0007E96CB /* CloseControllerProtocol.swift */,
 				3CE1CB1C2C4E3D02007E96CB /* TrackerRecordProtocol.swift */,
+				3CD336272C89C97700784414 /* ProviderDelegate.swift */,
+				3CD336252C89C71000784414 /* CategoryProviderProtocol.swift */,
+				3CD3362B2C8AF58700784414 /* TrackerProviderProtocol.swift */,
+				3CF46DF92C9B7BFA00F3AFCC /* RecordProviderProtocol.swift */,
+				3CD336292C89CC4F00784414 /* NewCategoryDelegate.swift */,
+				3CD3362D2C8AF93C00784414 /* NewTrackerDelegate.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -396,28 +406,39 @@
 				3C2E92032C3C82AF0081F7B7 /* CreateTrackerViewController.swift in Sources */,
 				3CB90D1D2C41CDCE0074BD2D /* AddNewCategoryViewController.swift in Sources */,
 				3CB90D172C413C3D0074BD2D /* SheduleViewController.swift in Sources */,
+				3C2A71802C7A81C3008E0CCB /* TrackerStore.swift in Sources */,
 				3C2E91FD2C393B160081F7B7 /* Tracker.swift in Sources */,
 				3C2E92012C393E7F0081F7B7 /* TrackerRecord.swift in Sources */,
 				3CB90D112C3E56DF0074BD2D /* CreateTemporaryEventViewController.swift in Sources */,
 				3C2E90C62C2B23A00081F7B7 /* TrackersViewController.swift in Sources */,
+				3CD336282C89C97700784414 /* ProviderDelegate.swift in Sources */,
 				3CE1CB022C43E4A2007E96CB /* CategoriesTableViewCell.swift in Sources */,
 				3C2E91BC2C3751880081F7B7 /* TabBarViewController.swift in Sources */,
+				3CD3362C2C8AF58700784414 /* TrackerProviderProtocol.swift in Sources */,
+				3CD3362E2C8AF93C00784414 /* NewTrackerDelegate.swift in Sources */,
 				3CB90D142C3E597E0074BD2D /* CustomTableViewCell.swift in Sources */,
 				3CE1CB102C4532F4007E96CB /* TrackersCollectionViewCell.swift in Sources */,
-				3CE1CB0B2C44236E007E96CB /* AddNewCategoryProtocol.swift in Sources */,
-				3CE1CB092C44210B007E96CB /* CreateTrackerProtocol.swift in Sources */,
+				3CF46DFA2C9B7BFA00F3AFCC /* RecordProviderProtocol.swift in Sources */,
 				3CB90D192C4143F60074BD2D /* SheduleTableViewCell.swift in Sources */,
 				3C2E90C22C2B23A00081F7B7 /* AppDelegate.swift in Sources */,
 				3CE1CB1D2C4E3D02007E96CB /* TrackerRecordProtocol.swift in Sources */,
 				3CE1CB0E2C4428E0007E96CB /* CloseControllerProtocol.swift in Sources */,
+				3CE1CB712C71CCFC007E96CB /* CustomEmojiCell.swift in Sources */,
 				3CE1CB072C43EED8007E96CB /* CategoryProtocol.swift in Sources */,
+				3CD336262C89C71000784414 /* CategoryProviderProtocol.swift in Sources */,
+				3CDE2FCA2CA0E64400FD3D06 /* Model.xcdatamodeld in Sources */,
+				3C2A71842C7A8210008E0CCB /* TrackerRecordStore.swift in Sources */,
 				3CE1CB132C486CAD007E96CB /* CollectionViewHeaders.swift in Sources */,
+				3CD3362A2C89CC4F00784414 /* NewCategoryDelegate.swift in Sources */,
 				3CE1CB052C43EE92007E96CB /* SheduleProtocol.swift in Sources */,
 				3CB90D1B2C4153AD0074BD2D /* CategoryViewController.swift in Sources */,
 				3C2E91BE2C37521D0081F7B7 /* StatisticViewController.swift in Sources */,
 				3C2E92052C3C83460081F7B7 /* CreateHabitViewController.swift in Sources */,
+				3C2A71822C7A81FA008E0CCB /* TrackerCategoryStore.swift in Sources */,
 				3C2E90C42C2B23A00081F7B7 /* SceneDelegate.swift in Sources */,
 				3C2E91FF2C393D0B0081F7B7 /* TrackerCategory.swift in Sources */,
+				3CD336302C8B021100784414 /* UIColorMarshalling.swift in Sources */,
+				3CE1CB732C748CC3007E96CB /* CustomColorCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -425,7 +446,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3C2E90D92C2B23A20081F7B7 /* TrackerTests.swift in Sources */,
+				3CDE2FCC2CA0E64400FD3D06 /* Model.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -433,8 +454,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3C2E90E32C2B23A20081F7B7 /* TrackerUITests.swift in Sources */,
-				3C2E90E52C2B23A20081F7B7 /* TrackerUITestsLaunchTests.swift in Sources */,
+				3CDE2FCB2CA0E64400FD3D06 /* Model.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -643,7 +663,6 @@
 		3C2E90EC2C2B23A20081F7B7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -663,7 +682,6 @@
 		3C2E90ED2C2B23A20081F7B7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -683,7 +701,6 @@
 		3C2E90EF2C2B23A20081F7B7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5VR55PX3MR;
@@ -701,7 +718,6 @@
 		3C2E90F02C2B23A20081F7B7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 5VR55PX3MR;
@@ -767,6 +783,19 @@
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCVersionGroup section */
+		3CDE2FC82CA0E64400FD3D06 /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				3CDE2FC92CA0E64400FD3D06 /* Model.xcdatamodel */,
+			);
+			currentVersion = 3CDE2FC92CA0E64400FD3D06 /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = 3C2E90B62C2B23A00081F7B7 /* Project object */;
 }

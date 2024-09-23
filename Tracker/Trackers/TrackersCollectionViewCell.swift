@@ -9,7 +9,7 @@ import UIKit
 
 final class TrackersCollectionViewCell: UICollectionViewCell {
     
-    var countTappedDay = 0
+    private var countTappedDay = 0
     static let identifier = "CustomCell"
     weak var delegate: TrackerRecordProtocol?
     private var checkButtonTap = false
@@ -62,6 +62,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     }()
     
     func changeCell(color: UIColor, emoji: String, title: String, daysCount: Int, checkThisDayRecord: Bool){
+        
         mainView.backgroundColor = color
         emojiLabel.text = emoji
         titleLabel.text = title
@@ -107,7 +108,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    @objc func buttonTapped(){
+    @objc private func buttonTapped(){
         if checkButtonTap == false {
             countTappedDay += 1
             delegate?.didTapAddButton(on: self)
@@ -191,6 +192,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     }
     
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        self.init()
+        assertionFailure("init(coder:) has not been implemented")
     }
 }
