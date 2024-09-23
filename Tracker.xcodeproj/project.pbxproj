@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 56;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -113,6 +113,10 @@
 		3CF46DF92C9B7BFA00F3AFCC /* RecordProviderProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecordProviderProtocol.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		3C89A8A32CA21C4A002299C6 /* Onboarding */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = Onboarding; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		3C2E90BB2C2B23A00081F7B7 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -160,6 +164,7 @@
 		3C2E90C02C2B23A00081F7B7 /* Tracker */ = {
 			isa = PBXGroup;
 			children = (
+				3C89A8A32CA21C4A002299C6 /* Onboarding */,
 				3CE1CB112C45333A007E96CB /* Trackers */,
 				3CE1CB0C2C442679007E96CB /* Shedule */,
 				3CE1CB032C43EE81007E96CB /* Protocols */,
@@ -282,6 +287,9 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				3C89A8A32CA21C4A002299C6 /* Onboarding */,
+			);
 			name = Tracker;
 			packageProductDependencies = (
 			);
@@ -302,6 +310,9 @@
 			dependencies = (
 				3C2E90D62C2B23A20081F7B7 /* PBXTargetDependency */,
 			);
+			fileSystemSynchronizedGroups = (
+				3C89A8A32CA21C4A002299C6 /* Onboarding */,
+			);
 			name = TrackerTests;
 			productName = TrackerTests;
 			productReference = 3C2E90D42C2B23A20081F7B7 /* TrackerTests.xctest */;
@@ -319,6 +330,9 @@
 			);
 			dependencies = (
 				3C2E90E02C2B23A20081F7B7 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				3C89A8A32CA21C4A002299C6 /* Onboarding */,
 			);
 			name = TrackerUITests;
 			productName = TrackerUITests;
