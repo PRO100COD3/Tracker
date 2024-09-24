@@ -137,7 +137,7 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
         tableView.heightAnchor.constraint(equalToConstant: 524).isActive = true
     }
-        
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.categories.count
     }

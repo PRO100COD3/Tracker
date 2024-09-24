@@ -203,7 +203,7 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
         let formattedDate = dateFormatter.string(from: currentDate)
         
         let uuid = trackersCategoriesOnCollection[indexPath.section].trackers[indexPath.row].id
-        guard let tracker = dataProvider.object(at: indexPath, id: uuid) else { return }
+        guard let tracker = dataProvider.findTracker(at: indexPath, id: uuid) else { return }
         recordsProvider.add(date: formattedDate, uuid: uuid, tracker: tracker)
     }
     
