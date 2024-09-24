@@ -7,16 +7,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "DC4A6DD3-657A-4CD9-9FAA-D0DBB6E4D5C9"
-            shouldBeEnabled = "No"
+            uuid = "D954DFA2-9679-42B0-BA22-CC87ACE5392B"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Onboarding/PageViewController.swift"
+            filePath = "Tracker/Models/TrackerStore.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "27"
-            endingLineNumber = "27"
-            landmarkName = "pages"
+            startingLineNumber = "19"
+            endingLineNumber = "19"
+            landmarkName = "trackerMixes"
             landmarkType = "24">
          </BreakpointContent>
       </BreakpointProxy>

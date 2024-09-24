@@ -24,4 +24,9 @@ final class CategoriesTableViewCell: UITableViewCell {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    func configurate(name: String, isSelected: Bool) {
+        textLabel?.text = name
+        accessoryType = isSelected ? .checkmark : .none
+    }
 }

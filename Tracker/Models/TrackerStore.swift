@@ -17,7 +17,13 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
     
     var trackerMixes: [TrackerCategory] {
         guard let objects = fetchedResultsController?.fetchedObjects else { return [] }
-        return objects.compactMap { try? self.trackerMix(from: $0) }
+            var mixes = [TrackerCategory]()
+            for object in objects {
+                if let mix = try? self.trackerMix(from: object) {
+                    mixes.append(mix)
+                }
+            }
+            return mixes
     }
     
     private var context: NSManagedObjectContext {
@@ -41,7 +47,7 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
         let compoundPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [predicate, dayPredicate])
         fetchRequest.predicate = compoundPredicate
         
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: false)]
         
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
                                                                   managedObjectContext: context,

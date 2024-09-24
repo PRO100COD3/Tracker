@@ -10,7 +10,7 @@ import UIKit
 
 final class CategoryViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
-    
+    private var viewModel: CategoryViewModel
     weak var delegate: CategoryProtocol?
     private let label = UILabel()
     private let buttonAddNewCategory = UIButton(type: .system)
@@ -18,7 +18,6 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
     private var imageView = UIImageView()
     private let quote = UILabel()
     
-    private lazy var dataProvider = TrackerCategoryStore(delegate: self)
     private var selectedIndexPath: IndexPath?
     var trackerCategory: TrackerCategoryCoreData?
     
@@ -26,19 +25,47 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         super.viewDidLoad()
         view.backgroundColor = .white
         coreDataToIndexPath()
-        if dataProvider.isContextEmpty(for: "TrackerCategoryCoreData") == false {
+        addLabel()
+        addButtonAddNewCategory()
+        bindViewModel()
+        viewModel.loadCategories()
+    }
+    
+    init(viewModel: CategoryViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func bindViewModel() {
+        viewModel.onCategoriesUpdated = { [weak self] categories in
+            self?.checkCategories()
+            self?.tableView.reloadData()
+        }
+        
+        viewModel.onCategorySelected = { [weak self] selectedCategory in
+            guard let self, let delegate = self.delegate, let selectedCategory else { return }
+            delegate.selectCategory(selected: selectedCategory)
+            self.dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    private func checkCategories() {
+        if viewModel.categories.count != 0 {
+            deleteCentre()
             addTableView()
         } else {
             addImageView()
             addCentreText()
         }
-        addLabel()
-        addButtonAddNewCategory()
     }
     
     private func coreDataToIndexPath() {
         guard let trackerCategory else { return }
-        selectedIndexPath = dataProvider.indexPath(for: trackerCategory)
+        selectedIndexPath = viewModel.indexPathFromeCoreData(category: trackerCategory)
     }
     
     private func addLabel() {
@@ -84,13 +111,13 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
     }
     
     private func deleteCentre() {
-        quote.removeFromSuperview()
         imageView.removeFromSuperview()
+        quote.removeFromSuperview()
     }
     
     @objc private func addNewCategory() {
         let addNewCategoryViewController = AddNewCategoryViewController()
-        addNewCategoryViewController.delegate = self
+        addNewCategoryViewController.delegate = viewModel
         let navigationController = UINavigationController(rootViewController: addNewCategoryViewController)
         present(navigationController, animated: true)
     }
@@ -110,26 +137,17 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
         tableView.heightAnchor.constraint(equalToConstant: 524).isActive = true
     }
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
-        dataProvider.numberOfSections
-    }
-    
+        
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dataProvider.numberOfRowsInSection(section)
+        return viewModel.categories.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CategoriesTableViewCell
         
-        guard let record = dataProvider.object(at: indexPath) else { return UITableViewCell() }
-        cell.textLabel?.text = record.name
-        cell.accessoryType = .none
-        if indexPath == selectedIndexPath {
-            cell.accessoryType = .checkmark
-        } else {
-            cell.accessoryType = .none
-        }
+        let category = viewModel.categories[indexPath.row]
+        guard let name = category.name else { return UITableViewCell() }
+        cell.configurate(name: name, isSelected: indexPath == selectedIndexPath)
         
         return cell
     }
@@ -137,54 +155,12 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
     // MARK: - UITableViewDelegate
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let selectedIndexPath = selectedIndexPath {
-            let previousCell = tableView.cellForRow(at: selectedIndexPath)
-            previousCell?.accessoryType = .none
-        }
-        
-        let currentCell = tableView.cellForRow(at: indexPath)
-        currentCell?.accessoryType = .checkmark
-        
+        viewModel.selectCategory(at: indexPath.row)
         selectedIndexPath = indexPath
-        
         tableView.reloadData()
-        guard let selectedCategory = dataProvider.object(at: indexPath) else {
-            return
-        }
-        
-        delegate?.selectCategory(selected: selectedCategory)
-        dismiss(animated: true, completion: nil)
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 75
-    }
-}
-
-extension CategoryViewController: TableViewProviderDelegate {
-    func didUpdate(_ update: CategoryStoreUpdate) {
-        tableView.performBatchUpdates({
-            let insertedIndexPaths = update.insertedIndexes.map { IndexPath(item: $0, section: 0) }
-            let deletedIndexPaths = update.deletedIndexes.map { IndexPath(item: $0, section: 0) }
-            let updatedIndexPaths = update.updatedIndexes.map { IndexPath(item: $0, section: 0) }
-            
-            tableView.insertRows(at: insertedIndexPaths, with: .automatic)
-            tableView.deleteRows(at: deletedIndexPaths, with: .fade)
-            tableView.reloadRows(at: updatedIndexPaths, with: .automatic)
-        }, completion: nil)
-    }
-}
-
-extension CategoryViewController: NewCategoryDelegate {
-    func add(name title: String) {
-        dataProvider.add(name: title)
-        if !dataProvider.isContextEmpty(for: "TrackerCategoryCoreData") {
-            deleteCentre()
-            addTableView()
-        } else {
-            addImageView()
-            addCentreText()
-        }
-        dismiss(animated: true)
     }
 }
