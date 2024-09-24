@@ -20,10 +20,12 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
     
     private lazy var dataProvider = TrackerCategoryStore(delegate: self)
     private var selectedIndexPath: IndexPath?
+    var trackerCategory: TrackerCategoryCoreData?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
+        coreDataToIndexPath()
         if dataProvider.isContextEmpty(for: "TrackerCategoryCoreData") == false {
             addTableView()
         } else {
@@ -32,6 +34,11 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         }
         addLabel()
         addButtonAddNewCategory()
+    }
+    
+    private func coreDataToIndexPath() {
+        guard let trackerCategory else { return }
+        selectedIndexPath = dataProvider.indexPath(for: trackerCategory)
     }
     
     private func addLabel() {

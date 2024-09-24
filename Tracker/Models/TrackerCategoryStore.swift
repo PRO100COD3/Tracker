@@ -81,6 +81,10 @@ extension TrackerCategoryStore: CategoryProviderProtocol {
         fetchedResultsController.object(at: indexPath)
     }
     
+    func indexPath(for object: TrackerCategoryCoreData) -> IndexPath? {
+        return fetchedResultsController.indexPath(forObject: object)
+    }
+    
     func add(name: String) {
         let newCategory = TrackerCategoryCoreData(context: context)
         newCategory.name = name

@@ -273,6 +273,8 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
     private func categoryButtonTapped(){
         let categoryViewController = CategoryViewController()
         categoryViewController.delegate = self
+        let category = selectedCategory
+        categoryViewController.trackerCategory = category
         let navigationController = UINavigationController(rootViewController: categoryViewController)
         present(navigationController, animated: true)
     }
