@@ -7,17 +7,29 @@
 
 import UIKit
 
+enum numberOfScreen: String {
+    case screen1LabelString = "Отслеживайте только то, что хотите"
+    case screen2LabelString = "Даже если это не литры воды и йога"
+    case screen1BackImageString = "Onboarding1"
+    case screen2BackImageString = "Onboarding2"
+}
 
 final class PageViewController: UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate {
-    private let screen1LabelString = "Отслеживайте только то, что хотите"
-    private let screen2LabelString = "Даже если это не литры воды и йога"
-    private let screen1BackImageString = "Onboarding1"
-    private let screen2BackImageString = "Onboarding2"
+    private var doneButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
+        button.backgroundColor = .yPblack
+        button.setTitleColor(.white, for: .normal)
+        button.layer.cornerRadius = 16
+        return button
+    } ()
+    private let doneButtonString: String = "Вот это технологии!"
     
     private lazy var pages: [UIViewController] = {
-        let screen1 = ScreenViewController(backgroundImageString: screen1BackImageString, screenTextString: screen1LabelString)
+        let screen1 = ScreenViewController(backgroundImageString: numberOfScreen.screen1BackImageString.rawValue, screenTextString: numberOfScreen.screen1LabelString.rawValue)
         
-        let screen2 = ScreenViewController(backgroundImageString: screen2BackImageString, screenTextString: screen2LabelString)
+        let screen2 = ScreenViewController(backgroundImageString: numberOfScreen.screen2BackImageString.rawValue, screenTextString: numberOfScreen.screen2LabelString.rawValue)
         
         return [screen1, screen2]
     }()
@@ -40,6 +52,7 @@ final class PageViewController: UIPageViewController, UIPageViewControllerDataSo
         self.delegate = self
         
         setupPageView()
+        setupButton()
     }
     
     func transitionToMainScreen() {
@@ -56,6 +69,25 @@ final class PageViewController: UIPageViewController, UIPageViewControllerDataSo
                           duration: 0.5,
                           options: .transitionFlipFromTop,
                           animations: nil)
+    }
+    
+    private func setupButton() {
+        doneButton.setTitle(doneButtonString, for: .normal)
+        doneButton.addTarget(self, action: #selector(doneButtonTap(_:)), for: .touchUpInside)
+        
+        view.addSubview(doneButton)
+        
+        NSLayoutConstraint.activate([
+            doneButton.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            doneButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -84),
+            doneButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+            doneButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20),
+            doneButton.heightAnchor.constraint(equalToConstant: 60)
+        ])
+    }
+    
+    @objc private func doneButtonTap(_ sender: UIButton) {
+        transitionToMainScreen()
     }
     
     private func setupPageView() {

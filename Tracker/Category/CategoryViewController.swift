@@ -42,7 +42,7 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
     
     private func bindViewModel() {
         viewModel.onCategoriesUpdated = { [weak self] categories in
-            self?.checkCategories()
+            self?.checkCategories(isShouldShowPlaceholder: self?.viewModel.isShouldShowPlaceholder() ?? false)
             self?.tableView.reloadData()
         }
         
@@ -53,9 +53,9 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         }
     }
     
-    private func checkCategories() {
-        if viewModel.categories.count != 0 {
-            deleteCentre()
+    private func checkCategories(isShouldShowPlaceholder: Bool) {
+        if isShouldShowPlaceholder {
+            removePlaceholderFromSuperview()
             addTableView()
         } else {
             addImageView()
@@ -110,7 +110,7 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         quote.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
     }
     
-    private func deleteCentre() {
+    private func removePlaceholderFromSuperview() {
         imageView.removeFromSuperview()
         quote.removeFromSuperview()
     }
@@ -143,13 +143,18 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as! CategoriesTableViewCell
-        
-        let category = viewModel.categories[indexPath.row]
-        guard let name = category.name else { return UITableViewCell() }
-        cell.configurate(name: name, isSelected: indexPath == selectedIndexPath)
-        
-        return cell
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? CategoriesTableViewCell {
+            guard indexPath.row < viewModel.categories.count else {
+                return UITableViewCell()
+            }
+            let category = viewModel.categories[indexPath.row]
+            guard let name = category.name else { return UITableViewCell() }
+            cell.configurate(name: name, isSelected: indexPath == selectedIndexPath)
+            
+            return cell
+        }
+        assertionFailure("не найдена ячейка")
+        return UITableViewCell()
     }
     
     // MARK: - UITableViewDelegate

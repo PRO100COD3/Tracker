@@ -23,26 +23,8 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
                 mixes.append(mix)
             }
         }
-        printAllData()
         return mixes
     }
-    
-    func printAllData() {
-        guard let entities = context.persistentStoreCoordinator?.managedObjectModel.entities else { return }
-        for entity in entities {
-            let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entity.name!)
-            do {
-                let objects = try context.fetch(fetchRequest)
-                print("Сущность: \(entity.name!), количество объектов: \(objects.count)")
-                for object in objects {
-                    print(object)
-                }
-            } catch {
-                print("Ошибка при получении данных для сущности \(entity.name!): \(error)")
-            }
-        }
-    }
-    
     
     private var context: NSManagedObjectContext {
         return (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -180,7 +162,6 @@ extension TrackerStore: TrackerProviderProtocol {
     }
     
     func object(at indexPath: IndexPath, id: UUID) -> TrackerCoreData? {
-        printAllData()
         guard let category = fetchedResultsController?.object(at: indexPath) as? TrackerCategoryCoreData else {
             return nil
         }

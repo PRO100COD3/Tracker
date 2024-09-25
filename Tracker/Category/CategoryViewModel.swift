@@ -9,10 +9,9 @@ import Foundation
 
 
 typealias Binding<T> = (T) -> Void
-
-final class CategoryViewModel {    
+final class CategoryViewModel {
     
-    var categories: [TrackerCategoryCoreData] = []
+    var categories = [TrackerCategoryCoreData]()
     var selectedCategory: TrackerCategoryCoreData?
     
     private lazy var dataProvider = TrackerCategoryStore(delegate: self)
@@ -31,6 +30,10 @@ final class CategoryViewModel {
     
     func indexPathFromeCoreData(category: TrackerCategoryCoreData) -> IndexPath{
         return dataProvider.indexPath(for: category) ?? IndexPath()
+    }
+    
+    func isShouldShowPlaceholder() -> Bool {
+        return categories.count != 0 ? true : false
     }
 }
 extension CategoryViewModel: NewCategoryDelegate {
