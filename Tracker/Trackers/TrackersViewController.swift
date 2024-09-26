@@ -119,7 +119,6 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
         return false
     }
     
-    
     private func checkTrackers() {
         trackersCategoriesOnCollection = []
         let dateFormatterDay = DateFormatter()
@@ -203,7 +202,7 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
         let formattedDate = dateFormatter.string(from: currentDate)
         
         let uuid = trackersCategoriesOnCollection[indexPath.section].trackers[indexPath.row].id
-        guard let tracker = dataProvider.object(at: indexPath, id: uuid) else { return }
+        guard let tracker = dataProvider.findTracker(at: indexPath, id: uuid) else { return }
         recordsProvider.add(date: formattedDate, uuid: uuid, tracker: tracker)
     }
     
@@ -251,12 +250,9 @@ extension TrackersViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TrackersCollectionViewCell.identifier, for: indexPath) as? TrackersCollectionViewCell {
             let tracker = trackersCategoriesOnCollection[indexPath.section].trackers[indexPath.row]
-            
             let uuid = trackersCategoriesOnCollection[indexPath.section].trackers[indexPath.row].id
-            
             var recordDaysCount = 0
             var i = false
-            
             for record in records{
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateStyle = .medium
@@ -283,12 +279,6 @@ extension TrackersViewController: UICollectionViewDataSource {
         let category = trackersCategoriesOnCollection[indexPath.section]
         header.configure(with: category.name)
         return header
-    }
-}
-
-extension TrackersViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        addNewRecord(indexPath: indexPath)
     }
 }
 

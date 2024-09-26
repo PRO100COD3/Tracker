@@ -23,7 +23,7 @@ final class AddNewCategoryViewController: UIViewController {
         view.backgroundColor = .white
         
         nameOfCategory.delegate = self  
-
+        
         addLabel()
         addTextField()
         addButtonAddNewCategory()

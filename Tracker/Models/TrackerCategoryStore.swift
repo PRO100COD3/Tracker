@@ -9,20 +9,12 @@ import CoreData
 import UIKit
 
 
-struct CategoryStoreUpdate {
-    let insertedIndexes: IndexSet
-    let deletedIndexes: IndexSet
-    let updatedIndexes: IndexSet
-}
-
 final class TrackerCategoryStore: NSObject{
     
-    weak var delegate: TableViewProviderDelegate?
+    weak var delegate: CategoryProviderDelegate?
+    var categoryVC: CategoryViewController?
     
     private let uiColorMarshalling = UIColorMarshalling()
-    private var insertedIndexes: IndexSet?
-    private var deletedIndexes: IndexSet?
-    private var updatedIndexes: IndexSet?
     
     private var context: NSManagedObjectContext {
         (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
@@ -41,10 +33,15 @@ final class TrackerCategoryStore: NSObject{
         return fetchedResultsController
     }()
     
-    init(delegate: TableViewProviderDelegate) {
-        self.delegate = delegate
-    }
+        init(delegate: CategoryProviderDelegate) {
+            self.delegate = delegate
+        }
     
+    var categories: [TrackerCategoryCoreData] {
+        guard let objects = fetchedResultsController.fetchedObjects else { return [] }
+        return objects.compactMap { $0 }
+    }
+        
     func isContextEmpty(for entityName: String) -> Bool {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
         fetchRequest.fetchLimit = 1
@@ -81,6 +78,10 @@ extension TrackerCategoryStore: CategoryProviderProtocol {
         fetchedResultsController.object(at: indexPath)
     }
     
+    func indexPath(for object: TrackerCategoryCoreData) -> IndexPath? {
+        return fetchedResultsController.indexPath(forObject: object)
+    }
+    
     func add(name: String) {
         let newCategory = TrackerCategoryCoreData(context: context)
         newCategory.name = name
@@ -98,56 +99,7 @@ extension TrackerCategoryStore: CategoryProviderProtocol {
 
 extension TrackerCategoryStore: NSFetchedResultsControllerDelegate {
     
-    func controllerWillChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        if controller == fetchedResultsController {
-            insertedIndexes = IndexSet()
-            deletedIndexes = IndexSet()
-            updatedIndexes = IndexSet()
-        } else {
-            
-        }
-    }
-    
     func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
-        if controller == fetchedResultsController {
-            guard let insertedIndexes = insertedIndexes,
-                  let deletedIndexes = deletedIndexes,
-                  let updatedIndexes = updatedIndexes else {
-                return
-            }
-            
-            delegate?.didUpdate(CategoryStoreUpdate(insertedIndexes: insertedIndexes, deletedIndexes: deletedIndexes, updatedIndexes: updatedIndexes))
-            
-            self.insertedIndexes = nil
-            self.deletedIndexes = nil
-            self.updatedIndexes = nil
-            
-        } else {
-            
-        }
-    }
-    
-    func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
-        if controller == fetchedResultsController {
-            
-            switch type {
-                case .delete:
-                    if let indexPath = indexPath {
-                        deletedIndexes?.insert(indexPath.item)
-                    }
-                case .insert:
-                    if let indexPath = newIndexPath {
-                        insertedIndexes?.insert(indexPath.item)
-                    }
-                case .update:
-                    if let indexPath = indexPath {
-                        updatedIndexes?.insert(indexPath.item)
-                    }
-                default:
-                    break
-            }
-        } else {
-            
-        }
+        delegate?.didUpdateCategories()
     }
 }

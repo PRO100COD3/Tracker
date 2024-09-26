@@ -17,7 +17,13 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
     
     var trackerMixes: [TrackerCategory] {
         guard let objects = fetchedResultsController?.fetchedObjects else { return [] }
-        return objects.compactMap { try? self.trackerMix(from: $0) }
+        var mixes = [TrackerCategory]()
+        for object in objects {
+            if let mix = try? self.trackerMix(from: object) {
+                mixes.append(mix)
+            }
+        }
+        return mixes
     }
     
     private var context: NSManagedObjectContext {
@@ -41,7 +47,7 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
         let compoundPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [predicate, dayPredicate])
         fetchRequest.predicate = compoundPredicate
         
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: true)]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "name", ascending: false)]
         
         let fetchedResultsController = NSFetchedResultsController(fetchRequest: fetchRequest,
                                                                   managedObjectContext: context,
@@ -140,6 +146,19 @@ extension TrackerStore: TrackerProviderProtocol {
     
     func numberOfRowsInSection(_ section: Int) -> Int {
         return trackerMixes[section].trackers.count
+    }
+    
+    func findTracker(at indexPath: IndexPath, id: UUID) -> TrackerCoreData? {
+        let newIndexPath = IndexPath(row: 0, section: indexPath.section)
+        guard let category = fetchedResultsController?.object(at: newIndexPath) as? TrackerCategoryCoreData else {
+            return nil
+        }
+        if let trackers = category.trackers as? Set<TrackerCoreData> {
+            if let tracker = trackers.first(where: { $0.id == id }) {
+                return tracker
+            }
+        }
+        return nil
     }
     
     func object(at indexPath: IndexPath, id: UUID) -> TrackerCoreData? {
