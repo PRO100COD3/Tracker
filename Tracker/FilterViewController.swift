@@ -12,18 +12,37 @@ final class FilterViewController: UIViewController {
     weak var delegate: FilterChangeDelegate?
     private let tableView = UITableView()
     private let label = UILabel()
-    var selectedFilter: String = "all"
+    private let dateFormatter = DateFormatter()
+    var selectedFilter: String
+    var currentDate: String
+
 
     private let data = ["Все трекеры", "Трекеры на сегодня", "Завершенные", "Не завершенные"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        if selectedFilter == "" {
+        
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .none
+
+        let date = dateFormatter.string(from: Date())
+        if (selectedFilter == "" || (currentDate != date && selectedFilter == "today")) {
             selectedFilter = "all"
         }
         addLabel()
         addTableView()
+    }
+    
+    init(currentDate: String, delegate: FilterChangeDelegate, filter: String) {
+        self.currentDate = currentDate
+        self.delegate = delegate
+        self.selectedFilter = filter
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     private func addTableView() {
@@ -41,8 +60,6 @@ final class FilterViewController: UIViewController {
         tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 138).isActive = true
         tableView.heightAnchor.constraint(equalToConstant: 299).isActive = true
         tableView.isScrollEnabled = false
-//        tableView.separatorInset = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 20)
-//        tableView.separatorColor = .ypLightGrey
     }
     
     private func addLabel() {
@@ -73,6 +90,7 @@ extension FilterViewController: UITableViewDelegate {
             delegate?.filterDidChange(filter: "all")
         } else if indexPath.row == 1 {
             delegate?.filterDidChange(filter: "today")
+            delegate?.changeDataByFilter()
         } else if indexPath.row == 2 {
             delegate?.filterDidChange(filter: "completed")
         } else if indexPath.row == 3 {

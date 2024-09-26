@@ -10,4 +10,5 @@ import Foundation
 
 protocol FilterChangeDelegate: AnyObject {
     func filterDidChange(filter: String)
+    func changeDataByFilter()
 }

@@ -286,7 +286,11 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
         let daysOfWeekForTable = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
         for (i, day) in daysOfWeek.enumerated(){
             if numOfDay[i] == true{
-                selectedDays.append(day + " ")
+                if selectedDays.isEmpty {
+                    selectedDays.append(day)
+                } else {
+                    selectedDays.append(" " + day)
+                }
             }
         }
         for (i, day) in daysOfWeekForTable.enumerated(){

@@ -28,7 +28,8 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
     private var categories: [TrackerCategory] = []
     private var trackersCategoriesOnCollection: [TrackerCategory] = []
     private var records: [TrackerRecord] = []
-    private var filter = ""
+    private var filter = "today"
+    private let dateFormatter = DateFormatter()
     
     private let collectionView: UICollectionView = {
         let collectionView = UICollectionView(
@@ -52,6 +53,9 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
         
         categories = dataProvider.trackerMixes
         records = recordsProvider.records
+        
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .none
         
         currentDate = dateButton.date
         
@@ -142,23 +146,57 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
         let dateFormatterDay = DateFormatter()
         dateFormatterDay.dateFormat = "EEEE"
         let dayName = dateFormatterDay.string(from: currentDate)
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .none
-        let formattedDate = dateFormatter.string(from: currentDate)
+        
+        let selectedDate = dateFormatter.string(from: currentDate)
         for cat in categories{
             var tempCat: TrackerCategory
             var trackersOnCollection: [Tracker] = []
             for tr in cat.trackers{
                 if tempEventOrHabit(date: tr.schedule) {
-                    if tr.schedule == formattedDate{
-                        trackersOnCollection.append(tr)
+                    if tr.schedule == selectedDate{
+                        if filter == "completed" {
+                            for record in records {
+                                if record.id == tr.id && record.date == selectedDate{
+                                    trackersOnCollection.append(tr)
+                                }
+                            }
+                        } else if filter == "notCompleted" {
+                            var setOfCompletedTrackers = Set<UUID>()
+                            for record in records {
+                                if record.date == selectedDate || record.date == dayName {
+                                    setOfCompletedTrackers.insert(record.id)
+                                }
+                            }
+                            if !setOfCompletedTrackers.contains(tr.id) {
+                                trackersOnCollection.append(tr)
+                            }
+                        } else {
+                            trackersOnCollection.append(tr)
+                        }
                     }
                 } else {
                     let wordsArray = tr.schedule.components(separatedBy: " ")
                     for s in wordsArray {
                         if s == dayName {
-                            trackersOnCollection.append(tr)
+                            if filter == "completed" {
+                                for record in records {
+                                    if record.id == tr.id && record.date == selectedDate{
+                                        trackersOnCollection.append(tr)
+                                    }
+                                }
+                            } else if filter == "notCompleted" {
+                                var setOfCompletedTrackers = Set<UUID>()
+                                for record in records {
+                                    if record.date == selectedDate || record.date == dayName {
+                                        setOfCompletedTrackers.insert(record.id)
+                                    }
+                                }
+                                if !setOfCompletedTrackers.contains(tr.id) {
+                                    trackersOnCollection.append(tr)
+                                }
+                            } else {
+                                trackersOnCollection.append(tr)
+                            }
                         }
                     }
                 }
@@ -169,7 +207,7 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
             }
         }
         setupCollectionView()
-        if dataProvider.isContextEmpty(for: "TrackerCoreData") {
+        if trackersCategoriesOnCollection.isEmpty {
             addCentrePictures()
             addCentreText()
             deleteFilterButton()
@@ -220,9 +258,9 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
     }
     
     private func addNewRecord(indexPath: IndexPath) {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .none
+        //        let dateFormatter = DateFormatter()
+        //        dateFormatter.dateStyle = .medium
+        //        dateFormatter.timeStyle = .none
         let formattedDate = dateFormatter.string(from: currentDate)
         
         let uuid = trackersCategoriesOnCollection[indexPath.section].trackers[indexPath.row].id
@@ -231,9 +269,9 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
     }
     
     private func deleteRecord(indexPath: IndexPath){
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .medium
-        dateFormatter.timeStyle = .none
+        //        let dateFormatter = DateFormatter()
+        //        dateFormatter.dateStyle = .medium
+        //        dateFormatter.timeStyle = .none
         let formattedDate = dateFormatter.string(from: currentDate)
         let uuid = trackersCategoriesOnCollection[indexPath.section].trackers[indexPath.row].id
         
@@ -246,6 +284,7 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
         dataProvider = TrackerStore(delegate: self, date: currentDate)
         categories = dataProvider.trackerMixes
         records = recordsProvider.records
+        //filter = "all"
         checkTrackers()
     }
     
@@ -263,10 +302,7 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
     
     
     @objc private func filterButtonTapped() {
-        let createFilterViewController = FilterViewController()
-        createFilterViewController.delegate = self
-        createFilterViewController.selectedFilter = filter
-//        createTrackerViewController.currentDate = self.currentDate
+        let createFilterViewController = FilterViewController(currentDate: dateFormatter.string(from: currentDate), delegate: self, filter: filter)
         let navigationController = UINavigationController(rootViewController: createFilterViewController)
         present(navigationController, animated: true)
     }
@@ -360,7 +396,14 @@ extension TrackersViewController: UISearchTextFieldDelegate {
 }
 
 extension TrackersViewController: FilterChangeDelegate {
+    func changeDataByFilter() {
+        dateButton.date = Date()
+        changeDate()
+        checkTrackers()
+    }
+    
     func filterDidChange(filter: String) {
         self.filter = filter
+        checkTrackers()
     }
 }
