@@ -128,7 +128,7 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         tableView.delegate = self
         tableView.register(CategoriesTableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(tableView)
+        view.addSubview(tableView)
         tableView.layer.masksToBounds = true
         tableView.layer.cornerRadius = 16
         tableView.backgroundColor = .white

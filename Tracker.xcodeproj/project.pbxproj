@@ -24,6 +24,8 @@
 		3C2E92032C3C82AF0081F7B7 /* CreateTrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2E92022C3C82AF0081F7B7 /* CreateTrackerViewController.swift */; };
 		3C2E92052C3C83460081F7B7 /* CreateHabitViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2E92042C3C83460081F7B7 /* CreateHabitViewController.swift */; };
 		3C94D6EA2CA2428D0004A62A /* CategoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C94D6E92CA2428D0004A62A /* CategoryViewModel.swift */; };
+		3C9B79D82CA58E5800141D4D /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9B79D72CA58E5800141D4D /* FilterViewController.swift */; };
+		3C9B79DA2CA591EB00141D4D /* FilterChangeDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9B79D92CA591EB00141D4D /* FilterChangeDelegate.swift */; };
 		3CB90D112C3E56DF0074BD2D /* CreateTemporaryEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB90D102C3E56DF0074BD2D /* CreateTemporaryEventViewController.swift */; };
 		3CB90D142C3E597E0074BD2D /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB90D132C3E597E0074BD2D /* CustomTableViewCell.swift */; };
 		3CB90D172C413C3D0074BD2D /* SheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB90D162C413C3D0074BD2D /* SheduleViewController.swift */; };
@@ -90,6 +92,8 @@
 		3C2E92022C3C82AF0081F7B7 /* CreateTrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTrackerViewController.swift; sourceTree = "<group>"; };
 		3C2E92042C3C83460081F7B7 /* CreateHabitViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateHabitViewController.swift; sourceTree = "<group>"; };
 		3C94D6E92CA2428D0004A62A /* CategoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewModel.swift; sourceTree = "<group>"; };
+		3C9B79D72CA58E5800141D4D /* FilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
+		3C9B79D92CA591EB00141D4D /* FilterChangeDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterChangeDelegate.swift; sourceTree = "<group>"; };
 		3CB90D102C3E56DF0074BD2D /* CreateTemporaryEventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTemporaryEventViewController.swift; sourceTree = "<group>"; };
 		3CB90D132C3E597E0074BD2D /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
 		3CB90D162C413C3D0074BD2D /* SheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheduleViewController.swift; sourceTree = "<group>"; };
@@ -178,6 +182,7 @@
 				3C2E91BB2C3751880081F7B7 /* TabBarViewController.swift */,
 				3C2E91BD2C37521D0081F7B7 /* StatisticViewController.swift */,
 				3C2E92022C3C82AF0081F7B7 /* CreateTrackerViewController.swift */,
+				3C9B79D72CA58E5800141D4D /* FilterViewController.swift */,
 				3C2E90CF2C2B23A10081F7B7 /* Info.plist */,
 			);
 			path = Tracker;
@@ -252,6 +257,7 @@
 				3CF46DF92C9B7BFA00F3AFCC /* RecordProviderProtocol.swift */,
 				3CD336292C89CC4F00784414 /* NewCategoryDelegate.swift */,
 				3CD3362D2C8AF93C00784414 /* NewTrackerDelegate.swift */,
+				3C9B79D92CA591EB00141D4D /* FilterChangeDelegate.swift */,
 			);
 			path = Protocols;
 			sourceTree = "<group>";
@@ -452,8 +458,10 @@
 				3CB90D1B2C4153AD0074BD2D /* CategoryViewController.swift in Sources */,
 				3C2E91BE2C37521D0081F7B7 /* StatisticViewController.swift in Sources */,
 				3C2E92052C3C83460081F7B7 /* CreateHabitViewController.swift in Sources */,
+				3C9B79D82CA58E5800141D4D /* FilterViewController.swift in Sources */,
 				3C2A71822C7A81FA008E0CCB /* TrackerCategoryStore.swift in Sources */,
 				3C2E90C42C2B23A00081F7B7 /* SceneDelegate.swift in Sources */,
+				3C9B79DA2CA591EB00141D4D /* FilterChangeDelegate.swift in Sources */,
 				3C2E91FF2C393D0B0081F7B7 /* TrackerCategory.swift in Sources */,
 				3CD336302C8B021100784414 /* UIColorMarshalling.swift in Sources */,
 				3CE1CB732C748CC3007E96CB /* CustomColorCell.swift in Sources */,

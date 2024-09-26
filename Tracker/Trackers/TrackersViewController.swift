@@ -14,6 +14,7 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
     private lazy var recordsProvider = TrackerRecordStore(delegate: self, currentDate: currentDate)
     private var imageView = UIImageView()
     private var button = UIButton(type: .system)
+    private var filterButton = UIButton(type: .system)
     private let label = UILabel()
     private let centreText = UILabel()
     private let searchBar = UISearchTextField()
@@ -27,6 +28,7 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
     private var categories: [TrackerCategory] = []
     private var trackersCategoriesOnCollection: [TrackerCategory] = []
     private var records: [TrackerRecord] = []
+    private var filter = ""
     
     private let collectionView: UICollectionView = {
         let collectionView = UICollectionView(
@@ -65,6 +67,22 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
         addSearchBar()
         addDateButton()
         checkTrackers()
+    }
+    
+    private func configureFilterButton() {
+        filterButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(filterButton)
+        filterButton.backgroundColor = .yPblue
+        filterButton.setTitle("Фильтры", for: .normal)
+        filterButton.setTitleColor(.white, for: .normal)
+        filterButton.titleLabel?.font = UIFont(name: "SFPro-Regular", size: 17)
+        filterButton.layer.masksToBounds = true
+        filterButton.layer.cornerRadius = 16
+        filterButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16).isActive = true
+        filterButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        filterButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        filterButton.widthAnchor.constraint(equalToConstant: 114).isActive = true
+        filterButton.addTarget(self, action: #selector(filterButtonTapped), for: .touchUpInside)
     }
     
     private func setupCollectionView() {
@@ -154,8 +172,10 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
         if dataProvider.isContextEmpty(for: "TrackerCoreData") {
             addCentrePictures()
             addCentreText()
+            deleteFilterButton()
         } else {
             deleteCentre()
+            configureFilterButton()
         }
         collectionView.reloadData()
     }
@@ -181,6 +201,10 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
     func deleteCentre() {
         centreText.removeFromSuperview()
         imageView.removeFromSuperview()
+    }
+    
+    func deleteFilterButton() {
+        filterButton.removeFromSuperview()
     }
     
     func didTapAddButton(on cell: TrackersCollectionViewCell) {
@@ -234,6 +258,16 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
         createTrackerViewController.delegate = self
         createTrackerViewController.currentDate = self.currentDate
         let navigationController = UINavigationController(rootViewController: createTrackerViewController)
+        present(navigationController, animated: true)
+    }
+    
+    
+    @objc private func filterButtonTapped() {
+        let createFilterViewController = FilterViewController()
+        createFilterViewController.delegate = self
+        createFilterViewController.selectedFilter = filter
+//        createTrackerViewController.currentDate = self.currentDate
+        let navigationController = UINavigationController(rootViewController: createFilterViewController)
         present(navigationController, animated: true)
     }
 }
@@ -322,5 +356,11 @@ extension TrackersViewController: UISearchTextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+}
+
+extension TrackersViewController: FilterChangeDelegate {
+    func filterDidChange(filter: String) {
+        self.filter = filter
     }
 }

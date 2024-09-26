@@ -31,6 +31,8 @@ class CustomTableViewCell: UITableViewCell {
         self.textLabel?.textColor = .yPblack
         self.backgroundColor = .ypGrey
         self.separatorInset = .init(top: 0, left: 20, bottom: 0, right: 20)
+        self.selectionStyle = .none
+
 
         contentView.addSubview(leftLabel)
         contentView.addSubview(optionalLabel)
@@ -76,5 +78,11 @@ class CustomTableViewCell: UITableViewCell {
                 optionalLabel.text = optionalDaysText
             }
         }
+    }
+    
+    func configureFilter(with mainText: String, isSelected: Bool) {
+        textLabel?.text = mainText
+        selectionStyle = .none
+        accessoryType = isSelected ? .checkmark : .none
     }
 }
