@@ -54,10 +54,6 @@ final class CategoriesTableViewCell: UITableViewCell {
         
         self.separatorInset = .init(top: 0, left: 32, bottom: 0, right: 32)
         self.selectionStyle = .none
-        
-//        let interaction = UIContextMenuInteraction(delegate: self)
-//        mainView.addInteraction(interaction)
-        
     }
     
     required init?(coder: NSCoder) {
@@ -72,30 +68,4 @@ final class CategoriesTableViewCell: UITableViewCell {
             mainView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
         }
     }
-}
-
-extension CategoriesTableViewCell: UIContextMenuInteractionDelegate {
-    
-    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
-        
-        let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ -> UIMenu? in
-            
-            // Создание действий для контекстного меню
-            let editAction = UIAction(title: "Редактировать", image: UIImage(systemName: "")) { action in
-                // Логика для редактирования
-                print("Редактировать нажато")
-            }
-            
-            let deleteAction = UIAction(title: "Удалить", image: UIImage(systemName: ""), attributes: .destructive) { action in
-                // Логика для удаления
-                print("Удалить нажато")
-            }
-            
-            return UIMenu(title: "", children: [editAction, deleteAction])
-        }
-                    
-        return configuration
-    }
-    
-
 }

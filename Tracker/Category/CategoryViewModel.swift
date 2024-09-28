@@ -40,12 +40,14 @@ final class CategoryViewModel {
         return categories.count - 1 == index
     }
 }
+
 extension CategoryViewModel: NewCategoryDelegate {
     func add(name title: String) {
         dataProvider.add(name: title)
         loadCategories()
     }
 }
+
 extension CategoryViewModel: CategoryProviderDelegate {
     func didUpdateCategories() {
         categories = dataProvider.categories
@@ -53,3 +55,9 @@ extension CategoryViewModel: CategoryProviderDelegate {
     }
 }
 
+extension CategoryViewModel: EditCategoryDelegate {
+    func edit(name: String, index: IndexPath) {
+        dataProvider.editCategory(indexPath: index, name: name)
+        loadCategories()
+    }
+}

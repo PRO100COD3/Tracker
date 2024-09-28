@@ -151,7 +151,7 @@ extension CategoryViewController: UITableViewDataSource {
             guard let name = category.name else { return UITableViewCell() }
             let numOfCategory = viewModel.isLastCategory(index: indexPath.row)
             cell.configurate(name: name, isSelected: indexPath == selectedIndexPath, isLastCategory: numOfCategory)
-
+            
             return cell
         }
         assertionFailure("не найдена ячейка")
@@ -172,31 +172,20 @@ extension CategoryViewController: UITableViewDelegate {
         return 75
     }
     
-//    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-//            let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
-//                let editAction = UIAction(title: "Редактировать") {_ in
-//                    
-//                }
-//                let deleteAction = UIAction(title: "Удалить", attributes: .destructive) { _ in
-//                    
-//                }
-//                return UIMenu(title: "", children: [editAction, deleteAction])
-//            }
-//            return configuration
-//        }
-
     func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-        let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
-            let editAction = UIAction(title: "Редактировать", image: UIImage(systemName: "")) { action in
-                // Логика для редактирования
+        let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ in
+            let editAction = UIAction(title: "Редактировать") {_ in
+                let category = self?.viewModel.categories[indexPath.row]
+                let editCategoryViewController = EditCategoryViewController(delegate: self?.viewModel ?? nil, index: indexPath, name: category?.name ?? "")
+                editCategoryViewController.delegate = self?.viewModel
+                let navigationController = UINavigationController(rootViewController: editCategoryViewController)
+                self?.present(navigationController, animated: true)
             }
-            let deleteAction = UIAction(title: "Удалить", image: UIImage(systemName: ""), attributes: .destructive) { action in
-                // Логика для удаления
+            let deleteAction = UIAction(title: "Удалить", attributes: .destructive) { _ in
+                
             }
             return UIMenu(title: "", children: [editAction, deleteAction])
         }
-        
         return configuration
     }
-
 }

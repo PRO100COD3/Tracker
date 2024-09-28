@@ -33,15 +33,15 @@ final class TrackerCategoryStore: NSObject{
         return fetchedResultsController
     }()
     
-        init(delegate: CategoryProviderDelegate) {
-            self.delegate = delegate
-        }
+    init(delegate: CategoryProviderDelegate) {
+        self.delegate = delegate
+    }
     
     var categories: [TrackerCategoryCoreData] {
         guard let objects = fetchedResultsController.fetchedObjects else { return [] }
         return objects.compactMap { $0 }
     }
-        
+    
     func isContextEmpty(for entityName: String) -> Bool {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
         fetchRequest.fetchLimit = 1
@@ -76,6 +76,12 @@ extension TrackerCategoryStore: CategoryProviderProtocol {
     
     func object(at indexPath: IndexPath) -> TrackerCategoryCoreData? {
         fetchedResultsController.object(at: indexPath)
+    }
+    
+    func editCategory(indexPath: IndexPath, name: String) {
+        let object = object(at: indexPath)
+        object?.name = name
+        saveContext()
     }
     
     func indexPath(for object: TrackerCategoryCoreData) -> IndexPath? {
