@@ -95,8 +95,9 @@ extension TrackerCategoryStore: CategoryProviderProtocol {
         saveContext()
     }
     
-    func delete(record: NSManagedObject) {
-        context.delete(record)
+    func delete(indexPath: IndexPath) {
+        guard let object = object(at: indexPath) else { return }
+        context.delete(object)
         saveContext()
     }
 }

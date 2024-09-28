@@ -182,7 +182,18 @@ extension CategoryViewController: UITableViewDelegate {
                 self?.present(navigationController, animated: true)
             }
             let deleteAction = UIAction(title: "Удалить", attributes: .destructive) { _ in
+                let actionSheet = UIAlertController(title: "Эта категория точно не нужна?", message: nil, preferredStyle: .actionSheet)
                 
+                let deleteAction = UIAlertAction(title: "Удалить", style: .destructive) { _ in
+                    // Логика для удаления
+                    self?.viewModel.delete(index: indexPath)
+                }
+                let cancelAction = UIAlertAction(title: "Отменить", style: .cancel, handler: nil)
+                
+                actionSheet.addAction(deleteAction)
+                actionSheet.addAction(cancelAction)
+                
+                self?.present(actionSheet, animated: true, completion: nil)
             }
             return UIMenu(title: "", children: [editAction, deleteAction])
         }

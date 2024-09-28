@@ -16,5 +16,5 @@ protocol CategoryProviderProtocol {
     func indexPath(for object: TrackerCategoryCoreData) -> IndexPath?
     func editCategory(indexPath: IndexPath, name: String)
     func add(name: String)
-    func delete(record: NSManagedObject)
+    func delete(indexPath: IndexPath)
 }

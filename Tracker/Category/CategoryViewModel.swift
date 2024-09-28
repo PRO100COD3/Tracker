@@ -39,6 +39,11 @@ final class CategoryViewModel {
     func isLastCategory(index: Int) -> Bool {
         return categories.count - 1 == index
     }
+    
+    func delete(index: IndexPath) {
+        dataProvider.delete(indexPath: index)
+        loadCategories()
+    }
 }
 
 extension CategoryViewModel: NewCategoryDelegate {
