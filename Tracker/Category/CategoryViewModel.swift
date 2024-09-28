@@ -35,6 +35,10 @@ final class CategoryViewModel {
     func isShouldShowPlaceholder() -> Bool {
         return categories.count != 0 ? true : false
     }
+    
+    func isLastCategory(index: Int) -> Bool {
+        return categories.count - 1 == index
+    }
 }
 extension CategoryViewModel: NewCategoryDelegate {
     func add(name title: String) {

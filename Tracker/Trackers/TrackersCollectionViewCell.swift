@@ -189,10 +189,39 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
             addButton.widthAnchor.constraint(equalToConstant: 34),
             addButton.heightAnchor.constraint(equalToConstant: 34)
         ])
+        let interaction = UIContextMenuInteraction(delegate: self)
+        mainView.addInteraction(interaction)
+    }
+    
+    private func makeContextMenu() -> UIMenu {
+        let pinAction = UIAction(title: "Закрепить") { action in
+            
+        }
+        
+        let editAction = UIAction(title: "Редактировать") { action in
+            // Действие при нажатии "Редактировать"
+            print("Редактировать трекер")
+        }
+        
+        let deleteAction = UIAction(title: "Удалить", attributes: .destructive) { action in
+            // Действие при нажатии "Удалить"
+            print("Удалить трекер")
+        }
+        
+        return UIMenu(title: "", children: [pinAction, editAction, deleteAction])
     }
     
     required init?(coder: NSCoder) {
         self.init()
         assertionFailure("init(coder:) has not been implemented")
+    }
+}
+
+extension TrackersCollectionViewCell: UIContextMenuInteractionDelegate {
+    
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] suggestedActions in
+            return self?.makeContextMenu()
+        }
     }
 }

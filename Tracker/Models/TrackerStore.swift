@@ -112,6 +112,21 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
         return result
     }
     
+//    func fetchTrackerEntity(_ id: UUID) -> TrackerCoreData? {
+//            let predicate = NSPredicate(format: "id == %@", id as CVarArg)
+//            
+//            self.setupFetchedResultsController(predicate)
+//            
+//            guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
+//                return TrackerEntity()
+//            }
+//
+//            let trackerEntity = fetchedObjects.first
+//
+//            return trackerEntity
+//
+//    }
+    
     func trackerMix(from trackerCategoryCoreData: TrackerCategoryCoreData) throws -> TrackerCategory {
         guard let name = trackerCategoryCoreData.name, let setTrackers = trackerCategoryCoreData.trackers else {
             assertionFailure("Некорректные данные из Core Data")

@@ -8,7 +8,7 @@
 import UIKit
 
 class CustomTableViewCell: UITableViewCell {
-
+    
     let leftLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "SFPro-Regular", size: 17)
@@ -32,12 +32,12 @@ class CustomTableViewCell: UITableViewCell {
         self.backgroundColor = .ypGrey
         self.separatorInset = .init(top: 0, left: 20, bottom: 0, right: 20)
         self.selectionStyle = .none
-
-
+        
+        
         contentView.addSubview(leftLabel)
         contentView.addSubview(optionalLabel)
         
-
+        
         NSLayoutConstraint.activate([
             leftLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             leftLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15),

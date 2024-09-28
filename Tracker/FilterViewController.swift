@@ -15,8 +15,8 @@ final class FilterViewController: UIViewController {
     private let dateFormatter = DateFormatter()
     var selectedFilter: String
     var currentDate: String
-
-
+    
+    
     private let data = ["Все трекеры", "Трекеры на сегодня", "Завершенные", "Не завершенные"]
     
     override func viewDidLoad() {
@@ -25,7 +25,7 @@ final class FilterViewController: UIViewController {
         
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .none
-
+        
         let date = dateFormatter.string(from: Date())
         if (selectedFilter == "" || (currentDate != date && selectedFilter == "today")) {
             selectedFilter = "all"

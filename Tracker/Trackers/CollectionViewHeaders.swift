@@ -27,6 +27,6 @@ final class CollectionViewHeaders: UICollectionReusableView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        label.frame = bounds.inset(by: UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 0))
+        label.frame = bounds.inset(by: UIEdgeInsets(top: 0, left: 28, bottom: 0, right: 0))
     }
 }

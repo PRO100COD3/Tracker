@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class CategoryViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+final class CategoryViewController: UIViewController {
     
     private var viewModel: CategoryViewModel
     weak var delegate: CategoryProtocol?
@@ -129,15 +129,15 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         tableView.register(CategoriesTableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(tableView)
-        tableView.layer.masksToBounds = true
-        tableView.layer.cornerRadius = 16
         tableView.backgroundColor = .white
-        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
+        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
         tableView.heightAnchor.constraint(equalToConstant: 524).isActive = true
     }
-    
+}
+
+extension CategoryViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.categories.count
     }
@@ -149,15 +149,18 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
             }
             let category = viewModel.categories[indexPath.row]
             guard let name = category.name else { return UITableViewCell() }
-            cell.configurate(name: name, isSelected: indexPath == selectedIndexPath)
-            
+            let numOfCategory = viewModel.isLastCategory(index: indexPath.row)
+            cell.configurate(name: name, isSelected: indexPath == selectedIndexPath, isLastCategory: numOfCategory)
+
             return cell
         }
         assertionFailure("не найдена ячейка")
         return UITableViewCell()
     }
-    
-    // MARK: - UITableViewDelegate
+}
+
+
+extension CategoryViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         viewModel.selectCategory(at: indexPath.row)
@@ -168,4 +171,32 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 75
     }
+    
+//    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+//            let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
+//                let editAction = UIAction(title: "Редактировать") {_ in
+//                    
+//                }
+//                let deleteAction = UIAction(title: "Удалить", attributes: .destructive) { _ in
+//                    
+//                }
+//                return UIMenu(title: "", children: [editAction, deleteAction])
+//            }
+//            return configuration
+//        }
+
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
+            let editAction = UIAction(title: "Редактировать", image: UIImage(systemName: "")) { action in
+                // Логика для редактирования
+            }
+            let deleteAction = UIAction(title: "Удалить", image: UIImage(systemName: ""), attributes: .destructive) { action in
+                // Логика для удаления
+            }
+            return UIMenu(title: "", children: [editAction, deleteAction])
+        }
+        
+        return configuration
+    }
+
 }

@@ -93,9 +93,10 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(collectionView)
         collectionView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 18).isActive = true
-        collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
-        collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
+        collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: 1).isActive = true
+        collectionView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 66, right: 0)
         collectionView.dataSource = self
         collectionView.delegate = self
     }
@@ -258,9 +259,6 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
     }
     
     private func addNewRecord(indexPath: IndexPath) {
-        //        let dateFormatter = DateFormatter()
-        //        dateFormatter.dateStyle = .medium
-        //        dateFormatter.timeStyle = .none
         let formattedDate = dateFormatter.string(from: currentDate)
         
         let uuid = trackersCategoriesOnCollection[indexPath.section].trackers[indexPath.row].id
@@ -269,9 +267,6 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
     }
     
     private func deleteRecord(indexPath: IndexPath){
-        //        let dateFormatter = DateFormatter()
-        //        dateFormatter.dateStyle = .medium
-        //        dateFormatter.timeStyle = .none
         let formattedDate = dateFormatter.string(from: currentDate)
         let uuid = trackersCategoriesOnCollection[indexPath.section].trackers[indexPath.row].id
         
@@ -284,7 +279,6 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
         dataProvider = TrackerStore(delegate: self, date: currentDate)
         categories = dataProvider.trackerMixes
         records = recordsProvider.records
-        //filter = "all"
         checkTrackers()
     }
     
@@ -354,7 +348,7 @@ extension TrackersViewController: UICollectionViewDataSource {
 
 extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: (collectionView.bounds.width - 9) / 2, height: 148)
+        return CGSize(width: (collectionView.bounds.width - 41) / 2, height: 148)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
@@ -362,7 +356,11 @@ extension TrackersViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        return CGSize(width: collectionView.bounds.width, height: 52)
+        return CGSize(width: collectionView.bounds.width, height: 40)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+            return UIEdgeInsets(top: 12, left: 16, bottom: 0, right: 16)
     }
 }
 
@@ -393,6 +391,7 @@ extension TrackersViewController: UISearchTextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
+    
 }
 
 extension TrackersViewController: FilterChangeDelegate {
@@ -407,3 +406,10 @@ extension TrackersViewController: FilterChangeDelegate {
         checkTrackers()
     }
 }
+
+//extension TrackersViewController: UISearchBarDelegate {
+//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+//        categories = trackerStore.searchTracker(with: searchText)
+//        checkTrackers()
+//    }
+//}
