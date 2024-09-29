@@ -12,7 +12,11 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     private var countTappedDay = 0
     static let identifier = "CustomCell"
     weak var delegate: TrackerRecordProtocol?
+    weak var presentDelegate: TrackersCollectionViewCellDelegate?
     private var checkButtonTap = false
+    private var id = UUID()
+    var dataProvider: TrackerStore?
+    var trackerCategoryCD: TrackerCategoryCoreData?
     
     private var mainView: UIView = {
         let view = UIView()
@@ -49,6 +53,12 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         return label
     }()
     
+    private var pinnedImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "Pinned")
+        return imageView
+    }()
+    
     private var addButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = UIColor.orange
@@ -61,12 +71,13 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         return button
     }()
     
-    func changeCell(color: UIColor, emoji: String, title: String, daysCount: Int, checkThisDayRecord: Bool){
-        
+    func changeCell(color: UIColor, emoji: String, title: String, daysCount: Int, checkThisDayRecord: Bool, uuid: UUID, category: TrackerCategoryCoreData, isPinned: Bool){
+        id = uuid
         mainView.backgroundColor = color
         emojiLabel.text = emoji
         titleLabel.text = title
         countTappedDay = daysCount
+        trackerCategoryCD = category
         updateDaysLabel()
         
         if (daysCount > 0 && checkThisDayRecord) {
@@ -96,6 +107,24 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
             addButton.setTitle("+", for: .normal)
             addButton.setImage(nil, for: .normal)
         }
+        if isPinned {
+            addPin()
+        } else {
+            deletePin()
+        }
+    }
+    
+    private func addPin() {
+        mainView.addSubview(pinnedImageView)
+        pinnedImageView.translatesAutoresizingMaskIntoConstraints = false
+        pinnedImageView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: -4).isActive = true
+        pinnedImageView.topAnchor.constraint(equalTo: mainView.topAnchor, constant: 12).isActive = true
+        pinnedImageView.widthAnchor.constraint(equalToConstant: 24).isActive = true
+        pinnedImageView.heightAnchor.constraint(equalToConstant: 24).isActive = true
+    }
+    
+    private func deletePin() {
+        pinnedImageView.removeFromSuperview()
     }
     
     private func updateDaysLabel() {
@@ -194,18 +223,62 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     }
     
     private func makeContextMenu() -> UIMenu {
-        let pinAction = UIAction(title: "Закрепить") { action in
+        guard let tracker = self.dataProvider?.fetchTrackerEntity(id: self.id) else { return UIMenu()}
+        var pinAction = UIAction(title: "") { action in
             
+        }
+        if tracker.pin {
+            pinAction = UIAction(title: "Открепить") { action in
+                self.dataProvider?.deletePin(tracker: tracker)
+            }
+        } else {
+            pinAction = UIAction(title: "Закрепить") { action in
+                self.dataProvider?.addPin(tracker: tracker)
+            }
         }
         
         let editAction = UIAction(title: "Редактировать") { action in
-            // Действие при нажатии "Редактировать"
-            print("Редактировать трекер")
+            if (self.dataProvider?.tempEventOrHabit(date: tracker.schedule ?? "") == true) {
+                let editTempEventController = EditTemporaryEventViewController()
+                editTempEventController.currentDays = self.daysLabel.text ?? ""
+                editTempEventController.dataProvider = self.dataProvider
+                editTempEventController.selectedTracker = tracker
+                editTempEventController.currentDate = tracker.schedule ?? ""
+                editTempEventController.nameOfTracker = tracker.name ?? ""
+                editTempEventController.selectedCategory = self.trackerCategoryCD
+                editTempEventController.selectedColor = UIColorMarshalling().color(from: tracker.color ?? "")
+                editTempEventController.selectedEmoji = tracker.emoji ?? ""
+                
+                let navigationController = UINavigationController(rootViewController: editTempEventController)
+                self.presentDelegate?.presentViewController(navController: navigationController)
+            } else {
+                let editHabitController = EditHabitViewController()
+                editHabitController.currentDays = self.daysLabel.text ?? ""
+                editHabitController.dataProvider = self.dataProvider
+                editHabitController.selectedTracker = tracker
+                editHabitController.selectedDays = tracker.schedule ?? ""
+                editHabitController.nameOfTracker = tracker.name ?? ""
+                editHabitController.selectedCategory = self.trackerCategoryCD
+                editHabitController.selectedColor = UIColorMarshalling().color(from: tracker.color ?? "")
+                editHabitController.selectedEmoji = tracker.emoji ?? ""
+                
+                let navigationController = UINavigationController(rootViewController: editHabitController)
+                self.presentDelegate?.presentViewController(navController: navigationController)
+            }
         }
         
         let deleteAction = UIAction(title: "Удалить", attributes: .destructive) { action in
-            // Действие при нажатии "Удалить"
-            print("Удалить трекер")
+            let actionSheet = UIAlertController(title: "Эта категория точно не нужна?", message: nil, preferredStyle: .actionSheet)
+            
+            let deleteAction = UIAlertAction(title: "Удалить", style: .destructive) { _ in
+                self.dataProvider?.delete(record: tracker)
+            }
+            let cancelAction = UIAlertAction(title: "Отменить", style: .cancel, handler: nil)
+            
+            actionSheet.addAction(deleteAction)
+            actionSheet.addAction(cancelAction)
+            
+            self.presentDelegate?.presentAlertController(alerController: actionSheet)
         }
         
         return UIMenu(title: "", children: [pinAction, editAction, deleteAction])

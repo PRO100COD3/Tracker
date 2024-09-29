@@ -27,6 +27,7 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
     private var currentDate: Date = Date()
     private var categories: [TrackerCategory] = []
     private var trackersCategoriesOnCollection: [TrackerCategory] = []
+    private var pinnedTrackers: [TrackerCategory] = []
     private var records: [TrackerRecord] = []
     private var filter = "today"
     private let dateFormatter = DateFormatter()
@@ -143,21 +144,36 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
     }
     
     private func checkTrackers() {
-        trackersCategoriesOnCollection = []
-        let dateFormatterDay = DateFormatter()
-        dateFormatterDay.dateFormat = "EEEE"
-        let dayName = dateFormatterDay.string(from: currentDate)
-        
-        let selectedDate = dateFormatter.string(from: currentDate)
-        for cat in categories{
-            var tempCat: TrackerCategory
-            var trackersOnCollection: [Tracker] = []
-            for tr in cat.trackers{
-                if tempEventOrHabit(date: tr.schedule) {
-                    if tr.schedule == selectedDate{
+        func checkTrackersEvent(tr: Tracker, trackersOnCollection: inout [Tracker]) {
+            if tempEventOrHabit(date: tr.schedule) {
+                if tr.schedule == selectedDate {
+                    if filter == "completed" {
+                        for record in records {
+                            if record.id == tr.id && record.date == selectedDate {
+                                trackersOnCollection.append(tr)
+                            }
+                        }
+                    } else if filter == "notCompleted" {
+                        var setOfCompletedTrackers = Set<UUID>()
+                        for record in records {
+                            if record.date == selectedDate || record.date == dayName {
+                                setOfCompletedTrackers.insert(record.id)
+                            }
+                        }
+                        if !setOfCompletedTrackers.contains(tr.id) {
+                            trackersOnCollection.append(tr)
+                        }
+                    } else {
+                        trackersOnCollection.append(tr)
+                    }
+                }
+            } else {
+                let wordsArray = tr.schedule.components(separatedBy: " ")
+                for s in wordsArray {
+                    if s == dayName {
                         if filter == "completed" {
                             for record in records {
-                                if record.id == tr.id && record.date == selectedDate{
+                                if record.id == tr.id && record.date == selectedDate {
                                     trackersOnCollection.append(tr)
                                 }
                             }
@@ -175,39 +191,50 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
                             trackersOnCollection.append(tr)
                         }
                     }
-                } else {
-                    let wordsArray = tr.schedule.components(separatedBy: " ")
-                    for s in wordsArray {
-                        if s == dayName {
-                            if filter == "completed" {
-                                for record in records {
-                                    if record.id == tr.id && record.date == selectedDate{
-                                        trackersOnCollection.append(tr)
-                                    }
-                                }
-                            } else if filter == "notCompleted" {
-                                var setOfCompletedTrackers = Set<UUID>()
-                                for record in records {
-                                    if record.date == selectedDate || record.date == dayName {
-                                        setOfCompletedTrackers.insert(record.id)
-                                    }
-                                }
-                                if !setOfCompletedTrackers.contains(tr.id) {
-                                    trackersOnCollection.append(tr)
-                                }
-                            } else {
-                                trackersOnCollection.append(tr)
-                            }
-                        }
-                    }
                 }
             }
-            if (!trackersOnCollection.isEmpty){
-                tempCat = TrackerCategory(name: cat.name, trackers: trackersOnCollection)
+        }
+        
+        trackersCategoriesOnCollection = []
+        
+        let dateFormatterDay = DateFormatter()
+        dateFormatterDay.dateFormat = "EEEE"
+        let dayName = dateFormatterDay.string(from: currentDate)
+        
+        let selectedDate = dateFormatter.string(from: currentDate)
+        
+        var pinCategory = TrackerCategory(name: "Закрепленные", trackers: [])
+        
+        for cat in categories {
+            for tr in cat.trackers {
+                if tr.pin {
+                    pinCategory.trackers.append(tr)
+                }
+            }
+        }
+        
+        if !pinCategory.trackers.isEmpty {
+            trackersCategoriesOnCollection.append(pinCategory)
+        }
+        
+        for cat in categories {
+            var trackersOnCollection: [Tracker] = []
+            var tempCat = TrackerCategory(name: cat.name, trackers: [])
+            
+            for tr in cat.trackers {
+                if !tr.pin {
+                    checkTrackersEvent(tr: tr, trackersOnCollection: &trackersOnCollection)
+                }
+            }
+            
+            if !trackersOnCollection.isEmpty {
+                tempCat = TrackerCategory(name: tempCat.name, trackers: trackersOnCollection)
                 trackersCategoriesOnCollection.append(tempCat)
             }
         }
+        
         setupCollectionView()
+        
         if trackersCategoriesOnCollection.isEmpty {
             addCentrePictures()
             addCentreText()
@@ -216,6 +243,7 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
             deleteCentre()
             configureFilterButton()
         }
+        
         collectionView.reloadData()
     }
     
@@ -329,7 +357,10 @@ extension TrackersViewController: UICollectionViewDataSource {
                     recordDaysCount += 1
                 }
             }
-            cell.changeCell(color: tracker.color, emoji: tracker.emoji, title: tracker.name, daysCount: recordDaysCount, checkThisDayRecord: i)
+            guard let category = dataProvider.fetchTrackerEntity(id: tracker.id)?.category else { return UICollectionViewCell() }
+            cell.changeCell(color: tracker.color, emoji: tracker.emoji, title: tracker.name, daysCount: recordDaysCount, checkThisDayRecord: i, uuid: tracker.id, category: category, isPinned: tracker.pin)
+            cell.dataProvider = dataProvider
+            cell.presentDelegate = self
             cell.delegate = self
             return cell
         }
@@ -404,6 +435,15 @@ extension TrackersViewController: FilterChangeDelegate {
     func filterDidChange(filter: String) {
         self.filter = filter
         checkTrackers()
+    }
+}
+
+extension TrackersViewController: TrackersCollectionViewCellDelegate {
+    func presentViewController(navController: UINavigationController) {
+        self.present(navController, animated: true)
+    }
+    func presentAlertController(alerController: UIAlertController) {
+        self.present(alerController, animated: true, completion: nil)
     }
 }
 

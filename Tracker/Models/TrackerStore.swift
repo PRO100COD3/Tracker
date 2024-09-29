@@ -63,12 +63,24 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
         self.currentDate = date
     }
     
-    private func tempEventOrHabit(date: String) -> Bool {
+    func tempEventOrHabit(date: String) -> Bool {
         let digitsSet = CharacterSet(charactersIn: "123456789")
         if date.rangeOfCharacter(from: digitsSet) != nil {
             return true
         }
         return false
+    }
+    
+    func addPin(tracker: TrackerCoreData) {
+        tracker.pin = true
+        saveContext()
+        delegate?.didUpdate()
+    }
+    
+    func deletePin(tracker: TrackerCoreData) {
+        tracker.pin = false
+        saveContext()
+        delegate?.didUpdate()
     }
     
     func isContextEmpty(for entityName: String) -> Bool {
@@ -96,36 +108,39 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
         }
     }
     
-    func transformTrackerCoreDataToTracker(trackerCoreData: [TrackerCoreData]) -> [Tracker] {
+    func transformTrackerCoreDataToTracker(trackerCoreData: [TrackerCoreData?]) -> [Tracker] {
         var result: [Tracker] = []
         for element in trackerCoreData {
-            guard let emoji = element.emoji,
-                  let colorHex = element.color,
-                  let id = element.id,
-                  let schedule = element.schedule,
-                  let name = element.name else {
+            guard let emoji = element?.emoji,
+                  let colorHex = element?.color,
+                  let id = element?.id,
+                  let schedule = element?.schedule,
+                  let name = element?.name,
+                  let pin = element?.pin
+            else {
                 assertionFailure("Некорректные данные из Core Data")
                 return []
             }
-            result.append(Tracker(id: id, name: name, color: uiColorMarshalling.color(from: colorHex), emoji: emoji, schedule: schedule))
+            result.append(Tracker(id: id, name: name, color: uiColorMarshalling.color(from: colorHex), emoji: emoji, schedule: schedule, pin: pin))
         }
         return result
     }
     
-//    func fetchTrackerEntity(_ id: UUID) -> TrackerCoreData? {
-//            let predicate = NSPredicate(format: "id == %@", id as CVarArg)
-//            
-//            self.setupFetchedResultsController(predicate)
-//            
-//            guard let fetchedObjects = fetchedResultsController?.fetchedObjects else {
-//                return TrackerEntity()
-//            }
-//
-//            let trackerEntity = fetchedObjects.first
-//
-//            return trackerEntity
-//
-//    }
+    func fetchTrackerEntity(id: UUID) -> TrackerCoreData? {
+        let fetchRequest: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
+        
+        let predicate = NSPredicate(format: "id == %@", id as CVarArg)
+        fetchRequest.predicate = predicate
+        
+        do {
+            let fetchedObjects = try context.fetch(fetchRequest)
+            
+            return fetchedObjects.first
+        } catch {
+            print("Ошибка при выполнении запроса: \(error)")
+            return nil
+        }
+    }
     
     func trackerMix(from trackerCategoryCoreData: TrackerCategoryCoreData) throws -> TrackerCategory {
         guard let name = trackerCategoryCoreData.name, let setTrackers = trackerCategoryCoreData.trackers else {
@@ -197,7 +212,18 @@ extension TrackerStore: TrackerProviderProtocol {
         newTracker.schedule = shedule
         newTracker.category = category
         newTracker.id = UUID()
+        newTracker.pin = false
         saveContext()
+    }
+    
+    func edit(tracker: TrackerCoreData, name: String, color: String, emoji: String, shedule: String, category: TrackerCategoryCoreData) {
+        tracker.name = name
+        tracker.color = color
+        tracker.emoji = emoji
+        tracker.schedule = shedule
+        tracker.category = category
+        saveContext()
+        delegate?.didUpdate()
     }
     
     func delete(record: NSManagedObject) {

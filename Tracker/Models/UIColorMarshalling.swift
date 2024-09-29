@@ -31,4 +31,8 @@ final class UIColorMarshalling {
             alpha: CGFloat(1.0)
         )
     }
+    
+    func translateColor(colors: UIColor) -> UIColor {
+        return color(from: hexString(from: colors))
+    }
 }

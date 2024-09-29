@@ -13,8 +13,8 @@ final class CategoriesTableViewCell: UITableViewCell {
         let view = UIView()
         view.backgroundColor = .ypGrey
         view.layer.masksToBounds = true
-        view.layer.cornerRadius = 16
-        view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+        //view.layer.cornerRadius = 16
+        //view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         return view
     }()
     
@@ -60,12 +60,21 @@ final class CategoriesTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configurate(name: String, isSelected: Bool, isLastCategory: Bool) {
+    func configurate(name: String, isSelected: Bool, isLastCategory: Bool, isFirstCategory: Bool) {
         titleLabel.text = name
         accessoryImageView.image = isSelected ? UIImage(systemName: "checkmark") : nil
-        if isLastCategory {
+        if isLastCategory && isFirstCategory {
+            mainView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner, .layerMinXMinYCorner, .layerMaxXMinYCorner]
+            mainView.layer.cornerRadius = 16
+        } else if isFirstCategory{
+            mainView.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
+            mainView.layer.cornerRadius = 16
+        } else if isLastCategory {
             mainView.layer.cornerRadius = 16
             mainView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
+        } else {
+            mainView.layer.cornerRadius = 0
         }
     }
 }
+

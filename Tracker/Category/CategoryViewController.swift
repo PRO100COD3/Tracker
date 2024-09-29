@@ -42,6 +42,7 @@ final class CategoryViewController: UIViewController {
     
     private func bindViewModel() {
         viewModel.onCategoriesUpdated = { [weak self] categories in
+            
             self?.checkCategories(isShouldShowPlaceholder: self?.viewModel.isShouldShowPlaceholder() ?? false)
             self?.tableView.reloadData()
         }
@@ -149,8 +150,9 @@ extension CategoryViewController: UITableViewDataSource {
             }
             let category = viewModel.categories[indexPath.row]
             guard let name = category.name else { return UITableViewCell() }
-            let numOfCategory = viewModel.isLastCategory(index: indexPath.row)
-            cell.configurate(name: name, isSelected: indexPath == selectedIndexPath, isLastCategory: numOfCategory)
+            let isLastCategory = viewModel.isLastCategory(index: indexPath.row)
+            let isFirstCategory = indexPath.row == 0 /*viewModel.categories.firstIndex(of: category) == 0*/
+            cell.configurate(name: name, isSelected: indexPath == selectedIndexPath, isLastCategory: isLastCategory, isFirstCategory: isFirstCategory)
             
             return cell
         }
@@ -185,7 +187,6 @@ extension CategoryViewController: UITableViewDelegate {
                 let actionSheet = UIAlertController(title: "Эта категория точно не нужна?", message: nil, preferredStyle: .actionSheet)
                 
                 let deleteAction = UIAlertAction(title: "Удалить", style: .destructive) { _ in
-                    // Логика для удаления
                     self?.viewModel.delete(index: indexPath)
                 }
                 let cancelAction = UIAlertAction(title: "Отменить", style: .cancel, handler: nil)
