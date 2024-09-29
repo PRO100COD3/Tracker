@@ -29,7 +29,7 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
     private var trackersCategoriesOnCollection: [TrackerCategory] = []
     private var pinnedTrackers: [TrackerCategory] = []
     private var records: [TrackerRecord] = []
-    private var filter = "today"
+    private var filter = "all"
     private let dateFormatter = DateFormatter()
     
     private let collectionView: UICollectionView = {
@@ -253,8 +253,8 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
         setupCollectionView()
         
         if trackersCategoriesOnCollection.isEmpty {
-            addCentrePictures()
-            addCentreText()
+            addCentrePictures(filter: filter)
+            addCentreText(filter: filter)
             deleteFilterButton()
         } else {
             deleteCentre()
@@ -264,19 +264,28 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
         collectionView.reloadData()
     }
     
-    private func addCentrePictures() {
-        let image = UIImage(named: "Star")
-        imageView = UIImageView(image: image)
+    private func addCentrePictures(filter: String) {
+        if filter == "all" {
+            let image = UIImage(named: "Star")
+            imageView = UIImageView(image: image)
+        } else {
+            let image = UIImage(named: "FilterImage")
+            imageView = UIImageView(image: image)
+        }
         view.addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
     
-    private func addCentreText() {
+    private func addCentreText(filter: String) {
+        if filter == "all" {
+            centreText.text = "Что будем отслеживать?"
+        } else {
+            centreText.text = "Ничего не найдено"
+        }
         centreText.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(centreText)
-        centreText.text = "Что будем отслеживать?"
         centreText.font = UIFont(name: "SFPro-Medium", size: 12)
         centreText.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8).isActive = true
         centreText.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
@@ -333,7 +342,6 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
         currentDate = dateButton.date
         recordsProvider.currentDate = currentDate
         dataProvider.currentDate = currentDate
-        filter = "all"
         categories = dataProvider.trackerMixes
         records = recordsProvider.records
         checkTrackers()
