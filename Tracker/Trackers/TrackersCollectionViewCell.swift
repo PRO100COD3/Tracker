@@ -266,6 +266,9 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
                 let navigationController = UINavigationController(rootViewController: editHabitController)
                 self.presentDelegate?.presentViewController(navController: navigationController)
             }
+            let params: AnalyticsEventParam = ["screen": "Main", "item": "edit"]
+            AnalyticsService.report(event: "click", params: params)
+            print("Зарегистрировано событие аналитики 'click' с параметрами \(params)")
         }
         
         let deleteAction = UIAction(title: "Удалить", attributes: .destructive) { action in
@@ -273,6 +276,9 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
             
             let deleteAction = UIAlertAction(title: "Удалить", style: .destructive) { _ in
                 self.dataProvider?.delete(record: tracker)
+                let params: AnalyticsEventParam = ["screen": "Main", "item": "delete"]
+                AnalyticsService.report(event: "click", params: params)
+                print("Зарегистрировано событие аналитики 'click' с параметрами \(params)")
             }
             let cancelAction = UIAlertAction(title: "Отменить", style: .cancel, handler: nil)
             

@@ -11,6 +11,7 @@ import UIKit
 
 final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
     
+    static let shared = TrackerStore()
     weak var delegate: CollectionViewProviderDelegate?
     private let uiColorMarshalling = UIColorMarshalling()
     var currentDate = Date()
@@ -57,11 +58,6 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
         try? fetchedResultsController.performFetch()
         return fetchedResultsController
     }()
-    
-    init(delegate: CollectionViewProviderDelegate, date: Date) {
-        self.delegate = delegate
-        self.currentDate = date
-    }
     
     func tempEventOrHabit(date: String) -> Bool {
         let digitsSet = CharacterSet(charactersIn: "123456789")

@@ -10,8 +10,8 @@ import CoreData
 
 class TrackersViewController: UIViewController, TrackerRecordProtocol {
     
-    private lazy var dataProvider = TrackerStore(delegate: self, date: currentDate)
-    private lazy var recordsProvider = TrackerRecordStore(delegate: self, currentDate: currentDate)
+    private lazy var dataProvider = TrackerStore()
+    private lazy var recordsProvider = TrackerRecordStore()
     private var imageView = UIImageView()
     private var button = UIButton(type: .system)
     private var filterButton = UIButton(type: .system)
@@ -55,6 +55,9 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
         categories = dataProvider.trackerMixes
         records = recordsProvider.records
         
+        dataProvider.delegate = self
+        recordsProvider.delegate = self
+        
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .none
         
@@ -64,6 +67,20 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: dateButton)
         
         configureDisplay()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        let params: AnalyticsEventParam = ["screen": "Main"]
+        AnalyticsService.report(event: "open", params: params)
+        print("Зарегистрировано событие аналитики 'open' c параметрами \(params)")
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        let params: AnalyticsEventParam = ["screen": "Main"]
+        AnalyticsService.report(event: "close", params: params)
+        print("Зарегистрировано событие аналитики 'close' с параметрами \(params)")
     }
     
     private func configureDisplay() {
@@ -296,20 +313,27 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
     }
     
     private func addNewRecord(trackerId: UUID) {
+        let params: AnalyticsEventParam = ["screen": "Main", "item" : "track"]
+        AnalyticsService.report(event: "AddClick", params: params)
+        print("Зарегистрировано событие аналитики 'AddClick' с параметрами \(params)")
         let formattedDate = dateFormatter.string(from: currentDate)
         guard let tracker = findTracker(byID: trackerId) else { return }
         recordsProvider.add(date: formattedDate, uuid: trackerId, tracker: tracker)
     }
     
     private func deleteRecord(trackerId: UUID) {
+        let params: AnalyticsEventParam = ["screen": "Main", "item" : "track"]
+        AnalyticsService.report(event: "DeleteClick", params: params)
+        print("Зарегистрировано событие аналитики 'DeleteClick' с параметрами \(params)")
         let formattedDate = dateFormatter.string(from: currentDate)
         recordsProvider.delete(id: trackerId, date: formattedDate)
     }
     
     @objc private func changeDate() {
         currentDate = dateButton.date
-        recordsProvider = TrackerRecordStore(delegate: self, currentDate: currentDate)
-        dataProvider = TrackerStore(delegate: self, date: currentDate)
+        recordsProvider.currentDate = currentDate
+        dataProvider.currentDate = currentDate
+        filter = "all"
         categories = dataProvider.trackerMixes
         records = recordsProvider.records
         checkTrackers()
@@ -320,6 +344,9 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
     }
     
     @objc private func createButtonTapped() {
+        let params: AnalyticsEventParam = ["screen": "Main", "item" : "add_track"]
+        AnalyticsService.report(event: "click", params: params)
+        print("Зарегистрировано событие аналитики 'click' с параметрами \(params)")
         let createTrackerViewController = CreateTrackerViewController()
         createTrackerViewController.delegate = self
         createTrackerViewController.currentDate = self.currentDate
@@ -329,6 +356,9 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
     
     
     @objc private func filterButtonTapped() {
+        let params: AnalyticsEventParam = ["screen": "Main", "item" : "filter"]
+        AnalyticsService.report(event: "click", params: params)
+        print("Зарегистрировано событие аналитики 'click' с параметрами \(params)")
         let createFilterViewController = FilterViewController(currentDate: dateFormatter.string(from: currentDate), delegate: self, filter: filter)
         let navigationController = UINavigationController(rootViewController: createFilterViewController)
         present(navigationController, animated: true)

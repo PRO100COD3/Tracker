@@ -11,6 +11,7 @@ import UIKit
 
 final class TrackerCategoryStore: NSObject{
     
+    static let shared = TrackerStore()
     weak var delegate: CategoryProviderDelegate?
     var categoryVC: CategoryViewController?
     
