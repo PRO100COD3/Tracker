@@ -491,9 +491,11 @@ extension TrackersViewController: TrackersCollectionViewCellDelegate {
     }
 }
 
-//extension TrackersViewController: UISearchBarDelegate {
-//    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-//        categories = trackerStore.searchTracker(with: searchText)
-//        checkTrackers()
-//    }
-//}
+extension TrackersViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let currentText = (textField.text as NSString?)?.replacingCharacters(in: range, with: string) ?? string
+        categories = dataProvider.searchTracker(text: currentText)
+        checkTrackers()
+        return true
+    }
+}

@@ -67,6 +67,18 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
         return false
     }
     
+    func searchTracker(text: String) -> [TrackerCategory] {
+        if text.isEmpty {
+            return trackerMixes
+        }
+        return trackerMixes.compactMap { category in
+            let filteredTrackers = category.trackers.filter { tracker in
+                tracker.name.lowercased().contains(text.lowercased())
+            }
+            return filteredTrackers.isEmpty ? nil : TrackerCategory(name: category.name, trackers: filteredTrackers)
+        }
+    }
+    
     func addPin(tracker: TrackerCoreData) {
         tracker.pin = true
         saveContext()
