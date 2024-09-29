@@ -91,7 +91,7 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
         }
         return false
     }
-
+    
     func isContextEmpty(for entityName: String) -> Bool {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
         let dateFormatter = DateFormatter()

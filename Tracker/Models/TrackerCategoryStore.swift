@@ -41,7 +41,7 @@ final class TrackerCategoryStore: NSObject{
         guard let objects = fetchedResultsController.fetchedObjects else { return [] }
         return objects.compactMap { $0 }
     }
-        
+    
     func isContextEmpty(for entityName: String) -> Bool {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
         fetchRequest.fetchLimit = 1
