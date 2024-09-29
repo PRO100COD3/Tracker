@@ -83,6 +83,15 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
         delegate?.didUpdate()
     }
     
+    func isHavePinnedCategory() -> Bool {
+        for cat in trackerMixes {
+            if cat.trackers.first(where: \.pin) != nil {
+                return true
+            }
+        }
+        return false
+    }
+
     func isContextEmpty(for entityName: String) -> Bool {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
         let dateFormatter = DateFormatter()

@@ -275,31 +275,66 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
     }
     
     func didTapAddButton(on cell: TrackersCollectionViewCell) {
-        guard let indexPath = collectionView.indexPath(for: cell) else { return }
-        addNewRecord(indexPath: indexPath)
+        guard let trackerId = cell.id else { return }
+        addNewRecord(trackerId: trackerId)
         checkTrackers()
     }
-    
+
     func didRetapAddButton(on cell: TrackersCollectionViewCell) {
-        guard let indexPath = collectionView.indexPath(for: cell) else { return }
-        deleteRecord(indexPath: indexPath)
+        guard let trackerId = cell.id else { return }
+        deleteRecord(trackerId: trackerId)
         checkTrackers()
     }
-    
-    private func addNewRecord(indexPath: IndexPath) {
-        let formattedDate = dateFormatter.string(from: currentDate)
-        
-        let uuid = trackersCategoriesOnCollection[indexPath.section].trackers[indexPath.row].id
-        guard let tracker = dataProvider.findTracker(at: indexPath, id: uuid) else { return }
-        recordsProvider.add(date: formattedDate, uuid: uuid, tracker: tracker)
+
+    private func findTracker(byID id: UUID) -> TrackerCoreData? {
+        for category in trackersCategoriesOnCollection {
+            if let tracker = category.trackers.first(where: { $0.id == id }) {
+                return dataProvider.fetchTrackerEntity(id: tracker.id) 
+            }
+        }
+        return nil
     }
-    
-    private func deleteRecord(indexPath: IndexPath){
+
+    private func addNewRecord(trackerId: UUID) {
         let formattedDate = dateFormatter.string(from: currentDate)
-        let uuid = trackersCategoriesOnCollection[indexPath.section].trackers[indexPath.row].id
-        
-        recordsProvider.delete(id: uuid, date: formattedDate)
+        guard let tracker = findTracker(byID: trackerId) else { return }
+        recordsProvider.add(date: formattedDate, uuid: trackerId, tracker: tracker)
     }
+
+    private func deleteRecord(trackerId: UUID) {
+        let formattedDate = dateFormatter.string(from: currentDate)
+        recordsProvider.delete(id: trackerId, date: formattedDate)
+    }
+
+//    func didTapAddButton(on cell: TrackersCollectionViewCell) {
+//        //guard let indexPath = collectionView.indexPath(for: cell) else { return }
+//        guard let indexPath = cell.indexOfSection else { return }
+//        addNewRecord(indexPath: indexPath)
+//        checkTrackers()
+//    }
+//    
+//    func didRetapAddButton(on cell: TrackersCollectionViewCell) {
+//        //guard let indexPath = collectionView.indexPath(for: cell) else { return }
+//        guard let indexPath = cell.indexOfSection else { return }
+//        deleteRecord(indexPath: indexPath)
+//        checkTrackers()
+//    }
+//    
+//    private func addNewRecord(indexPath: IndexPath) {
+//        let formattedDate = dateFormatter.string(from: currentDate)
+//        
+//        
+//        let uuid = trackersCategoriesOnCollection[indexPath.section].trackers[indexPath.row].id
+//        guard let tracker = dataProvider.findTracker(at: indexPath, id: uuid) else { return }
+//        recordsProvider.add(date: formattedDate, uuid: uuid, tracker: tracker)
+//    }
+//    
+//    private func deleteRecord(indexPath: IndexPath){
+//        let formattedDate = dateFormatter.string(from: currentDate)
+//        let uuid = trackersCategoriesOnCollection[indexPath.section].trackers[indexPath.row].id
+//        
+//        recordsProvider.delete(id: uuid, date: formattedDate)
+//    }
     
     @objc private func changeDate() {
         currentDate = dateButton.date
@@ -362,6 +397,7 @@ extension TrackersViewController: UICollectionViewDataSource {
             cell.dataProvider = dataProvider
             cell.presentDelegate = self
             cell.delegate = self
+            cell.indexOfSection = indexPath
             return cell
         }
         assertionFailure("не найдена ячейка")

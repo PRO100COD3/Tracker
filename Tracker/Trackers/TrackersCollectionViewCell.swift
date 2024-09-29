@@ -14,9 +14,10 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     weak var delegate: TrackerRecordProtocol?
     weak var presentDelegate: TrackersCollectionViewCellDelegate?
     private var checkButtonTap = false
-    private var id = UUID()
+    var id: UUID?
     var dataProvider: TrackerStore?
     var trackerCategoryCD: TrackerCategoryCoreData?
+    var indexOfSection: IndexPath?
     
     private var mainView: UIView = {
         let view = UIView()
@@ -223,7 +224,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     }
     
     private func makeContextMenu() -> UIMenu {
-        guard let tracker = self.dataProvider?.fetchTrackerEntity(id: self.id) else { return UIMenu()}
+        guard let tracker = self.dataProvider?.fetchTrackerEntity(id: self.id ?? UUID()) else { return UIMenu()}
         var pinAction = UIAction(title: "") { action in
             
         }
