@@ -14,6 +14,7 @@ final class AddNewCategoryViewController: UIViewController {
     private let label = UILabel()
     private let buttonAddNewCategory = UIButton(type: .system)
     private let nameOfCategory = UITextField()
+    private let errorLabel = UILabel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,6 +72,18 @@ final class AddNewCategoryViewController: UIViewController {
         nameOfCategory.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
     }
     
+    private func addErrorLabel() {
+        errorLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(errorLabel)
+        errorLabel.text = "Ограничение 38 символов"
+        errorLabel.textColor = .ypRed
+        errorLabel.font = UIFont(name: "SFPro-Regular", size: 17)
+        NSLayoutConstraint.activate([
+            errorLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            errorLabel.topAnchor.constraint(equalTo: nameOfCategory.bottomAnchor, constant: 8)
+        ])
+    }
+    
     @objc private func textFieldDidChange() {
         if let text = nameOfCategory.text, !text.isEmpty {
             buttonAddNewCategory.backgroundColor = .yPblack
@@ -78,6 +91,15 @@ final class AddNewCategoryViewController: UIViewController {
         } else {
             buttonAddNewCategory.backgroundColor = .ypLightGrey
             buttonAddNewCategory.isEnabled = false
+        }
+        if nameOfCategory.text?.count ?? 0 > 38 {
+            buttonAddNewCategory.backgroundColor = .ypLightGrey
+            buttonAddNewCategory.isEnabled = false
+            addErrorLabel()
+        } else {
+            buttonAddNewCategory.backgroundColor = .yPblack
+            buttonAddNewCategory.isEnabled = true
+            errorLabel.removeFromSuperview()
         }
     }
     
