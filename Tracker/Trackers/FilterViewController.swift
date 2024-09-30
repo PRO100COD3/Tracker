@@ -17,14 +17,15 @@ final class FilterViewController: UIViewController {
     var currentDate: String
     
     
-    private let data = ["Все трекеры", "Трекеры на сегодня", "Завершенные", "Не завершенные"]
+    private let data = [NSLocalizedString("trackersFilterTitleForAllTrackers", comment: "Все трекеры"), NSLocalizedString("trackersFilterTitleForCurrentDayTrackers", comment: "Трекеры на сегодня"), NSLocalizedString("trackersFilterTitleForComplitedTrackers", comment: "Завершённые"), NSLocalizedString("trackersFilterTitleForRunningTrackers", comment: "Не завершённые")]
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .ypBackground
         
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .none
+        dateFormatter.locale = Locale(identifier: "en_GB")
         
         let date = dateFormatter.string(from: Date())
         if (selectedFilter == "" || (currentDate != date && selectedFilter == "today")) {
@@ -54,7 +55,7 @@ final class FilterViewController: UIViewController {
         view.addSubview(tableView)
         tableView.layer.masksToBounds = true
         tableView.layer.cornerRadius = 16
-        tableView.backgroundColor = .ypGrey
+        tableView.backgroundColor = .ypTableViewCell
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
         tableView.topAnchor.constraint(equalTo: view.topAnchor, constant: 138).isActive = true
@@ -63,19 +64,19 @@ final class FilterViewController: UIViewController {
     }
     
     private func addLabel() {
-        label.text = "Фильтры"
+        label.text = NSLocalizedString("filterButtonTitle", comment: "Фильтры")
         label.font = UIFont(name: "SFPro-Medium", size: 16)
         navigationItem.titleView = label
     }
     
     private func checkSelected(name: String) -> Bool {
-        if name == "Все трекеры" {
+        if name == NSLocalizedString("trackersFilterTitleForAllTrackers", comment: "Все трекеры") {
             return "all" == selectedFilter
-        } else if name == "Трекеры на сегодня" {
+        } else if name == NSLocalizedString("trackersFilterTitleForCurrentDayTrackers", comment: "Трекеры на сегодня") {
             return "today" == selectedFilter
-        } else if name == "Завершенные" {
+        } else if name == NSLocalizedString("trackersFilterTitleForComplitedTrackers", comment: "Завершённые") {
             return selectedFilter == "completed"
-        } else if name == "Не завершенные" {
+        } else if name == NSLocalizedString("trackersFilterTitleForRunningTrackers", comment: "Не завершённые") {
             return selectedFilter == "notCompleted"
         }
         return false

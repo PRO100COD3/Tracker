@@ -33,7 +33,7 @@ final class StatisticsCollectionViewCell: UICollectionViewCell {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.font = UIFont(name: "SFPro-Bold", size: 34)
-        view.textColor = .yPblack
+        view.textColor = .ypReBackground
         view.textAlignment = .natural
         return view
     }()
@@ -41,7 +41,7 @@ final class StatisticsCollectionViewCell: UICollectionViewCell {
         let view = UILabel()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.font = UIFont(name: "SFPro-Medium", size: 12)
-        view.textColor = .yPblack
+        view.textColor = .ypReBackground
         view.textAlignment = .natural
         return view
     }()

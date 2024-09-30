@@ -20,14 +20,14 @@ final class CreateTrackerViewController: UIViewController, CloseControllerProtoc
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .ypBackground
         addLabel()
         addHabitButton()
         addTemporaryEventButton()
     }
     
     private func addLabel(){
-        label.text = "Создание трекера"
+        label.text = NSLocalizedString("viewTitleText", comment: "Создание трекера")
         label.font = UIFont(name: "SFPro-Medium", size: 16)
         navigationItem.titleView = label
     }
@@ -38,9 +38,10 @@ final class CreateTrackerViewController: UIViewController, CloseControllerProtoc
         habitButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 281).isActive = true
         habitButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20).isActive = true
         habitButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20).isActive = true
-        habitButton.setTitle("Привычка", for: .normal)
+        habitButton.setTitle(NSLocalizedString("addHabitButtonTitle", comment: "Привычка"), for: .normal)
         habitButton.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
-        habitButton.backgroundColor = .yPblack
+        habitButton.backgroundColor = .ypReBackground
+        habitButton.setTitleColor(UIColor.ypBackground, for: .normal)
         habitButton.layer.masksToBounds = true
         habitButton.layer.cornerRadius = 20
         habitButton.heightAnchor.constraint(equalToConstant: 60).isActive = true
@@ -54,9 +55,10 @@ final class CreateTrackerViewController: UIViewController, CloseControllerProtoc
         temporaryEventButton.topAnchor.constraint(equalTo: habitButton.bottomAnchor, constant: 16).isActive = true
         temporaryEventButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 20).isActive = true
         temporaryEventButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -20).isActive = true
-        temporaryEventButton.setTitle("Нерегулярное событие", for: .normal)
+        temporaryEventButton.setTitle(NSLocalizedString("addEventButtonTitle", comment: "Нерегулярное событие"), for: .normal)
         temporaryEventButton.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
-        temporaryEventButton.backgroundColor = .yPblack
+        temporaryEventButton.backgroundColor = .ypReBackground
+        temporaryEventButton.setTitleColor(UIColor.ypBackground, for: .normal)
         temporaryEventButton.layer.masksToBounds = true
         temporaryEventButton.layer.cornerRadius = 20
         temporaryEventButton.heightAnchor.constraint(equalToConstant: 60).isActive = true

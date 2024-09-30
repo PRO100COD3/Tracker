@@ -13,7 +13,6 @@ final class CustomEmojiCell: UICollectionViewCell {
     private var emojiLabel: UILabel = {
         let emojiLabel = UILabel()
         emojiLabel.textAlignment = .center
-        emojiLabel.backgroundColor = .ypTransparentWhite
         emojiLabel.textColor = .white
         emojiLabel.font = UIFont(name: "SFPro-Bold", size: 32)
         return emojiLabel
@@ -21,6 +20,7 @@ final class CustomEmojiCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        contentView.backgroundColor = .ypBackground
         contentView.addSubview(emojiLabel)
         emojiLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -40,6 +40,6 @@ final class CustomEmojiCell: UICollectionViewCell {
     }
     
     func setSelectedBackground(_ isSelected: Bool) {
-        contentView.backgroundColor = isSelected ? .ypGreyNOTransparent : .clear
+        contentView.backgroundColor = isSelected ? .ypGreyNOTransparent : .ypBackground
     }
 }

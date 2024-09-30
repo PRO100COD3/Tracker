@@ -21,7 +21,7 @@ final class EditCategoryViewController: UIViewController {
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
-        view.backgroundColor = .white
+        view.backgroundColor = .ypBackground
         
         nameOfCategory.delegate = self
         
@@ -42,7 +42,7 @@ final class EditCategoryViewController: UIViewController {
     }
     
     private func addLabel() {
-        label.text = "Новая категория"
+        label.text = NSLocalizedString("viewTitleTextForNewCategory", comment: "Новая категория")
         label.font = UIFont(name: "SFPro-Medium", size: 16)
         navigationItem.titleView = label
     }
@@ -56,10 +56,10 @@ final class EditCategoryViewController: UIViewController {
         buttonEditCategory.heightAnchor.constraint(equalToConstant: 60).isActive = true
         buttonEditCategory.layer.masksToBounds = true
         buttonEditCategory.layer.cornerRadius = 16
-        buttonEditCategory.setTitle("Готово", for: .normal)
+        buttonEditCategory.setTitle(NSLocalizedString("readyButtonTitle", comment: "Готово"), for: .normal)
         buttonEditCategory.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
-        buttonEditCategory.backgroundColor = .yPblack
-        buttonEditCategory.tintColor = .white
+        buttonEditCategory.backgroundColor = .ypReBackground
+        buttonEditCategory.setTitleColor(UIColor.ypBackground, for: .normal)
         buttonEditCategory.addTarget(self, action: #selector(didTapEditButton), for: .touchUpInside)
     }
     
@@ -67,14 +67,14 @@ final class EditCategoryViewController: UIViewController {
         nameOfCategory.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(nameOfCategory)
         nameOfCategory.text = name
-        nameOfCategory.placeholder = "Введите название категории"
+        nameOfCategory.placeholder = NSLocalizedString("trackerNamePlaceholderTitle", comment: "Введите название категории")
         nameOfCategory.heightAnchor.constraint(equalToConstant: 75).isActive = true
         nameOfCategory.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24).isActive = true
         nameOfCategory.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
         nameOfCategory.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
         nameOfCategory.layer.masksToBounds = true
         nameOfCategory.layer.cornerRadius = 16
-        nameOfCategory.backgroundColor = .ypGrey
+        nameOfCategory.backgroundColor = .ypTableViewCell
         nameOfCategory.font = UIFont(name: "SFPro-Regular", size: 17)
         nameOfCategory.textInputView.leadingAnchor.constraint(equalTo: nameOfCategory.leadingAnchor, constant: 16).isActive = true
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: nameOfCategory.frame.height))
@@ -85,7 +85,7 @@ final class EditCategoryViewController: UIViewController {
     
     @objc private func textFieldDidChange() {
         if let text = nameOfCategory.text, !text.isEmpty {
-            buttonEditCategory.backgroundColor = .yPblack
+            buttonEditCategory.backgroundColor = .ypReBackground
             buttonEditCategory.isEnabled = true
         } else {
             buttonEditCategory.backgroundColor = .ypLightGrey

@@ -8,8 +8,6 @@
 import UIKit
 
 enum numberOfScreen: String {
-    case screen1LabelString = "Отслеживайте только то, что хотите"
-    case screen2LabelString = "Даже если это не литры воды и йога"
     case screen1BackImageString = "Onboarding1"
     case screen2BackImageString = "Onboarding2"
 }
@@ -24,12 +22,12 @@ final class PageViewController: UIPageViewController, UIPageViewControllerDataSo
         button.layer.cornerRadius = 16
         return button
     } ()
-    private let doneButtonString: String = "Вот это технологии!"
+    private let doneButtonString: String = NSLocalizedString("launchApplicationButtonTitle", comment: "Вот это технологии!")
     
     private lazy var pages: [UIViewController] = {
-        let screen1 = ScreenViewController(backgroundImageString: numberOfScreen.screen1BackImageString.rawValue, screenTextString: numberOfScreen.screen1LabelString.rawValue)
+        let screen1 = ScreenViewController(backgroundImageString: numberOfScreen.screen1BackImageString.rawValue, screenTextString: NSLocalizedString("onboardingPage1Title", comment: "Отслеживайте только то, что хотите"))
         
-        let screen2 = ScreenViewController(backgroundImageString: numberOfScreen.screen2BackImageString.rawValue, screenTextString: numberOfScreen.screen2LabelString.rawValue)
+        let screen2 = ScreenViewController(backgroundImageString: numberOfScreen.screen2BackImageString.rawValue, screenTextString: NSLocalizedString("onboardingPage2Title", comment: "Даже если это не литры воды и йога"))
         
         return [screen1, screen2]
     }()

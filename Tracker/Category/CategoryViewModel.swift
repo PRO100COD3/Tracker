@@ -40,10 +40,6 @@ final class CategoryViewModel {
         return categories.count - 1 == index
     }
     
-//    func isFirstCategory(index: Int) -> Bool {
-//        return categories.count - 1 == index
-//    }
-    
     func delete(index: IndexPath) {
         dataProvider.delete(indexPath: index)
         loadCategories()

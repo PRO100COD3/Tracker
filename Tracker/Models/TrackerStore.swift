@@ -37,10 +37,12 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .none
+        dateFormatter.locale = Locale(identifier: "en_GB")
         let formattedDate = dateFormatter.string(from: currentDate)
         
         let dateFormatterDay = DateFormatter()
         dateFormatterDay.dateFormat = "EEEE"
+        dateFormatterDay.locale = Locale(identifier: "en_GB")
         let dayName = dateFormatterDay.string(from: currentDate)
         
         let predicate = NSPredicate(format: "ANY trackers.schedule == %@", formattedDate)
@@ -105,10 +107,12 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .none
+        dateFormatter.locale = Locale(identifier: "en_GB")
         let formattedDate = dateFormatter.string(from: currentDate)
         
         let dateFormatterDay = DateFormatter()
         dateFormatterDay.dateFormat = "EEEE"
+        dateFormatterDay.locale = Locale(identifier: "en_GB")
         let dayName = dateFormatterDay.string(from: currentDate)
         
         let predicate = NSPredicate(format: "schedule == %@", formattedDate)

@@ -103,6 +103,7 @@ final class TrackerRecordStore: NSObject{
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .none
+        dateFormatter.locale = Locale(identifier: "en_GB")
         
         guard let dateFormat = dateFormatter.date(from: date) else {
             print("Неверный формат даты: \(date)")
@@ -116,6 +117,7 @@ final class TrackerRecordStore: NSObject{
         
         let dateFormatterDay = DateFormatter()
         dateFormatterDay.dateFormat = "EEEE"
+        dateFormatterDay.locale = Locale(identifier: "en_GB")
         let dayName = dateFormatterDay.string(from: dateWithoutTime)
         
         fetchRequest.predicate = NSPredicate(format: "ANY schedule CONTAINS %@", dayName)

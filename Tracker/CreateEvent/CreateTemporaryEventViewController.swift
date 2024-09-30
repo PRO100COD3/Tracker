@@ -13,6 +13,7 @@ final class CreateTemporaryEventViewController: UIViewController, UITableViewDat
     private let contentView = UIView()
     var currentDate: Date = Date()
     private let label = UILabel()
+    private let errorLabel = UILabel()
     private let nameOfHabit = UITextField()
     private let buttonСancel = UIButton(type: .system)
     private let buttonAccept = UIButton(type: .system)
@@ -22,6 +23,7 @@ final class CreateTemporaryEventViewController: UIViewController, UITableViewDat
             frame: .zero,
             collectionViewLayout: UICollectionViewFlowLayout()
         )
+        collectionView.backgroundColor = .ypBackground
         collectionView.isScrollEnabled = false
         collectionView.register(CustomEmojiCell.self, forCellWithReuseIdentifier: CustomEmojiCell.identifier)
         return collectionView
@@ -37,6 +39,7 @@ final class CreateTemporaryEventViewController: UIViewController, UITableViewDat
             frame: .zero,
             collectionViewLayout: UICollectionViewFlowLayout()
         )
+        collectionView.backgroundColor = .ypBackground
         collectionView.isScrollEnabled = false
         collectionView.register(CustomColorCell.self, forCellWithReuseIdentifier: CustomColorCell.identifier)
         return collectionView
@@ -45,7 +48,7 @@ final class CreateTemporaryEventViewController: UIViewController, UITableViewDat
     weak var closeDelegate: CloseControllerProtocol?
     private var selectedCategory: TrackerCategoryCoreData?
     
-    private let data = ["Категория"]
+    private let data = [NSLocalizedString("categoryViewTitleText", comment: "Категория")]
     private let emoji = ["🙂", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶", "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝", "😪"]
     private let colors = [UIColor.ypRedPlate1, UIColor.ypOrangePlate2, UIColor.ypBluePlate3, UIColor.ypVioletPlate4, UIColor.ypGreenPlate5, UIColor.ypPinkPlate6, UIColor.ypPinkPlate7, UIColor.ypBluePlate8, UIColor.ypGreenPlate9, UIColor.ypVioletPlate10, UIColor.ypOrangePlate11, UIColor.ypPinkPlate12, UIColor.ypOrangePlate13, UIColor.ypBluePlate14, UIColor.ypVioletPlate15, UIColor.ypVioletPlate16, UIColor.ypVioletPlate17, UIColor.ypGreenPlate18]
     
@@ -54,7 +57,7 @@ final class CreateTemporaryEventViewController: UIViewController, UITableViewDat
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
-        view.backgroundColor = .white
+        view.backgroundColor = .ypBackground
         nameOfHabit.delegate = self
         setupScrollView()
         addLabel()
@@ -94,8 +97,20 @@ final class CreateTemporaryEventViewController: UIViewController, UITableViewDat
         contentView.addSubview(emojiLabel)
         emojiLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 28).isActive = true
         emojiLabel.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 32).isActive = true
-        emojiLabel.text = "Emoji"
+        emojiLabel.text = NSLocalizedString("emojiLabelText", comment: "Emoji")
         emojiLabel.font = UIFont(name: "SFPro-Bold", size: 19)
+    }
+    
+    private func addErrorLabel() {
+        errorLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(errorLabel)
+        errorLabel.text = NSLocalizedString("trackerNameWarningLabelText", comment: "Ограничение 38 символов")
+        errorLabel.textColor = .ypRed
+        errorLabel.font = UIFont(name: "SFPro-Regular", size: 17)
+        NSLayoutConstraint.activate([
+            errorLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            errorLabel.topAnchor.constraint(equalTo: nameOfHabit.bottomAnchor, constant: 8)
+        ])
     }
     
     private func addColorLabel() {
@@ -103,7 +118,7 @@ final class CreateTemporaryEventViewController: UIViewController, UITableViewDat
         contentView.addSubview(colorLabel)
         colorLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 28).isActive = true
         colorLabel.topAnchor.constraint(equalTo: emojiCollectiomView.bottomAnchor, constant: 32).isActive = true
-        colorLabel.text = "Цвет"
+        colorLabel.text = NSLocalizedString("colorsLabelText", comment: "Цвет")
         colorLabel.font = UIFont(name: "SFPro-Bold", size: 19)
     }
     
@@ -140,7 +155,7 @@ final class CreateTemporaryEventViewController: UIViewController, UITableViewDat
         contentView.addSubview(tableView)
         tableView.layer.masksToBounds = true
         tableView.layer.cornerRadius = 16
-        tableView.backgroundColor = .ypGrey
+        tableView.backgroundColor = .ypTableViewCell
         tableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16).isActive = true
         tableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16).isActive = true
         tableView.topAnchor.constraint(equalTo: nameOfHabit.bottomAnchor, constant: 24).isActive = true
@@ -151,7 +166,7 @@ final class CreateTemporaryEventViewController: UIViewController, UITableViewDat
     }
     
     private func addLabel(){
-        label.text = "Новое нерегулярное событие"
+        label.text = NSLocalizedString("viewTitleForCreateEvent", comment: "Новое нерегулярное событие")
         label.font = UIFont(name: "SFPro-Medium", size: 16)
         navigationItem.titleView = label
     }
@@ -159,14 +174,14 @@ final class CreateTemporaryEventViewController: UIViewController, UITableViewDat
     private func addTextField(){
         nameOfHabit.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(nameOfHabit)
-        nameOfHabit.placeholder = "Введите название трекера"
+        nameOfHabit.placeholder = NSLocalizedString("categoryNamePlaceholder", comment: "Введите название трекера")
         nameOfHabit.heightAnchor.constraint(equalToConstant: 75).isActive = true
         nameOfHabit.topAnchor.constraint(equalTo: contentView.safeAreaLayoutGuide.topAnchor, constant: 24).isActive = true
         nameOfHabit.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16).isActive = true
         nameOfHabit.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16).isActive = true
         nameOfHabit.layer.masksToBounds = true
         nameOfHabit.layer.cornerRadius = 16
-        nameOfHabit.backgroundColor = .ypGrey
+        nameOfHabit.backgroundColor = .ypTableViewCell
         nameOfHabit.font = UIFont(name: "SFPro-Regular", size: 17)
         nameOfHabit.textInputView.leadingAnchor.constraint(equalTo: nameOfHabit.leadingAnchor, constant: 16).isActive = true
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: nameOfHabit.frame.height))
@@ -187,7 +202,7 @@ final class CreateTemporaryEventViewController: UIViewController, UITableViewDat
         buttonСancel.layer.borderWidth = 1
         buttonСancel.layer.cornerRadius = 16
         buttonСancel.layer.borderColor = UIColor.ypRed.cgColor
-        buttonСancel.setTitle("Отменить", for: .normal)
+        buttonСancel.setTitle(NSLocalizedString("cancelButtonTitle", comment: "Отменить"), for: .normal)
         buttonСancel.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
         buttonСancel.tintColor = .ypRed
         buttonСancel.addTarget(self, action: #selector(closeThisWindow), for: .touchUpInside)
@@ -203,10 +218,10 @@ final class CreateTemporaryEventViewController: UIViewController, UITableViewDat
         buttonAccept.heightAnchor.constraint(equalToConstant: 60).isActive = true
         buttonAccept.layer.masksToBounds = true
         buttonAccept.layer.cornerRadius = 16
-        buttonAccept.setTitle("Создать", for: .normal)
+        buttonAccept.setTitle(NSLocalizedString("trackerSaveButtonForCreatingTitle", comment: "Создать"), for: .normal)
         buttonAccept.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
-        buttonAccept.backgroundColor = .ypLightGrey
-        buttonAccept.tintColor = .white
+        buttonAccept.backgroundColor = .ypReBackground
+        buttonAccept.setTitleColor(UIColor.ypBackground, for: .normal)
         buttonAccept.addTarget(self, action: #selector(addNewTempEvent), for: .touchUpInside)
     }
     
@@ -259,11 +274,15 @@ final class CreateTemporaryEventViewController: UIViewController, UITableViewDat
     }
     
     @objc private func checkAllConditions(){
-        if (!nameOfHabit.text!.isEmpty && selectedCategory != nil && selectedEmoji != "" && selectedColor != UIColor.clear){
-            buttonAccept.backgroundColor = .yPblack
+        if nameOfHabit.text?.count ?? 0 > 38 {
+            buttonAccept.backgroundColor = .ypLightGrey
+            buttonAccept.isEnabled = false
+            addErrorLabel()
+        } else if (!nameOfHabit.text!.isEmpty && selectedCategory != nil && selectedEmoji != "" && selectedColor != UIColor.clear) {
+            buttonAccept.backgroundColor = .ypReBackground
             buttonAccept.isEnabled = true
-        }
-        else{
+            errorLabel.removeFromSuperview()
+        } else {
             buttonAccept.backgroundColor = .ypLightGrey
             buttonAccept.isEnabled = false
         }
@@ -281,6 +300,7 @@ final class CreateTemporaryEventViewController: UIViewController, UITableViewDat
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .none
+        dateFormatter.locale = Locale(identifier: "en_GB")
         let formattedDate = dateFormatter.string(from: currentDate)
         delegate?.add(name: nameOfTracker, color: UIColorMarshalling().hexString(from: selectedColor), emoji: selectedEmoji, shedule: formattedDate, category: category)
         closeThisWindow()

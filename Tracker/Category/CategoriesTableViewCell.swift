@@ -11,16 +11,14 @@ final class CategoriesTableViewCell: UITableViewCell {
     
     private var mainView: UIView = {
         let view = UIView()
-        view.backgroundColor = .ypGrey
+        view.backgroundColor = .ypTableViewCell
         view.layer.masksToBounds = true
-        //view.layer.cornerRadius = 16
-        //view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
         return view
     }()
     
     private var titleLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .yPblack
+        label.textColor = .ypReBackground
         label.font = UIFont(name: "SFPro-Regular", size: 17)
         return label
     }()

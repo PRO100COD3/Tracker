@@ -17,10 +17,21 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
     private var filterButton = UIButton(type: .system)
     private let label = UILabel()
     private let centreText = UILabel()
-    private let searchBar = UISearchTextField()
+    private let searchBar = {
+        let textField = UISearchTextField()
+        textField.placeholder = NSLocalizedString("trackersSearchBarPlaceholder", comment: "Поиск")
+        let placeholderColor = UIColor.ypBack
+        textField.attributedPlaceholder = NSAttributedString(string: textField.placeholder ?? "", attributes: [.foregroundColor: placeholderColor])
+        return textField
+    }()
     private let dateButton: UIDatePicker = {
         let picker = UIDatePicker()
+        picker.locale = Locale(identifier: "ru_RU")
         picker.datePickerMode = .date
+        picker.layer.masksToBounds = true
+        picker.layer.cornerRadius = 8
+        picker.overrideUserInterfaceStyle = .light
+        picker.backgroundColor = .ypDatePicker
         picker.preferredDatePickerStyle = .compact
         return picker
     }()
@@ -45,7 +56,7 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .ypBackground
         searchBar.delegate = self
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
@@ -60,6 +71,8 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
         
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .none
+        dateFormatter.locale = Locale(identifier: "en_GB")
+        dateButton.locale = Locale(identifier: "en_GB")
         
         currentDate = dateButton.date
         
@@ -95,7 +108,7 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
         filterButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(filterButton)
         filterButton.backgroundColor = .yPblue
-        filterButton.setTitle("Фильтры", for: .normal)
+        filterButton.setTitle(NSLocalizedString("filterButtonTitle", comment: "Фильтры"), for: .normal)
         filterButton.setTitleColor(.white, for: .normal)
         filterButton.titleLabel?.font = UIFont(name: "SFPro-Regular", size: 17)
         filterButton.layer.masksToBounds = true
@@ -110,6 +123,7 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
     private func setupCollectionView() {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(collectionView)
+        collectionView.backgroundColor = .ypBackground
         collectionView.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 18).isActive = true
         collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
@@ -122,15 +136,16 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
     private func addTitle() {
         label.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(label)
+        label.textColor = UIColor.label
         label.font = UIFont(name: "SFPro-Bold", size: 34)
-        label.text = "Трекеры"
+        label.text = NSLocalizedString("trackersTabBarItemTitle", comment: "Трекеры")
         label.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 1).isActive = true
         label.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
     }
     
     private func addPlusButton() {
         button.setTitle("+", for: .normal)
-        button.setTitleColor(.black, for: .normal)
+        button.setTitleColor(UIColor.label, for: .normal)
         button.titleLabel?.font = UIFont(name: "SFPro-Regular", size: 34)
         button.widthAnchor.constraint(equalToConstant: 44).isActive = true
         button.heightAnchor.constraint(equalToConstant: 44).isActive = true
@@ -143,7 +158,6 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
         searchBar.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 7).isActive = true
         searchBar.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
         searchBar.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
-        searchBar.placeholder = "Поиск"
         searchBar.heightAnchor.constraint(equalToConstant: 36).isActive = true
     }
     
@@ -216,11 +230,12 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
         
         let dateFormatterDay = DateFormatter()
         dateFormatterDay.dateFormat = "EEEE"
+        dateFormatterDay.locale = Locale(identifier: "en_GB")
         let dayName = dateFormatterDay.string(from: currentDate)
         
         let selectedDate = dateFormatter.string(from: currentDate)
         
-        var pinCategory = TrackerCategory(name: "Закрепленные", trackers: [])
+        var pinCategory = TrackerCategory(name: NSLocalizedString("fixedTrackersSectionTitle", comment: "Закреплённые"), trackers: [])
         
         for cat in categories {
             for tr in cat.trackers {
@@ -280,9 +295,9 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
     
     private func addCentreText(filter: String) {
         if filter == "all" {
-            centreText.text = "Что будем отслеживать?"
+            centreText.text = NSLocalizedString("trackersStubImageLabelText", comment: "Что будем отслеживать?")
         } else {
-            centreText.text = "Ничего не найдено"
+            centreText.text = NSLocalizedString("trackersStubEmptyFilterLabelText", comment: "Ничего не найдено")
         }
         centreText.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(centreText)
@@ -389,9 +404,6 @@ extension TrackersViewController: UICollectionViewDataSource {
             var recordDaysCount = 0
             var i = false
             for record in records{
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateStyle = .medium
-                dateFormatter.timeStyle = .none
                 let formattedDate = dateFormatter.string(from: currentDate)
                 if (uuid == record.id && record.date == formattedDate){
                     i = true

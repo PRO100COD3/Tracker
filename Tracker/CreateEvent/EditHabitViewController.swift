@@ -15,6 +15,7 @@ final class EditHabitViewController: UIViewController, UITableViewDataSource, UI
     var selectedTracker: TrackerCoreData?
     var nameOfTracker: String = ""
     var selectedDays: String = ""
+    private let errorLabel = UILabel()
     private var selectedDaysForTable: String = ""
     private let daysLabel = UILabel()
     private let label = UILabel()
@@ -27,6 +28,7 @@ final class EditHabitViewController: UIViewController, UITableViewDataSource, UI
             frame: .zero,
             collectionViewLayout: UICollectionViewFlowLayout()
         )
+        collectionView.backgroundColor = .ypBackground
         collectionView.isScrollEnabled = false
         collectionView.register(CustomEmojiCell.self, forCellWithReuseIdentifier: CustomEmojiCell.identifier)
         return collectionView
@@ -42,6 +44,7 @@ final class EditHabitViewController: UIViewController, UITableViewDataSource, UI
             frame: .zero,
             collectionViewLayout: UICollectionViewFlowLayout()
         )
+        collectionView.backgroundColor = .ypBackground
         collectionView.isScrollEnabled = false
         collectionView.register(CustomColorCell.self, forCellWithReuseIdentifier: CustomColorCell.identifier)
         return collectionView
@@ -50,7 +53,7 @@ final class EditHabitViewController: UIViewController, UITableViewDataSource, UI
     weak var closeDelegate: CloseControllerProtocol?
     var selectedCategory: TrackerCategoryCoreData?
     
-    private let data = ["Категория", "Расписание"]
+    private let data = [NSLocalizedString("categoryViewTitleText", comment: "Категория"), NSLocalizedString("scheduleViewTitleText", comment: "Расписание")]
     private let emoji = ["🙂", "😻", "🌺", "🐶", "❤️", "😱", "😇", "😡", "🥶", "🤔", "🙌", "🍔", "🥦", "🏓", "🥇", "🎸", "🏝", "😪"]
     private let colors = [UIColor.ypRedPlate1, UIColor.ypOrangePlate2, UIColor.ypBluePlate3, UIColor.ypVioletPlate4, UIColor.ypGreenPlate5, UIColor.ypPinkPlate6, UIColor.ypPinkPlate7, UIColor.ypBluePlate8, UIColor.ypGreenPlate9, UIColor.ypVioletPlate10, UIColor.ypOrangePlate11, UIColor.ypPinkPlate12, UIColor.ypOrangePlate13, UIColor.ypBluePlate14, UIColor.ypVioletPlate15, UIColor.ypVioletPlate16, UIColor.ypVioletPlate17, UIColor.ypGreenPlate18]
     
@@ -59,7 +62,7 @@ final class EditHabitViewController: UIViewController, UITableViewDataSource, UI
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
         tapGesture.cancelsTouchesInView = false
         view.addGestureRecognizer(tapGesture)
-        view.backgroundColor = .white
+        view.backgroundColor = .ypBackground
         nameOfHabit.delegate = self
         convertSelectedDaysToShortForm()
         setupScrollView()
@@ -101,7 +104,7 @@ final class EditHabitViewController: UIViewController, UITableViewDataSource, UI
         contentView.addSubview(emojiLabel)
         emojiLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 28).isActive = true
         emojiLabel.topAnchor.constraint(equalTo: tableView.bottomAnchor, constant: 32).isActive = true
-        emojiLabel.text = "Emoji"
+        emojiLabel.text = NSLocalizedString("emojiLabelText", comment: "Emoji")
         emojiLabel.font = UIFont(name: "SFPro-Bold", size: 19)
     }
     
@@ -120,7 +123,7 @@ final class EditHabitViewController: UIViewController, UITableViewDataSource, UI
         contentView.addSubview(colorLabel)
         colorLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 28).isActive = true
         colorLabel.topAnchor.constraint(equalTo: emojiCollectiomView.bottomAnchor, constant: 32).isActive = true
-        colorLabel.text = "Цвет"
+        colorLabel.text = NSLocalizedString("colorsLabelText", comment: "Цвет")
         colorLabel.font = UIFont(name: "SFPro-Bold", size: 19)
     }
     
@@ -156,7 +159,7 @@ final class EditHabitViewController: UIViewController, UITableViewDataSource, UI
         contentView.addSubview(tableView)
         tableView.layer.masksToBounds = true
         tableView.layer.cornerRadius = 16
-        tableView.backgroundColor = .ypGrey
+        tableView.backgroundColor = .ypTableViewCell
         tableView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16).isActive = true
         tableView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16).isActive = true
         tableView.topAnchor.constraint(equalTo: nameOfHabit.bottomAnchor, constant: 24).isActive = true
@@ -167,7 +170,7 @@ final class EditHabitViewController: UIViewController, UITableViewDataSource, UI
     }
     
     private func addLabel(){
-        label.text = "Редактирование привычки"
+        label.text = NSLocalizedString("viewTitleForEditHabit", comment: "Редактирование привычки")
         label.font = UIFont(name: "SFPro-Medium", size: 16)
         navigationItem.titleView = label
     }
@@ -175,7 +178,7 @@ final class EditHabitViewController: UIViewController, UITableViewDataSource, UI
     private func addTextField(){
         nameOfHabit.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(nameOfHabit)
-        nameOfHabit.placeholder = "Введите название трекера"
+        nameOfHabit.placeholder = NSLocalizedString("categoryNamePlaceholder", comment: "Введите название трекера")
         nameOfHabit.text = nameOfTracker
         nameOfHabit.heightAnchor.constraint(equalToConstant: 75).isActive = true
         nameOfHabit.topAnchor.constraint(equalTo: daysLabel.bottomAnchor, constant: 40).isActive = true
@@ -183,7 +186,7 @@ final class EditHabitViewController: UIViewController, UITableViewDataSource, UI
         nameOfHabit.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16).isActive = true
         nameOfHabit.layer.masksToBounds = true
         nameOfHabit.layer.cornerRadius = 16
-        nameOfHabit.backgroundColor = .ypGrey
+        nameOfHabit.backgroundColor = .ypTableViewCell
         nameOfHabit.font = UIFont(name: "SFPro-Regular", size: 17)
         nameOfHabit.textInputView.leadingAnchor.constraint(equalTo: nameOfHabit.leadingAnchor, constant: 16).isActive = true
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: nameOfHabit.frame.height))
@@ -204,7 +207,7 @@ final class EditHabitViewController: UIViewController, UITableViewDataSource, UI
         buttonСancel.layer.borderWidth = 1
         buttonСancel.layer.cornerRadius = 16
         buttonСancel.layer.borderColor = UIColor.ypRed.cgColor
-        buttonСancel.setTitle("Отменить", for: .normal)
+        buttonСancel.setTitle(NSLocalizedString("cancelButtonTitle", comment: "Отменить"), for: .normal)
         buttonСancel.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
         buttonСancel.tintColor = .ypRed
         buttonСancel.addTarget(self, action: #selector(closeThisWindow), for: .touchUpInside)
@@ -220,10 +223,10 @@ final class EditHabitViewController: UIViewController, UITableViewDataSource, UI
         buttonAccept.heightAnchor.constraint(equalToConstant: 60).isActive = true
         buttonAccept.layer.masksToBounds = true
         buttonAccept.layer.cornerRadius = 16
-        buttonAccept.setTitle("Сохранить", for: .normal)
+        buttonAccept.setTitle(NSLocalizedString("trackerSaveButtonForEditingTitle", comment: "Сохранить"), for: .normal)
         buttonAccept.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
-        buttonAccept.backgroundColor = .ypLightGrey
-        buttonAccept.tintColor = .white
+        buttonAccept.backgroundColor = .ypReBackground
+        buttonAccept.setTitleColor(UIColor.ypBackground, for: .normal)
         buttonAccept.addTarget(self, action: #selector(EditTempEvent), for: .touchUpInside)
     }
     
@@ -261,7 +264,7 @@ final class EditHabitViewController: UIViewController, UITableViewDataSource, UI
         let sheduleViewController = SheduleViewController()
         sheduleViewController.delegate = self
         
-        let daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+        let daysOfWeek = [NSLocalizedString("mondayOnEng", comment: "Monday"), NSLocalizedString("tuesdayOnEng", comment: "Tuesday"), NSLocalizedString("wednesdayOnEng", comment: "Wednesday"), NSLocalizedString("thursdayOnEng", comment: "Thursday"), NSLocalizedString("fridayOnEng", comment: "Friday"), NSLocalizedString("saturdayOnEng", comment: "Saturday"), NSLocalizedString("sundayOnEng", comment: "Sunday")]
         var selectedDaysBool = [Bool](repeating: false, count: daysOfWeek.count)
         for (i, day) in daysOfWeek.enumerated() {
             if selectedDays.contains(day) {
@@ -285,8 +288,8 @@ final class EditHabitViewController: UIViewController, UITableViewDataSource, UI
     
     private func convertSelectedDaysToShortForm() {
         let daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-        let daysOfWeekForTable = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
-        
+        let daysOfWeekForTable = [NSLocalizedString("mondayShortening", comment: "Пн"), NSLocalizedString("tuesdayShortening", comment: "Вт"), NSLocalizedString("wednesdayShortening", comment: "Ср"), NSLocalizedString("thursdayShortening", comment: "Чт"), NSLocalizedString("fridayShortening", comment: "Пт"), NSLocalizedString("saturdayShortening", comment: "Сб"), NSLocalizedString("sundayShortening", comment: "Вс")]
+
         var result = [String]()
         
         let selectedDaysArray = selectedDays.components(separatedBy: " ")
@@ -304,7 +307,7 @@ final class EditHabitViewController: UIViewController, UITableViewDataSource, UI
         selectedDays = ""
         selectedDaysForTable = ""
         let daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
-        let daysOfWeekForTable = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
+        let daysOfWeekForTable = [NSLocalizedString("mondayShortening", comment: "Пн"), NSLocalizedString("tuesdayShortening", comment: "Вт"), NSLocalizedString("wednesdayShortening", comment: "Ср"), NSLocalizedString("thursdayShortening", comment: "Чт"), NSLocalizedString("fridayShortening", comment: "Пт"), NSLocalizedString("saturdayShortening", comment: "Сб"), NSLocalizedString("sundayShortening", comment: "Вс")]
         for (i, day) in daysOfWeek.enumerated(){
             if numOfDay[i] == true{
                 if selectedDays.isEmpty {
@@ -327,6 +330,17 @@ final class EditHabitViewController: UIViewController, UITableViewDataSource, UI
         checkAllConditions()
     }
     
+    private func addErrorLabel() {
+        errorLabel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(errorLabel)
+        errorLabel.text = NSLocalizedString("trackerNameWarningLabelText", comment: "Ограничение 38 символов")
+        errorLabel.textColor = .ypRed
+        errorLabel.font = UIFont(name: "SFPro-Regular", size: 17)
+        NSLayoutConstraint.activate([
+            errorLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            errorLabel.topAnchor.constraint(equalTo: nameOfHabit.bottomAnchor, constant: 8)
+        ])
+    }
     
     private func selectEmoji(indexPath: IndexPath){
         selectedEmoji = emoji[indexPath.row]
@@ -349,11 +363,14 @@ final class EditHabitViewController: UIViewController, UITableViewDataSource, UI
     }
     
     @objc private func checkAllConditions(){
-        if (!nameOfHabit.text!.isEmpty && !selectedDays.isEmpty && selectedCategory != nil && selectedEmoji != "" && selectedColor != UIColor.clear){
-            buttonAccept.backgroundColor = .yPblack
+        if nameOfHabit.text?.count ?? 0 > 38 {
+            buttonAccept.backgroundColor = .ypLightGrey
+            buttonAccept.isEnabled = false
+            addErrorLabel()
+        } else if (!nameOfHabit.text!.isEmpty && !selectedDays.isEmpty && selectedCategory != nil && selectedEmoji != "" && selectedColor != UIColor.clear){
+            buttonAccept.backgroundColor = .ypReBackground
             buttonAccept.isEnabled = true
-        }
-        else{
+        } else {
             buttonAccept.backgroundColor = .ypLightGrey
             buttonAccept.isEnabled = false
         }

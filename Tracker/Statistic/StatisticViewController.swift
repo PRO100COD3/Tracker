@@ -27,13 +27,13 @@ enum StatisticsType: CustomStringConvertible {
     var description: String {
         switch self {
             case .bestPeriod:
-                return "Лучший период"
+                return NSLocalizedString("statisticsTypeBestPeriod", comment: "Лучший период")
             case .completedTrackers:
-                return /*L10n.statisticsTypeCompleted*/"Трекеров завершено"
+                return NSLocalizedString("statisticsTypeCompleted", comment: "Трекеров завершено")
             case .averageTrackers:
-                return /*L10n.statisticsTypeAverage*/"Среднее значение"
+                return NSLocalizedString("statisticsTypeAverage", comment: "Среднее значение")
             case .idealDaysCount:
-                return /*L10n.statisticsTypeIdealDaysCount*/"Идеальные дни"
+                return NSLocalizedString("statisticsTypeIdealDaysCount", comment: "Идеальные дни")
         }
     }
 }
@@ -50,6 +50,7 @@ final class StatisticsViewController: UIViewController {
             frame: .zero,
             collectionViewLayout: UICollectionViewFlowLayout()
         )
+        collectionView.backgroundColor = .ypBackground
         collectionView.isScrollEnabled = false
         collectionView.register(StatisticsCollectionViewCell.self, forCellWithReuseIdentifier: StatisticsCollectionViewCell.Constants.identifier)
         return collectionView
@@ -68,13 +69,13 @@ final class StatisticsViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont(name: "SFPro-Medium", size: 12)
         label.textColor = .yPblack
-        label.text = "Анализировать пока нечего"/*L10n.statisticsStubImageLabelText*/
+        label.text = NSLocalizedString("statisticsStubImageLabelText", comment: "Анализировать пока нечего")
         return label
     }()
         
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .ypBackground
         
         addTitle()
         setupCollectionView()
@@ -85,7 +86,7 @@ final class StatisticsViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(label)
         label.font = UIFont(name: "SFPro-Bold", size: 34)
-        label.text = "Статистика"
+        label.text = NSLocalizedString("statisticsTabBarItemTitle", comment: "Статистика")
         label.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 44).isActive = true
         label.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16).isActive = true
     }
@@ -133,6 +134,7 @@ final class StatisticsViewController: UIViewController {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .none
+        dateFormatter.locale = Locale(identifier: "en_GB")
         
         let allCompletionDates: [Date] = allCompletionDateStrings.compactMap { dateString in
             return dateFormatter.date(from: dateString.date)

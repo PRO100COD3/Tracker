@@ -49,7 +49,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     private var daysLabel: UILabel = {
         let label = UILabel()
         label.text = "0 дней"
-        label.textColor = .black
+        label.textColor = UIColor.label
         label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         return label
     }()
@@ -129,13 +129,8 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     }
     
     private func updateDaysLabel() {
-        if countTappedDay % 10 == 1 && countTappedDay % 100 != 11 {
-            daysLabel.text = "\(countTappedDay) день"
-        } else if ((countTappedDay % 10 == 2 && countTappedDay % 100 != 12) || (countTappedDay % 10 == 3 && countTappedDay % 100 != 13) || (countTappedDay % 10 == 4 && countTappedDay % 100 != 14)) {
-            daysLabel.text = "\(countTappedDay) дня"
-        } else {
-            daysLabel.text = "\(countTappedDay) дней"
-        }
+        let formatString = String.localizedStringWithFormat(NSLocalizedString("numberOfDays", comment: "Days count"), countTappedDay)
+        daysLabel.text = formatString
     }
     
     @objc private func buttonTapped(){
@@ -187,6 +182,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         mainView.addSubview(titleLabel)
         contentView.addSubview(daysLabel)
         contentView.addSubview(addButton)
+        contentView.backgroundColor = .ypBackground
         
         mainView.translatesAutoresizingMaskIntoConstraints = false
         emojiLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -229,16 +225,16 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
             
         }
         if tracker.pin {
-            pinAction = UIAction(title: "Открепить") { action in
+            pinAction = UIAction(title: NSLocalizedString("trackersCollectionMenuPinOffTitle", comment: "Открепить")) { action in
                 self.dataProvider?.deletePin(tracker: tracker)
             }
         } else {
-            pinAction = UIAction(title: "Закрепить") { action in
+            pinAction = UIAction(title: NSLocalizedString("trackersCollectionMenuPinOnTitle", comment: "Закрепить")) { action in
                 self.dataProvider?.addPin(tracker: tracker)
             }
         }
         
-        let editAction = UIAction(title: "Редактировать") { action in
+        let editAction = UIAction(title: NSLocalizedString("editActionText", comment: "Редактировать")) { action in
             if (self.dataProvider?.tempEventOrHabit(date: tracker.schedule ?? "") == true) {
                 let editTempEventController = EditTemporaryEventViewController()
                 editTempEventController.currentDays = self.daysLabel.text ?? ""
@@ -271,16 +267,16 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
             print("Зарегистрировано событие аналитики 'click' с параметрами \(params)")
         }
         
-        let deleteAction = UIAction(title: "Удалить", attributes: .destructive) { action in
-            let actionSheet = UIAlertController(title: "Эта категория точно не нужна?", message: nil, preferredStyle: .actionSheet)
+        let deleteAction = UIAction(title: NSLocalizedString("deleteButtonTitle", comment: "Удалить"), attributes: .destructive) { action in
+            let actionSheet = UIAlertController(title: NSLocalizedString("confirmCategoryDeleteAlertMessage", comment: "Эта категория точно не нужна?"), message: nil, preferredStyle: .actionSheet)
             
-            let deleteAction = UIAlertAction(title: "Удалить", style: .destructive) { _ in
+            let deleteAction = UIAlertAction(title: NSLocalizedString("deleteButtonTitle", comment: "Удалить"), style: .destructive) { _ in
                 self.dataProvider?.delete(record: tracker)
                 let params: AnalyticsEventParam = ["screen": "Main", "item": "delete"]
                 AnalyticsService.report(event: "click", params: params)
                 print("Зарегистрировано событие аналитики 'click' с параметрами \(params)")
             }
-            let cancelAction = UIAlertAction(title: "Отменить", style: .cancel, handler: nil)
+            let cancelAction = UIAlertAction(title: NSLocalizedString("cancelButtonTitle", comment: "Отменить"), style: .cancel, handler: nil)
             
             actionSheet.addAction(deleteAction)
             actionSheet.addAction(cancelAction)
