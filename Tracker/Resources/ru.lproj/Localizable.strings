@@ -26,11 +26,9 @@
 "fixedTrackersSectionTitle" = "Закреплённые";
 "fridayShortening" = "Пт";
 "fridayTitle" = "Пятница";
-"fridayOnEng" = "Friday";
 "launchApplicationButtonTitle" = "Вот это технологии!";
 "mondayShortening" = "Пн";
 "mondayTitle" = "Понедельник";
-"mondayOnEng" = "Monday";
 "trackerSaveButtonForCreatingTitle" = "Создать";
 "trackerSaveButtonForEditingTitle" = "Сохранить";
 "onboardingPage1Title" = "Отслеживайте только то, что хотите";
@@ -38,7 +36,6 @@
 "readyButtonTitle" = "Готово";
 "saturdayShortening" = "Сб";
 "saturdayTitle" = "Суббота";
-"saturdayOnEng" = "Saturday";
 "statisticsStubImageLabelText" = "Анализировать пока нечего";
 "statisticsTabBarItemTitle" = "Статистика";
 "statisticsTypeCompleted" = "Трекеров завершено";
@@ -47,11 +44,9 @@
 "statisticsTypeBestPeriod" = "Лучший период";
 "sundayShortening" = "Вс";
 "sundayTitle" = "Воскресенье";
-"sundayOnEng" = "Sunday";
 "scheduleViewTitleText" = "Расписание";
 "thursdayShortening" = "Чт";
 "thursdayTitle" = "Четверг";
-"thursdayOnEng" = "Thursday";
 "trackerNamePlaceholderTitle" = "Введите название трекера";
 "trackerNameWarningLabelText" = "Ограничение 38 символов";
 "trackersCollectionMenuPinOnTitle" = "Закрепить";
@@ -66,7 +61,6 @@
 "trackersTabBarItemTitle" = "Трекеры";
 "tuesdayShortening" = "Вт";
 "tuesdayTitle" = "Вторник";
-"tuesdayOnEng" = "Tuesday";
 "viewTitleForCreateEvent" = "Новое нерегулярное событие";
 "viewTitleForCreateHabit" = "Новая привычка";
 "viewTitleForEditEvent" = "Редактирование нерегулярного события";
@@ -76,4 +70,3 @@
 "viewTitleTextForNewCategory" = "Новая категория";
 "wednesdayShortening" = "Ср";
 "wednesdayTitle" = "Среда";
-"wednesdayOnEng" = "Wednesday";
