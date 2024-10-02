@@ -10,17 +10,17 @@ import UIKit
 final class TabBarViewController: UITabBarController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        let statisticViewController = StatisticViewController()
+        let statisticViewController = StatisticsViewController()
         let trackersViewController = TrackersViewController()
         statisticViewController.tabBarItem = UITabBarItem(
-            title: "Статистика",
-            image: UIImage(named: "Circle_on"),
+            title: NSLocalizedString("statisticsTabBarItemTitle", comment: "Статистика"),
+            image: UIImage(named: "Rabbit_on"),
             selectedImage: nil
         )
         let navigationController = UINavigationController(rootViewController: trackersViewController)
         navigationController.tabBarItem = UITabBarItem(
-            title: "Трекеры",
-            image: UIImage(named: "Rabbit_on"),
+            title: NSLocalizedString("trackersTabBarItemTitle", comment: "Трекеры"),
+            image: UIImage(named: "Circle_on"),
             selectedImage: nil
         )
         self.viewControllers = [ navigationController, statisticViewController ]

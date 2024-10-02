@@ -15,10 +15,10 @@ final class SheduleViewController: UIViewController, UITableViewDataSource, UITa
     private let tableView = UITableView()
     var switchStates = [Bool](repeating: false, count: 7)
     
-    private let data = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"]
+    private let data = [NSLocalizedString("mondayTitle", comment: "Понедельник"), NSLocalizedString("tuesdayTitle", comment: "Вторник"), NSLocalizedString("wednesdayTitle", comment: "Среда"), NSLocalizedString("thursdayTitle", comment: "Четверг"), NSLocalizedString("fridayTitle", comment: "Пятница"), NSLocalizedString("saturdayTitle", comment: "Суббота"), NSLocalizedString("sundayTitle", comment: "Воскресенье")]
     
     override func viewDidLoad() {
-        view.backgroundColor = .white
+        view.backgroundColor = .ypBackground
         addLabel()
         addTableView()
         addButtonAccept()
@@ -33,7 +33,7 @@ final class SheduleViewController: UIViewController, UITableViewDataSource, UITa
         self.view.addSubview(tableView)
         tableView.layer.masksToBounds = true
         tableView.layer.cornerRadius = 16
-        tableView.backgroundColor = .ypGrey
+        tableView.backgroundColor = .ypBackground
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
         tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
@@ -43,7 +43,7 @@ final class SheduleViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     private func addLabel(){
-        label.text = "Расписание"
+        label.text = NSLocalizedString("scheduleViewTitleText", comment: "Расписание")
         label.font = UIFont(name: "SFPro-Medium", size: 16)
         navigationItem.titleView = label
     }
@@ -57,10 +57,10 @@ final class SheduleViewController: UIViewController, UITableViewDataSource, UITa
         buttonAccept.heightAnchor.constraint(equalToConstant: 60).isActive = true
         buttonAccept.layer.masksToBounds = true
         buttonAccept.layer.cornerRadius = 16
-        buttonAccept.setTitle("Готово", for: .normal)
+        buttonAccept.setTitle(NSLocalizedString("readyButtonTitle", comment: "Готово"), for: .normal)
         buttonAccept.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
-        buttonAccept.backgroundColor = .yPblack
-        buttonAccept.tintColor = .white
+        buttonAccept.backgroundColor = .ypReBackground
+        buttonAccept.setTitleColor(UIColor.ypBackground, for: .normal)
         buttonAccept.addTarget(self, action: #selector(didTapAcceptButton), for: .touchUpInside)
     }
     

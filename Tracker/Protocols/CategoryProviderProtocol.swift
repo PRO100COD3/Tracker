@@ -14,6 +14,7 @@ protocol CategoryProviderProtocol {
     func numberOfRowsInSection(_ section: Int) -> Int
     func object(at: IndexPath) -> TrackerCategoryCoreData?
     func indexPath(for object: TrackerCategoryCoreData) -> IndexPath?
+    func editCategory(indexPath: IndexPath, name: String)
     func add(name: String)
-    func delete(record: NSManagedObject)
+    func delete(indexPath: IndexPath)
 }

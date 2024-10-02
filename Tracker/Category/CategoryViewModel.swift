@@ -35,13 +35,24 @@ final class CategoryViewModel {
     func isShouldShowPlaceholder() -> Bool {
         return categories.count != 0 ? true : false
     }
+    
+    func isLastCategory(index: Int) -> Bool {
+        return categories.count - 1 == index
+    }
+    
+    func delete(index: IndexPath) {
+        dataProvider.delete(indexPath: index)
+        loadCategories()
+    }
 }
+
 extension CategoryViewModel: NewCategoryDelegate {
     func add(name title: String) {
         dataProvider.add(name: title)
         loadCategories()
     }
 }
+
 extension CategoryViewModel: CategoryProviderDelegate {
     func didUpdateCategories() {
         categories = dataProvider.categories
@@ -49,3 +60,9 @@ extension CategoryViewModel: CategoryProviderDelegate {
     }
 }
 
+extension CategoryViewModel: EditCategoryDelegate {
+    func edit(name: String, index: IndexPath) {
+        dataProvider.editCategory(indexPath: index, name: name)
+        loadCategories()
+    }
+}

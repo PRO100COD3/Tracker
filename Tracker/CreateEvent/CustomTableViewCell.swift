@@ -8,7 +8,7 @@
 import UIKit
 
 class CustomTableViewCell: UITableViewCell {
-
+    
     let leftLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont(name: "SFPro-Regular", size: 17)
@@ -28,14 +28,16 @@ class CustomTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.textLabel?.font = UIFont(name: "SFPro-Regular", size: 17)
-        self.textLabel?.textColor = .yPblack
-        self.backgroundColor = .ypGrey
+        self.textLabel?.textColor = .ypReBackground
+        self.backgroundColor = .ypTableViewCell
         self.separatorInset = .init(top: 0, left: 20, bottom: 0, right: 20)
-
+        self.selectionStyle = .none
+        
+        
         contentView.addSubview(leftLabel)
         contentView.addSubview(optionalLabel)
         
-
+        
         NSLayoutConstraint.activate([
             leftLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
             leftLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 15),
@@ -59,7 +61,7 @@ class CustomTableViewCell: UITableViewCell {
         }
     }
     func configureHabit(with mainText: String, optionalCategoryText: String?, optionalDaysText: String) {
-        if mainText == "Категория" {
+        if mainText == NSLocalizedString("categoryViewTitleText", comment: "Категория") {
             if optionalCategoryText == nil {
                 textLabel?.text = mainText
             } else {
@@ -76,5 +78,11 @@ class CustomTableViewCell: UITableViewCell {
                 optionalLabel.text = optionalDaysText
             }
         }
+    }
+    
+    func configureFilter(with mainText: String, isSelected: Bool) {
+        textLabel?.text = mainText
+        selectionStyle = .none
+        accessoryType = isSelected ? .checkmark : .none
     }
 }

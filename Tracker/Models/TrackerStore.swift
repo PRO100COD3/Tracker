@@ -11,6 +11,7 @@ import UIKit
 
 final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
     
+    static let shared = TrackerStore()
     weak var delegate: CollectionViewProviderDelegate?
     private let uiColorMarshalling = UIColorMarshalling()
     var currentDate = Date()
@@ -36,10 +37,12 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .none
+        dateFormatter.locale = Locale(identifier: "en_GB")
         let formattedDate = dateFormatter.string(from: currentDate)
         
         let dateFormatterDay = DateFormatter()
         dateFormatterDay.dateFormat = "EEEE"
+        dateFormatterDay.locale = Locale(identifier: "en_GB")
         let dayName = dateFormatterDay.string(from: currentDate)
         
         let predicate = NSPredicate(format: "ANY trackers.schedule == %@", formattedDate)
@@ -58,15 +61,43 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
         return fetchedResultsController
     }()
     
-    init(delegate: CollectionViewProviderDelegate, date: Date) {
-        self.delegate = delegate
-        self.currentDate = date
-    }
-    
-    private func tempEventOrHabit(date: String) -> Bool {
+    func tempEventOrHabit(date: String) -> Bool {
         let digitsSet = CharacterSet(charactersIn: "123456789")
         if date.rangeOfCharacter(from: digitsSet) != nil {
             return true
+        }
+        return false
+    }
+    
+    func searchTracker(text: String) -> [TrackerCategory] {
+        if text.isEmpty {
+            return trackerMixes
+        }
+        return trackerMixes.compactMap { category in
+            let filteredTrackers = category.trackers.filter { tracker in
+                tracker.name.lowercased().contains(text.lowercased())
+            }
+            return filteredTrackers.isEmpty ? nil : TrackerCategory(name: category.name, trackers: filteredTrackers)
+        }
+    }
+    
+    func addPin(tracker: TrackerCoreData) {
+        tracker.pin = true
+        saveContext()
+        delegate?.didUpdate()
+    }
+    
+    func deletePin(tracker: TrackerCoreData) {
+        tracker.pin = false
+        saveContext()
+        delegate?.didUpdate()
+    }
+    
+    func isHavePinnedCategory() -> Bool {
+        for cat in trackerMixes {
+            if cat.trackers.first(where: \.pin) != nil {
+                return true
+            }
         }
         return false
     }
@@ -76,10 +107,12 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
         let dateFormatter = DateFormatter()
         dateFormatter.dateStyle = .medium
         dateFormatter.timeStyle = .none
+        dateFormatter.locale = Locale(identifier: "en_GB")
         let formattedDate = dateFormatter.string(from: currentDate)
         
         let dateFormatterDay = DateFormatter()
         dateFormatterDay.dateFormat = "EEEE"
+        dateFormatterDay.locale = Locale(identifier: "en_GB")
         let dayName = dateFormatterDay.string(from: currentDate)
         
         let predicate = NSPredicate(format: "schedule == %@", formattedDate)
@@ -96,20 +129,38 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
         }
     }
     
-    func transformTrackerCoreDataToTracker(trackerCoreData: [TrackerCoreData]) -> [Tracker] {
+    func transformTrackerCoreDataToTracker(trackerCoreData: [TrackerCoreData?]) -> [Tracker] {
         var result: [Tracker] = []
         for element in trackerCoreData {
-            guard let emoji = element.emoji,
-                  let colorHex = element.color,
-                  let id = element.id,
-                  let schedule = element.schedule,
-                  let name = element.name else {
+            guard let emoji = element?.emoji,
+                  let colorHex = element?.color,
+                  let id = element?.id,
+                  let schedule = element?.schedule,
+                  let name = element?.name,
+                  let pin = element?.pin
+            else {
                 assertionFailure("Некорректные данные из Core Data")
                 return []
             }
-            result.append(Tracker(id: id, name: name, color: uiColorMarshalling.color(from: colorHex), emoji: emoji, schedule: schedule))
+            result.append(Tracker(id: id, name: name, color: uiColorMarshalling.color(from: colorHex), emoji: emoji, schedule: schedule, pin: pin))
         }
         return result
+    }
+    
+    func fetchTrackerEntity(id: UUID) -> TrackerCoreData? {
+        let fetchRequest: NSFetchRequest<TrackerCoreData> = TrackerCoreData.fetchRequest()
+        
+        let predicate = NSPredicate(format: "id == %@", id as CVarArg)
+        fetchRequest.predicate = predicate
+        
+        do {
+            let fetchedObjects = try context.fetch(fetchRequest)
+            
+            return fetchedObjects.first
+        } catch {
+            print("Ошибка при выполнении запроса: \(error)")
+            return nil
+        }
     }
     
     func trackerMix(from trackerCategoryCoreData: TrackerCategoryCoreData) throws -> TrackerCategory {
@@ -182,7 +233,18 @@ extension TrackerStore: TrackerProviderProtocol {
         newTracker.schedule = shedule
         newTracker.category = category
         newTracker.id = UUID()
+        newTracker.pin = false
         saveContext()
+    }
+    
+    func edit(tracker: TrackerCoreData, name: String, color: String, emoji: String, shedule: String, category: TrackerCategoryCoreData) {
+        tracker.name = name
+        tracker.color = color
+        tracker.emoji = emoji
+        tracker.schedule = shedule
+        tracker.category = category
+        saveContext()
+        delegate?.didUpdate()
     }
     
     func delete(record: NSManagedObject) {

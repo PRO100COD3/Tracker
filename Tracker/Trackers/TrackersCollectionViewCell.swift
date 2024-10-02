@@ -12,7 +12,12 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     private var countTappedDay = 0
     static let identifier = "CustomCell"
     weak var delegate: TrackerRecordProtocol?
+    weak var presentDelegate: TrackersCollectionViewCellDelegate?
     private var checkButtonTap = false
+    var id: UUID?
+    var dataProvider: TrackerStore?
+    var trackerCategoryCD: TrackerCategoryCoreData?
+    var indexOfSection: IndexPath?
     
     private var mainView: UIView = {
         let view = UIView()
@@ -44,9 +49,15 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
     private var daysLabel: UILabel = {
         let label = UILabel()
         label.text = "0 дней"
-        label.textColor = .black
+        label.textColor = UIColor.label
         label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         return label
+    }()
+    
+    private var pinnedImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(named: "Pinned")
+        return imageView
     }()
     
     private var addButton: UIButton = {
@@ -61,12 +72,13 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         return button
     }()
     
-    func changeCell(color: UIColor, emoji: String, title: String, daysCount: Int, checkThisDayRecord: Bool){
-        
+    func changeCell(color: UIColor, emoji: String, title: String, daysCount: Int, checkThisDayRecord: Bool, uuid: UUID, category: TrackerCategoryCoreData, isPinned: Bool){
+        id = uuid
         mainView.backgroundColor = color
         emojiLabel.text = emoji
         titleLabel.text = title
         countTappedDay = daysCount
+        trackerCategoryCD = category
         updateDaysLabel()
         
         if (daysCount > 0 && checkThisDayRecord) {
@@ -96,16 +108,26 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
             addButton.setTitle("+", for: .normal)
             addButton.setImage(nil, for: .normal)
         }
+        
+        isPinned ? addPin() : deletePin()
+    }
+    
+    private func addPin() {
+        mainView.addSubview(pinnedImageView)
+        pinnedImageView.translatesAutoresizingMaskIntoConstraints = false
+        pinnedImageView.trailingAnchor.constraint(equalTo: mainView.trailingAnchor, constant: -4).isActive = true
+        pinnedImageView.topAnchor.constraint(equalTo: mainView.topAnchor, constant: 12).isActive = true
+        pinnedImageView.widthAnchor.constraint(equalToConstant: 24).isActive = true
+        pinnedImageView.heightAnchor.constraint(equalToConstant: 24).isActive = true
+    }
+    
+    private func deletePin() {
+        pinnedImageView.removeFromSuperview()
     }
     
     private func updateDaysLabel() {
-        if countTappedDay % 10 == 1 && countTappedDay % 100 != 11 {
-            daysLabel.text = "\(countTappedDay) день"
-        } else if ((countTappedDay % 10 == 2 && countTappedDay % 100 != 12) || (countTappedDay % 10 == 3 && countTappedDay % 100 != 13) || (countTappedDay % 10 == 4 && countTappedDay % 100 != 14)) {
-            daysLabel.text = "\(countTappedDay) дня"
-        } else {
-            daysLabel.text = "\(countTappedDay) дней"
-        }
+        let formatString = String.localizedStringWithFormat(NSLocalizedString("numberOfDays", comment: "Days count"), countTappedDay)
+        daysLabel.text = formatString
     }
     
     @objc private func buttonTapped(){
@@ -157,6 +179,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
         mainView.addSubview(titleLabel)
         contentView.addSubview(daysLabel)
         contentView.addSubview(addButton)
+        contentView.backgroundColor = .ypBackground
         
         mainView.translatesAutoresizingMaskIntoConstraints = false
         emojiLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -189,10 +212,89 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
             addButton.widthAnchor.constraint(equalToConstant: 34),
             addButton.heightAnchor.constraint(equalToConstant: 34)
         ])
+        let interaction = UIContextMenuInteraction(delegate: self)
+        mainView.addInteraction(interaction)
+    }
+    
+    private func makeContextMenu() -> UIMenu {
+        guard let tracker = self.dataProvider?.fetchTrackerEntity(id: self.id ?? UUID()) else { return UIMenu()}
+        var pinAction = UIAction(title: "") { action in
+            
+        }
+        if tracker.pin {
+            pinAction = UIAction(title: NSLocalizedString("trackersCollectionMenuPinOffTitle", comment: "Открепить")) { [weak self] action in
+                self?.dataProvider?.deletePin(tracker: tracker)
+            }
+        } else {
+            pinAction = UIAction(title: NSLocalizedString("trackersCollectionMenuPinOnTitle", comment: "Закрепить")) { [weak self] action in
+                self?.dataProvider?.addPin(tracker: tracker)
+            }
+        }
+        
+        let editAction = UIAction(title: NSLocalizedString("editActionText", comment: "Редактировать")) { [weak self] action in
+            if (self?.dataProvider?.tempEventOrHabit(date: tracker.schedule ?? "") == true) {
+                let editTempEventController = EditTemporaryEventViewController()
+                editTempEventController.currentDays = self?.daysLabel.text ?? ""
+                editTempEventController.dataProvider = self?.dataProvider
+                editTempEventController.selectedTracker = tracker
+                editTempEventController.currentDate = tracker.schedule ?? ""
+                editTempEventController.nameOfTracker = tracker.name ?? ""
+                editTempEventController.selectedCategory = self?.trackerCategoryCD
+                editTempEventController.selectedColor = UIColorMarshalling().color(from: tracker.color ?? "")
+                editTempEventController.selectedEmoji = tracker.emoji ?? ""
+                
+                let navigationController = UINavigationController(rootViewController: editTempEventController)
+                self?.presentDelegate?.presentViewController(navController: navigationController)
+            } else {
+                let editHabitController = EditHabitViewController()
+                editHabitController.currentDays = self?.daysLabel.text ?? ""
+                editHabitController.dataProvider = self?.dataProvider
+                editHabitController.selectedTracker = tracker
+                editHabitController.selectedDays = tracker.schedule ?? ""
+                editHabitController.nameOfTracker = tracker.name ?? ""
+                editHabitController.selectedCategory = self?.trackerCategoryCD
+                editHabitController.selectedColor = UIColorMarshalling().color(from: tracker.color ?? "")
+                editHabitController.selectedEmoji = tracker.emoji ?? ""
+                
+                let navigationController = UINavigationController(rootViewController: editHabitController)
+                self?.presentDelegate?.presentViewController(navController: navigationController)
+            }
+            let params: AnalyticsEventParam = ["screen": "Main", "item": "edit"]
+            AnalyticsService.report(event: "click", params: params)
+            print("Зарегистрировано событие аналитики 'click' с параметрами \(params)")
+        }
+        
+        let deleteAction = UIAction(title: NSLocalizedString("deleteButtonTitle", comment: "Удалить"), attributes: .destructive) { [weak self] action in
+            let actionSheet = UIAlertController(title: NSLocalizedString("confirmCategoryDeleteAlertMessage", comment: "Эта категория точно не нужна?"), message: nil, preferredStyle: .actionSheet)
+            
+            let deleteAction = UIAlertAction(title: NSLocalizedString("deleteButtonTitle", comment: "Удалить"), style: .destructive) { _ in
+                self?.dataProvider?.delete(record: tracker)
+                let params: AnalyticsEventParam = ["screen": "Main", "item": "delete"]
+                AnalyticsService.report(event: "click", params: params)
+                print("Зарегистрировано событие аналитики 'click' с параметрами \(params)")
+            }
+            let cancelAction = UIAlertAction(title: NSLocalizedString("cancelButtonTitle", comment: "Отменить"), style: .cancel, handler: nil)
+            
+            actionSheet.addAction(deleteAction)
+            actionSheet.addAction(cancelAction)
+            
+            self?.presentDelegate?.presentAlertController(alerController: actionSheet)
+        }
+        
+        return UIMenu(title: "", children: [pinAction, editAction, deleteAction])
     }
     
     required init?(coder: NSCoder) {
         self.init()
         assertionFailure("init(coder:) has not been implemented")
+    }
+}
+
+extension TrackersCollectionViewCell: UIContextMenuInteractionDelegate {
+    
+    func contextMenuInteraction(_ interaction: UIContextMenuInteraction, configurationForMenuAtLocation location: CGPoint) -> UIContextMenuConfiguration? {
+        return UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] suggestedActions in
+            return self?.makeContextMenu()
+        }
     }
 }

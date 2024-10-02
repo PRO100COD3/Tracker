@@ -11,6 +11,7 @@ import UIKit
 
 final class TrackerCategoryStore: NSObject{
     
+    static let shared = TrackerStore()
     weak var delegate: CategoryProviderDelegate?
     var categoryVC: CategoryViewController?
     
@@ -33,15 +34,15 @@ final class TrackerCategoryStore: NSObject{
         return fetchedResultsController
     }()
     
-        init(delegate: CategoryProviderDelegate) {
-            self.delegate = delegate
-        }
+    init(delegate: CategoryProviderDelegate) {
+        self.delegate = delegate
+    }
     
     var categories: [TrackerCategoryCoreData] {
         guard let objects = fetchedResultsController.fetchedObjects else { return [] }
         return objects.compactMap { $0 }
     }
-        
+    
     func isContextEmpty(for entityName: String) -> Bool {
         let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
         fetchRequest.fetchLimit = 1
@@ -78,6 +79,12 @@ extension TrackerCategoryStore: CategoryProviderProtocol {
         fetchedResultsController.object(at: indexPath)
     }
     
+    func editCategory(indexPath: IndexPath, name: String) {
+        let object = object(at: indexPath)
+        object?.name = name
+        saveContext()
+    }
+    
     func indexPath(for object: TrackerCategoryCoreData) -> IndexPath? {
         return fetchedResultsController.indexPath(forObject: object)
     }
@@ -89,8 +96,9 @@ extension TrackerCategoryStore: CategoryProviderProtocol {
         saveContext()
     }
     
-    func delete(record: NSManagedObject) {
-        context.delete(record)
+    func delete(indexPath: IndexPath) {
+        guard let object = object(at: indexPath) else { return }
+        context.delete(object)
         saveContext()
     }
 }

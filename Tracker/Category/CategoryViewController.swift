@@ -8,7 +8,7 @@
 
 import UIKit
 
-final class CategoryViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+final class CategoryViewController: UIViewController {
     
     private var viewModel: CategoryViewModel
     weak var delegate: CategoryProtocol?
@@ -23,7 +23,7 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .ypBackground
         coreDataToIndexPath()
         addLabel()
         addButtonAddNewCategory()
@@ -42,6 +42,7 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
     
     private func bindViewModel() {
         viewModel.onCategoriesUpdated = { [weak self] categories in
+            
             self?.checkCategories(isShouldShowPlaceholder: self?.viewModel.isShouldShowPlaceholder() ?? false)
             self?.tableView.reloadData()
         }
@@ -69,7 +70,7 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
     }
     
     private func addLabel() {
-        label.text = "Категория"
+        label.text = NSLocalizedString("categoryViewTitleText", comment: "Категория")
         label.font = UIFont(name: "SFPro-Medium", size: 16)
         navigationItem.titleView = label
     }
@@ -83,10 +84,10 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         buttonAddNewCategory.heightAnchor.constraint(equalToConstant: 60).isActive = true
         buttonAddNewCategory.layer.masksToBounds = true
         buttonAddNewCategory.layer.cornerRadius = 16
-        buttonAddNewCategory.setTitle("Добавить категорию", for: .normal)
+        buttonAddNewCategory.setTitle(NSLocalizedString("addCategoryButtonTitle", comment: "Добавить категорию"), for: .normal)
         buttonAddNewCategory.titleLabel?.font = UIFont(name: "SFPro-Medium", size: 16)
-        buttonAddNewCategory.backgroundColor = .yPblack
-        buttonAddNewCategory.tintColor = .white
+        buttonAddNewCategory.backgroundColor = .ypReBackground
+        buttonAddNewCategory.setTitleColor(UIColor.ypBackground, for: .normal)
         buttonAddNewCategory.addTarget(self, action: #selector(addNewCategory), for: .touchUpInside)
     }
     
@@ -104,10 +105,12 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         view.addSubview(quote)
         quote.numberOfLines = 2
         quote.textAlignment = .center
-        quote.text = "Привычки и события можно объединить по смыслу?"
+        quote.text = NSLocalizedString("categoriesStubImageLabelText", comment: "Привычки и события можно объединить по смыслу")
         quote.font = UIFont(name: "SFPro-Medium", size: 12)
         quote.topAnchor.constraint(equalTo: imageView.bottomAnchor, constant: 8).isActive = true
         quote.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        quote.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        quote.widthAnchor.constraint(equalToConstant: 200).isActive = true
     }
     
     private func removePlaceholderFromSuperview() {
@@ -128,16 +131,16 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
         tableView.delegate = self
         tableView.register(CategoriesTableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(tableView)
-        tableView.layer.masksToBounds = true
-        tableView.layer.cornerRadius = 16
-        tableView.backgroundColor = .white
-        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16).isActive = true
+        view.addSubview(tableView)
+        tableView.backgroundColor = .ypBackground
+        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 16).isActive = true
         tableView.heightAnchor.constraint(equalToConstant: 524).isActive = true
     }
-    
+}
+
+extension CategoryViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return viewModel.categories.count
     }
@@ -149,15 +152,19 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
             }
             let category = viewModel.categories[indexPath.row]
             guard let name = category.name else { return UITableViewCell() }
-            cell.configurate(name: name, isSelected: indexPath == selectedIndexPath)
+            let isLastCategory = viewModel.isLastCategory(index: indexPath.row)
+            let isFirstCategory = indexPath.row == 0 
+            cell.configurate(name: name, isSelected: indexPath == selectedIndexPath, isLastCategory: isLastCategory, isFirstCategory: isFirstCategory)
             
             return cell
         }
         assertionFailure("не найдена ячейка")
         return UITableViewCell()
     }
-    
-    // MARK: - UITableViewDelegate
+}
+
+
+extension CategoryViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         viewModel.selectCategory(at: indexPath.row)
@@ -167,5 +174,32 @@ final class CategoryViewController: UIViewController, UITableViewDataSource, UIT
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 75
+    }
+    
+    func tableView(_ tableView: UITableView, contextMenuConfigurationForRowAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+        let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { [weak self] _ in
+            let editAction = UIAction(title: NSLocalizedString("editActionText", comment: "Редактировать")) {_ in
+                let category = self?.viewModel.categories[indexPath.row]
+                let editCategoryViewController = EditCategoryViewController(delegate: self?.viewModel ?? nil, index: indexPath, name: category?.name ?? "")
+                editCategoryViewController.delegate = self?.viewModel
+                let navigationController = UINavigationController(rootViewController: editCategoryViewController)
+                self?.present(navigationController, animated: true)
+            }
+            let deleteAction = UIAction(title: NSLocalizedString("deleteButtonTitle", comment: "Удалить"), attributes: .destructive) { _ in
+                let actionSheet = UIAlertController(title: NSLocalizedString("confirmCategoryDeleteAlertMessage", comment: "Эта категория точно не нужна?"), message: nil, preferredStyle: .actionSheet)
+                
+                let deleteAction = UIAlertAction(title: NSLocalizedString("deleteButtonTitle", comment: "Удалить"), style: .destructive) { _ in
+                    self?.viewModel.delete(index: indexPath)
+                }
+                let cancelAction = UIAlertAction(title: NSLocalizedString("cancelButtonTitle", comment: "Отменить"), style: .cancel, handler: nil)
+                
+                actionSheet.addAction(deleteAction)
+                actionSheet.addAction(cancelAction)
+                
+                self?.present(actionSheet, animated: true, completion: nil)
+            }
+            return UIMenu(title: "", children: [editAction, deleteAction])
+        }
+        return configuration
     }
 }

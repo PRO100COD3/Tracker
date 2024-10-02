@@ -14,19 +14,19 @@ final class CollectionViewHeaders: UICollectionReusableView {
         let label = UILabel()
         label.text = "header"
         label.textAlignment = .left
-        label.textColor = .yPblack
+        label.textColor = UIColor.label
         label.font = UIFont(name: "SFPro-Bold", size: 19)
         return label
     }()
     
     public func configure(with title: String){
-        backgroundColor = .white
+        backgroundColor = .ypBackground
         addSubview(label)
         label.text = title
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        label.frame = bounds.inset(by: UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 0))
+        label.frame = bounds.inset(by: UIEdgeInsets(top: 0, left: 28, bottom: 0, right: 0))
     }
 }

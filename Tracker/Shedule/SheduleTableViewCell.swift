@@ -14,8 +14,8 @@ final class SheduleTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         self.textLabel?.font = UIFont(name: "SFPro-Regular", size: 17)
-        self.textLabel?.textColor = .yPblack
-        self.backgroundColor = .ypGrey
+        self.textLabel?.textColor = UIColor.label
+        self.backgroundColor = .ypTableViewCell
         self.separatorInset = .init(top: 0, left: 20, bottom: 0, right: 20)
         self.selectionStyle = .none
         
