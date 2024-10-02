@@ -108,11 +108,8 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
             addButton.setTitle("+", for: .normal)
             addButton.setImage(nil, for: .normal)
         }
-        if isPinned {
-            addPin()
-        } else {
-            deletePin()
-        }
+        
+        isPinned ? addPin() : deletePin()
     }
     
     private func addPin() {
@@ -225,53 +222,53 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
             
         }
         if tracker.pin {
-            pinAction = UIAction(title: NSLocalizedString("trackersCollectionMenuPinOffTitle", comment: "Открепить")) { action in
-                self.dataProvider?.deletePin(tracker: tracker)
+            pinAction = UIAction(title: NSLocalizedString("trackersCollectionMenuPinOffTitle", comment: "Открепить")) { [weak self] action in
+                self?.dataProvider?.deletePin(tracker: tracker)
             }
         } else {
-            pinAction = UIAction(title: NSLocalizedString("trackersCollectionMenuPinOnTitle", comment: "Закрепить")) { action in
-                self.dataProvider?.addPin(tracker: tracker)
+            pinAction = UIAction(title: NSLocalizedString("trackersCollectionMenuPinOnTitle", comment: "Закрепить")) { [weak self] action in
+                self?.dataProvider?.addPin(tracker: tracker)
             }
         }
         
-        let editAction = UIAction(title: NSLocalizedString("editActionText", comment: "Редактировать")) { action in
-            if (self.dataProvider?.tempEventOrHabit(date: tracker.schedule ?? "") == true) {
+        let editAction = UIAction(title: NSLocalizedString("editActionText", comment: "Редактировать")) { [weak self] action in
+            if (self?.dataProvider?.tempEventOrHabit(date: tracker.schedule ?? "") == true) {
                 let editTempEventController = EditTemporaryEventViewController()
-                editTempEventController.currentDays = self.daysLabel.text ?? ""
-                editTempEventController.dataProvider = self.dataProvider
+                editTempEventController.currentDays = self?.daysLabel.text ?? ""
+                editTempEventController.dataProvider = self?.dataProvider
                 editTempEventController.selectedTracker = tracker
                 editTempEventController.currentDate = tracker.schedule ?? ""
                 editTempEventController.nameOfTracker = tracker.name ?? ""
-                editTempEventController.selectedCategory = self.trackerCategoryCD
+                editTempEventController.selectedCategory = self?.trackerCategoryCD
                 editTempEventController.selectedColor = UIColorMarshalling().color(from: tracker.color ?? "")
                 editTempEventController.selectedEmoji = tracker.emoji ?? ""
                 
                 let navigationController = UINavigationController(rootViewController: editTempEventController)
-                self.presentDelegate?.presentViewController(navController: navigationController)
+                self?.presentDelegate?.presentViewController(navController: navigationController)
             } else {
                 let editHabitController = EditHabitViewController()
-                editHabitController.currentDays = self.daysLabel.text ?? ""
-                editHabitController.dataProvider = self.dataProvider
+                editHabitController.currentDays = self?.daysLabel.text ?? ""
+                editHabitController.dataProvider = self?.dataProvider
                 editHabitController.selectedTracker = tracker
                 editHabitController.selectedDays = tracker.schedule ?? ""
                 editHabitController.nameOfTracker = tracker.name ?? ""
-                editHabitController.selectedCategory = self.trackerCategoryCD
+                editHabitController.selectedCategory = self?.trackerCategoryCD
                 editHabitController.selectedColor = UIColorMarshalling().color(from: tracker.color ?? "")
                 editHabitController.selectedEmoji = tracker.emoji ?? ""
                 
                 let navigationController = UINavigationController(rootViewController: editHabitController)
-                self.presentDelegate?.presentViewController(navController: navigationController)
+                self?.presentDelegate?.presentViewController(navController: navigationController)
             }
             let params: AnalyticsEventParam = ["screen": "Main", "item": "edit"]
             AnalyticsService.report(event: "click", params: params)
             print("Зарегистрировано событие аналитики 'click' с параметрами \(params)")
         }
         
-        let deleteAction = UIAction(title: NSLocalizedString("deleteButtonTitle", comment: "Удалить"), attributes: .destructive) { action in
+        let deleteAction = UIAction(title: NSLocalizedString("deleteButtonTitle", comment: "Удалить"), attributes: .destructive) { [weak self] action in
             let actionSheet = UIAlertController(title: NSLocalizedString("confirmCategoryDeleteAlertMessage", comment: "Эта категория точно не нужна?"), message: nil, preferredStyle: .actionSheet)
             
             let deleteAction = UIAlertAction(title: NSLocalizedString("deleteButtonTitle", comment: "Удалить"), style: .destructive) { _ in
-                self.dataProvider?.delete(record: tracker)
+                self?.dataProvider?.delete(record: tracker)
                 let params: AnalyticsEventParam = ["screen": "Main", "item": "delete"]
                 AnalyticsService.report(event: "click", params: params)
                 print("Зарегистрировано событие аналитики 'click' с параметрами \(params)")
@@ -281,7 +278,7 @@ final class TrackersCollectionViewCell: UICollectionViewCell {
             actionSheet.addAction(deleteAction)
             actionSheet.addAction(cancelAction)
             
-            self.presentDelegate?.presentAlertController(alerController: actionSheet)
+            self?.presentDelegate?.presentAlertController(alerController: actionSheet)
         }
         
         return UIMenu(title: "", children: [pinAction, editAction, deleteAction])

@@ -10,14 +10,6 @@ import UIKit
 
 final class StatisticsCollectionViewCell: UICollectionViewCell {
     
-    enum Constants {
-        static let identifier = "StatisticsCollectionViewCell"
-        static let cornerRadius: CGFloat = 16
-        static let marginWidth: CGFloat = 2
-        static let labelsContainerSpacing: CGFloat = 7
-        static let labelInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
-    }
-        
     private let gradientLayer = CAGradientLayer()
     private let borderLayer = CAShapeLayer()
     private lazy var labelsContainer: UIStackView = {
@@ -101,5 +93,15 @@ final class StatisticsCollectionViewCell: UICollectionViewCell {
         borderLayer.fillColor = UIColor.clear.cgColor
         borderLayer.strokeColor = UIColor.black.cgColor
         gradientLayer.mask = borderLayer
+    }
+}
+
+extension StatisticsCollectionViewCell {
+    enum Constants {
+        static let identifier = "StatisticsCollectionViewCell"
+        static let cornerRadius: CGFloat = 16
+        static let marginWidth: CGFloat = 2
+        static let labelsContainerSpacing: CGFloat = 7
+        static let labelInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
     }
 }

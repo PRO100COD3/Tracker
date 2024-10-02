@@ -226,9 +226,3 @@ extension StatisticsViewController: UICollectionViewDelegateFlowLayout {
         return 0
     }
 }
-
-extension StatisticsViewController: CollectionViewProviderDelegate {
-    func didUpdate() {
-        
-    }
-}

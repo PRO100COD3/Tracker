@@ -12,12 +12,11 @@ import SnapshotTesting
 
 
 final class TrackerTests: XCTestCase {
-
+    
     func testViewController() {
-            let vc = TrackersViewController()
-            vc.loadViewIfNeeded()
-            
+        let vc = TrackersViewController()
+        vc.loadViewIfNeeded()
+        
         assertSnapshot(of: vc, as: .image(traits: .init(userInterfaceStyle: .light)))
-        }
-
+    }
 }
