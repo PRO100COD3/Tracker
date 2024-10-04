@@ -26,7 +26,7 @@ final class PageViewController: UIPageViewController, UIPageViewControllerDataSo
     
     private lazy var pages: [UIViewController] = {
         let screen1 = ScreenViewController(backgroundImageString: numberOfScreen.screen1BackImageString.rawValue, screenTextString: NSLocalizedString("onboardingPage1Title", comment: "Отслеживайте только то, что хотите"))
-        
+        //screen1.
         let screen2 = ScreenViewController(backgroundImageString: numberOfScreen.screen2BackImageString.rawValue, screenTextString: NSLocalizedString("onboardingPage2Title", comment: "Даже если это не литры воды и йога"))
         
         return [screen1, screen2]

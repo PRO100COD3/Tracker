@@ -102,6 +102,6 @@ extension StatisticsCollectionViewCell {
         static let cornerRadius: CGFloat = 16
         static let marginWidth: CGFloat = 2
         static let labelsContainerSpacing: CGFloat = 7
-        static let labelInsets = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
+        static let labelInsets = UIEdgeInsets(top: 0, left: 14, bottom: 0, right: 14)
     }
 }
