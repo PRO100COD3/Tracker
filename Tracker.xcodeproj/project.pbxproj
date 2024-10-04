@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 56;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -33,6 +33,7 @@
 		3C94D6EA2CA2428D0004A62A /* CategoryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C94D6E92CA2428D0004A62A /* CategoryViewModel.swift */; };
 		3C9B79D82CA58E5800141D4D /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9B79D72CA58E5800141D4D /* FilterViewController.swift */; };
 		3C9B79DA2CA591EB00141D4D /* FilterChangeDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9B79D92CA591EB00141D4D /* FilterChangeDelegate.swift */; };
+		3C9DCB4F2CB08D9400B451A2 /* TrackerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C9DCB4E2CB08D9400B451A2 /* TrackerTests.swift */; };
 		3CA988872CA8C32F00D25E3E /* TrackersCollectionViewCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CA988862CA8C32F00D25E3E /* TrackersCollectionViewCellDelegate.swift */; };
 		3CB90D112C3E56DF0074BD2D /* CreateTemporaryEventViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB90D102C3E56DF0074BD2D /* CreateTemporaryEventViewController.swift */; };
 		3CB90D142C3E597E0074BD2D /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CB90D132C3E597E0074BD2D /* CustomTableViewCell.swift */; };
@@ -106,6 +107,7 @@
 		3C94D6E92CA2428D0004A62A /* CategoryViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryViewModel.swift; sourceTree = "<group>"; };
 		3C9B79D72CA58E5800141D4D /* FilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
 		3C9B79D92CA591EB00141D4D /* FilterChangeDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterChangeDelegate.swift; sourceTree = "<group>"; };
+		3C9DCB4E2CB08D9400B451A2 /* TrackerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerTests.swift; sourceTree = "<group>"; };
 		3CA988862CA8C32F00D25E3E /* TrackersCollectionViewCellDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackersCollectionViewCellDelegate.swift; sourceTree = "<group>"; };
 		3CB90D102C3E56DF0074BD2D /* CreateTemporaryEventViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTemporaryEventViewController.swift; sourceTree = "<group>"; };
 		3CB90D132C3E597E0074BD2D /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
@@ -139,10 +141,6 @@
 		AD0045C41EF58AABC59B5276 /* Pods-Tracker.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tracker.debug.xcconfig"; path = "Target Support Files/Pods-Tracker/Pods-Tracker.debug.xcconfig"; sourceTree = "<group>"; };
 		F9A0EFFF2060A779A0B11DCB /* Pods_Tracker.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Tracker.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		3C29236B2CAA510800E5D31C /* TrackerTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = TrackerTests; sourceTree = "<group>"; };
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		3C2923672CAA510800E5D31C /* Frameworks */ = {
@@ -179,7 +177,7 @@
 			children = (
 				3CDE2FC82CA0E64400FD3D06 /* Model.xcdatamodeld */,
 				3C2E90C02C2B23A00081F7B7 /* Tracker */,
-				3C29236B2CAA510800E5D31C /* TrackerTests */,
+				3C9DCB502CB08DB500B451A2 /* TrackerTests */,
 				3C2E90BF2C2B23A00081F7B7 /* Products */,
 				9583FDF05487AC270C8BF3EE /* Pods */,
 				60E5376F8140EDDAFD802C89 /* Frameworks */,
@@ -253,6 +251,14 @@
 				3CDCD1FE2CAA4ACC0001A2BE /* Localizable.stringsdict */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		3C9DCB502CB08DB500B451A2 /* TrackerTests */ = {
+			isa = PBXGroup;
+			children = (
+				3C9DCB4E2CB08D9400B451A2 /* TrackerTests.swift */,
+			);
+			path = TrackerTests;
 			sourceTree = "<group>";
 		};
 		3CB90D122C3E594C0074BD2D /* CreateEvent */ = {
@@ -366,9 +372,6 @@
 			);
 			dependencies = (
 				3C29236F2CAA510800E5D31C /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				3C29236B2CAA510800E5D31C /* TrackerTests */,
 			);
 			name = TrackerTests;
 			packageProductDependencies = (
@@ -509,6 +512,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3C9DCB4F2CB08D9400B451A2 /* TrackerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
