@@ -266,8 +266,7 @@ final class CreateHabitViewController: UIViewController, UITableViewDataSource, 
     func sheduleButtonTapped() {
         let sheduleViewController = SheduleViewController()
         sheduleViewController.delegate = self
-        
-        let daysOfWeek = [NSLocalizedString("mondayOnEng", comment: "Monday"), NSLocalizedString("tuesdayOnEng", comment: "Tuesday"), NSLocalizedString("wednesdayOnEng", comment: "Wednesday"), NSLocalizedString("thursdayOnEng", comment: "Thursday"), NSLocalizedString("fridayOnEng", comment: "Friday"), NSLocalizedString("saturdayOnEng", comment: "Saturday"), NSLocalizedString("sundayOnEng", comment: "Sunday")]
+        let daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
         var selectedDaysBool = [Bool](repeating: false, count: daysOfWeek.count)
         for (i, day) in daysOfWeek.enumerated() {
             if selectedDays.contains(day) {
