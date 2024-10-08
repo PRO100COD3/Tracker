@@ -72,7 +72,7 @@ final class StatisticsViewController: UIViewController {
         label.text = NSLocalizedString("statisticsStubImageLabelText", comment: "Анализировать пока нечего")
         return label
     }()
-        
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .ypBackground
@@ -109,7 +109,7 @@ final class StatisticsViewController: UIViewController {
         super.viewWillAppear(animated)
         calculateStatistics()
     }
-        
+    
     private func calculateStatistics() {
         let bestPeriod = calculateBestPeriod()
         statistics = [

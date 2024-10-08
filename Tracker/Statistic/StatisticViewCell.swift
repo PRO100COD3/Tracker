@@ -37,7 +37,7 @@ final class StatisticsCollectionViewCell: UICollectionViewCell {
         view.textAlignment = .natural
         return view
     }()
-        
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         createAndLayoutViews()
@@ -52,12 +52,12 @@ final class StatisticsCollectionViewCell: UICollectionViewCell {
         gradientLayer.frame = self.bounds
         borderLayer.path = UIBezierPath(roundedRect: self.bounds, cornerRadius: self.layer.cornerRadius).cgPath
     }
-        
+    
     public func showCellViewModel(_ model: StatisticsCellViewModel) {
         valueLabel.text = ("\(model.value)")
         titleLabel.text = model.title
     }
-        
+    
     private func createAndLayoutViews() {
         backgroundColor = .clear
         labelsContainer.addArrangedSubview(valueLabel)
