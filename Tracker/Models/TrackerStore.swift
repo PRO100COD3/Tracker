@@ -129,6 +129,32 @@ final class TrackerStore: NSObject, NSFetchedResultsControllerDelegate {
         }
     }
     
+    func haveTrackerAtThisDate(date: Date) -> Bool {
+        let fetchRequest = NSFetchRequest<NSFetchRequestResult>(entityName: "TrackerCoreData")
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .none
+        dateFormatter.locale = Locale(identifier: "en_GB")
+        let formattedDate = dateFormatter.string(from: date)
+        
+        let dateFormatterDay = DateFormatter()
+        dateFormatterDay.dateFormat = "EEEE"
+        dateFormatterDay.locale = Locale(identifier: "en_GB")
+        let dayName = dateFormatterDay.string(from: date)
+        let predicate = NSPredicate(format: "schedule == %@", formattedDate)
+        let dayPredicate = NSPredicate(format: "schedule CONTAINS %@", dayName)
+        let compoundPredicate = NSCompoundPredicate(orPredicateWithSubpredicates: [predicate, dayPredicate])
+        fetchRequest.predicate = compoundPredicate
+        fetchRequest.fetchLimit = 1
+        do {
+            let count = try context.count(for: fetchRequest)
+            return count == 0
+        } catch {
+            print("Ошибка при проверке данных в контексте: \(error)")
+            return true
+        }
+    }
+    
     func transformTrackerCoreDataToTracker(trackerCoreData: [TrackerCoreData?]) -> [Tracker] {
         var result: [Tracker] = []
         for element in trackerCoreData {

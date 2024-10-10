@@ -280,7 +280,7 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
     }
     
     private func addCentrePictures(filter: String) {
-        if filter == "all" {
+        if dataProvider.haveTrackerAtThisDate(date: dateButton.date) {
             let image = UIImage(named: "Star")
             imageView = UIImageView(image: image)
         } else {
@@ -294,7 +294,7 @@ class TrackersViewController: UIViewController, TrackerRecordProtocol {
     }
     
     private func addCentreText(filter: String) {
-        if filter == "all" {
+        if dataProvider.haveTrackerAtThisDate(date: dateButton.date) {
             centreText.text = NSLocalizedString("trackersStubImageLabelText", comment: "Что будем отслеживать?")
         } else {
             centreText.text = NSLocalizedString("trackersStubEmptyFilterLabelText", comment: "Ничего не найдено")
