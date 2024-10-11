@@ -8,6 +8,7 @@
 import UIKit
 import CoreData
 
+
 class TrackersViewController: UIViewController, TrackerRecordProtocol {
     
     private lazy var dataProvider = TrackerStore()
